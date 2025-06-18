@@ -1,0 +1,62 @@
+﻿@model TechShop.Application.DTOs.DatosPersonalesDto
+
+@{
+    ViewData["Title"] = "Detalles de Persona";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Detalles de @Model.Nombres @Model.Apellidos</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.Id</dd>
+
+                <dt class="col-sm-3">Nombres</dt>
+                <dd class="col-sm-9">@Model.Nombres</dd>
+
+                <dt class="col-sm-3">Apellidos</dt>
+                <dd class="col-sm-9">@Model.Apellidos</dd>
+
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">
+                    @if (string.IsNullOrWhiteSpace(Model.Email))
+                    {
+                        <span class="text-muted fst-italic">Sin registrar</span>
+                    }
+                    else
+                    {
+                        <a href="mailto:@Model.Email">@Model.Email</a>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Fecha de Nacimiento</dt>
+                <dd class="col-sm-9">
+                    @Model.FechaNacimiento?.ToString("yyyy-MM-dd")
+                </dd>
+
+                <dt class="col-sm-3">Activo</dt>
+                <dd class="col-sm-9">
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">Sí</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">No</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">
+                <i class="bi bi-pencil-square"></i> Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>

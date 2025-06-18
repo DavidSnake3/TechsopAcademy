@@ -1,0 +1,22 @@
+﻿@model IEnumerable<TechShop.Application.DTOs.EmpleadoDto>
+
+<h1>Listado de Empleados</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Puesto</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <td>@emp.Crfb9_codigo</td>
+                <td>@emp.Crfb9_nombre</td>
+                <td>@emp.Crfb9_puesto</td>
+            </tr>
+        }
+    </tbody>
+</table>
