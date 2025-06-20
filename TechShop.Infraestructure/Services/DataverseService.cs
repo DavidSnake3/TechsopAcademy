@@ -21,7 +21,6 @@ namespace TechShop.Infraestructure.Services
                 new StringContent("{}", Encoding.UTF8, "application/json")
             );
             response.EnsureSuccessStatusCode();
-
             var json = await response.Content.ReadAsStringAsync();
             var wrapper = JsonConvert.DeserializeObject<EmpleadosWrapper>(json)!;
             return wrapper.Empleados;

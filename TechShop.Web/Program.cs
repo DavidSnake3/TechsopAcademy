@@ -33,5 +33,7 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
-app.MapDefaultControllerRoute();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 app.Run();

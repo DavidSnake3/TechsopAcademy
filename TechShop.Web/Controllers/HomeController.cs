@@ -15,6 +15,10 @@ namespace TechShop.Web.Controllers
 
         public IActionResult Index()
         {
+            if (TempData.ContainsKey("Mensaje"))
+            {
+                ViewBag.NotificationMessage = TempData["Mensaje"];
+            }
             return View();
         }
 

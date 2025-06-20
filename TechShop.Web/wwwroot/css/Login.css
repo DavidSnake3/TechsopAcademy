@@ -1,0 +1,109 @@
+﻿html {
+    font-size: 14px;
+    min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.animated-bg {
+    background: linear-gradient( -45deg, rgba(40, 134, 222, 1), rgba(15, 108, 189, 1), rgba(15, 84, 140, 1), rgba(12, 59, 94, 1), rgba(20, 101, 172, 1), rgba(13, 72, 123, 1), rgba(8, 40, 80, 1), rgba(15, 108, 189, 1) );
+    background-size: 800% 800%;
+    animation: gradientAnimation 15s ease-in-out infinite;
+    min-height: 100vh;
+}
+
+.LoginImg {
+    max-width: 100vw;
+    width: 500px;
+    height: 200px;
+    transition: all 0.3s ease-in-out;
+    animation: fadeInUp 1s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.LoginCard {
+    padding: 0 10px 10px 10px;
+    background-color: white;
+    border-radius: 15px;
+    margin-bottom: 120px;
+    max-width: 600px;
+    border: solid 4px RGBA(180, 214, 250, 1);
+    box-shadow: 10px 8px 232px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: all 0.3s ease-in-out;
+    animation: fadeInUp 1s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.LoginText {
+    text-align: center;
+    color: RGBA(40, 134, 222, 1);
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: -10px
+}
+
+.LoginAlert {
+    color: red;
+    margin-bottom: -10px;
+}
+
+
+.LoginLabel {
+    margin-top: 10px;
+    padding-top: 0;
+    text-align: center;
+    width: 100%
+}
+
+.PrimaryBtn {
+    background-color: RGBA(40, 134, 222, 1);
+    color: white;
+    border: 3px solid RGBA(40, 134, 222, 1);
+    border-radius: 8px;
+    height: 40px;
+    width: 50%;
+    margin: 15px auto 0 auto;
+    transition: all ease 0.2s;
+    font-weight: bold;
+}
+
+    .PrimaryBtn:hover {
+        background-color: RGBA(15, 84, 140, 1);
+    }
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    25% {
+        background-position: 50% 100%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    75% {
+        background-position: 50% 0%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
