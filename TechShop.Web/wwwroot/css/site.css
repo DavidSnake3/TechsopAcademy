@@ -21,11 +21,18 @@ body {
   margin-bottom: 60px;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.PrimaryBtn {
+    background-color: RGBA(40, 134, 222, 1);
+    color: white;
+    border: 3px solid RGBA(40, 134, 222, 1);
+    border-radius: 8px;
+    height: 40px;
+    width: 50%;
+    margin: 15px auto 0 auto;
+    transition: all ease 0.2s;
+    font-weight: bold;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
+    .PrimaryBtn:hover {
+        background-color: RGBA(15, 84, 140, 1);
+    }

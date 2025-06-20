@@ -1,0 +1,61 @@
+﻿@model Libreria.Infraestructure.Models.LoginTest;
+@{
+    Layout = "_layoutLogin";
+    ViewData["Title"] = "Login";
+}
+
+
+<div class="animated-bg">
+    @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="w-100 vh-100" style="display:flex; flex-direction:column; align-items:center; justify-content:center">
+            <img src="~/img/TechShop Academy blanco sin fondo.png" alt="Alternate Text" class="LoginImg" style="" />
+            <div class="LoginCard col-sm-10 col-md-8 col-lg-6">
+                <h2 class="LoginText">
+                    Iniciar Sesion
+                </h2>
+                <div class="card-body">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User,"Usuario", htmlAttributes:
+                        new { @class = "control-label col-md-2 LoginLabel" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.User, new {
+                                                htmlAttributes = new { @class = "form-control" } })
+                        @{
+                            if (!string.IsNullOrEmpty(ViewBag.MessageUser))
+                            {
+                                <p class="LoginAlert"> 
+                                    @ViewBag.MessageUser
+                                </p>
+                            }
+                        }
+                    </div>
+                    @Html.LabelFor(model => model.Password, "Contraseña",
+                                        htmlAttributes: new { @class = "control-label col-md-2 LoginLabel" })                         <div class="col-md-12">
+                        @Html.EditorFor(model => model.Password, new {
+                                                htmlAttributes = new { type = "password", @class = "form-control" } })
+                        @{
+                            if (!string.IsNullOrEmpty(ViewBag.MessagePassword))
+                            {
+                                <p class="LoginAlert">
+                                    @ViewBag.MessagePassword
+                                </p>
+                            }
+                        }
+                    </div>
+                    <div class="w-100" style="display:flex; align-items:center; justify-content:center">
+                        <button type="submit" id="btnGuardar"
+                                class="PrimaryBtn">
+                            Ingresar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @* <div class="card-footer text-muted">
+                TechShop International
+            </div> *@
+        </div>
+    </div>
+        }
+</div> 
