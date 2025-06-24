@@ -1,24 +1,48 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authorization
+
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
     <div class="container-fluid" style="position: relative;">
         <div class="p-0 mt-2 mb-2">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation" style="height: 45px">
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation" style="height: 45px">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between p-0 m-0">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a>
                     </li>
+                    <!--
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Empleados" asp-action="Index">Empleados</a>
+                      <a class="nav-link" asp-controller="Empleados" asp-action="Index">Empleados</a>
                     </li>
+                    -->
+                </ul>
+
+                <ul class="navbar-nav">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <form asp-controller="Login" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="nav-link btn btn-link">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
-        <a class="navbar-brand NavbarImg" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/TechShop Academy blanco sin fondo.png" alt="Alternate Text" /></a>
+
+        <a class="navbar-brand NavbarImg" asp-controller="Home" asp-action="Index">
+            <img src="~/img/TechShop Academy blanco sin fondo.png" alt="TechShop Academy" />
+        </a>
     </div>
 </nav>

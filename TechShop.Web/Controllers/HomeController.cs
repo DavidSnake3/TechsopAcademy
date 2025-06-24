@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TechShop.Web.Models;
 
 namespace TechShop.Web.Controllers
 {
+    [Authorize(AuthenticationSchemes = "MyCookieAuth")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

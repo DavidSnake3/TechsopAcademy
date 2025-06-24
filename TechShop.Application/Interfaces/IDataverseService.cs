@@ -10,5 +10,6 @@ namespace TechShop.Application.Interfaces
     public interface IDataverseService
     {
         Task<IEnumerable<EmpleadoDto>> GetEmpleadosAsync();
+        Task<EmpleadoDto?> GetEmpleadoByCodigoAsync(string codigo);
     }
 }
