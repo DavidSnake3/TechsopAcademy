@@ -2,7 +2,119 @@
     ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@using System.Security.Claims
+@{
+    var nombre = User.Identity?.Name ?? "Usuario";
+    var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D";
+    var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Empleado";
+}
+
+<div class="parent">
+
+    <div class="div1 p-3 d-flex flex-column justify-content-between">
+        <div>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-person-circle fs-1 text-primary me-2"></i>
+                    <div>
+                        <h5 class="mb-0">@nombre</h5>
+                        <small class="text-muted">Código: @codigo</small><br />
+                        <small class="text-muted">@rol</small>
+                    </div>
+                </div>
+                <a class="btn btn-outline-primary btn-sm" href="#">Ver información</a>
+            </div>
+        </div>
+
+        <div class="row g-2 mt-auto">
+            <div class="col-6">
+                <div class="bg-opacity-50 bg-success text-white p-2 rounded d-flex justify-content-center">
+                    <i class="bi bi-award-fill fs-4"></i>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bg-opacity-50 bg-info text-white p-2 rounded d-flex justify-content-center">
+                    <i class="bi bi-book-fill fs-4"></i>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bg-opacity-50 bg-secondary text-white p-2 rounded d-flex justify-content-center">
+                    <i class="bi bi-clock-fill fs-4"></i>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="bg-opacity-50 bg-warning text-dark p-2 rounded d-flex justify-content-center">
+                    <i class="bi bi-graph-up fs-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="div2 p-3">
+        <h6 class="mb-3"><i class="bi bi-journal-bookmark-fill me-1"></i>Mis Cursos</h6>
+
+        <div class="mb-3">
+            <h6 class="text-success mb-2"><i class="bi bi-check-circle-fill me-1"></i>Completados</h6>
+            <div class="bg-light-success text-success text-center py-2 rounded">
+                <i class="bi bi-dash-circle me-1"></i>Vacío
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <h6 class="text-primary mb-2"><i class="bi bi-play-circle-fill me-1"></i>En Proceso</h6>
+            <div class="bg-light-info text-primary text-center py-2 rounded">
+                <i class="bi bi-dash-circle me-1"></i>Vacío
+            </div>
+        </div>
+
+        <div>
+            <h6 class="text-secondary mb-2"><i class="bi bi-archive-fill me-1"></i>Finalizados</h6>
+            <div class="bg-light text-secondary text-center py-2 rounded border">
+                <i class="bi bi-dash-circle me-1"></i>Vacío
+            </div>
+        </div>
+    </div>
+
+    <div class="div3 p-3">
+        <h6 class="text-center mb-3"><i class="bi bi-pie-chart-fill me-1"></i>Rendimiento del Mes</h6>
+        <canvas id="chartRendimiento" width="250" height="250" class="mx-auto d-block mb-3"></canvas>
+
+    </div>
+
+    <div class="div4 p-3 d-flex flex-column justify-content-center align-items-center text-center">
+        <i class="bi bi-layout-text-window fs-1 text-muted mb-2"></i>
+        <h6 class="text-muted">No hay cursos disponibles en este momento</h6>
+    </div>
+
+    <div class="div5 p-3 d-flex justify-content-center align-items-center text-center">
+
+        <div class="text-muted">
+            <i class="bi bi-info-circle fs-1 mb-2 d-block"></i>
+            <h6>No hay avisos por el momento</h6>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('chartRendimiento').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completado', 'Pendiente'],
+                datasets: [{
+                    data: [75, 25],
+                    backgroundColor: ['#198754', '#dee2e6'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                cutout: '70%',
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+}

@@ -1,48 +1,67 @@
 ﻿using Libreria.Infraestructure.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using TechShop.Application.Interfaces;
 
-namespace Libreria.Web.Controllers
+public class LoginController : Controller
 {
-    public class LoginController : Controller
+    private readonly IDataverseService _dataverse;
+    public LoginController(IDataverseService dataverse) => _dataverse = dataverse;
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Index() => View();
+
+    [HttpPost]
+    [AllowAnonymous]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Index(LoginTest login)
     {
-        public IActionResult Index()
+        var empleado = await _dataverse.GetEmpleadoByCodigoAsync(login.User);
+        if (empleado == null || empleado.Crfb9_contrasena != login.Password)
         {
-            return View();
+            ViewBag.MessageUser = empleado == null ? "* Usuario no existe" : null;
+            ViewBag.MessagePassword = empleado != null && empleado.Crfb9_contrasena != login.Password
+                                     ? "* Contraseña incorrecta"
+                                     : null;
+            return View(login);
         }
 
-        [HttpPost("Login")]
-        public IActionResult Login(LoginTest login)
-        {
-            if (login.User == null || login.Password == null)
-            {
-                ViewBag.MessageUser = "* Por favor, debe indicar el usuario";
-                ViewBag.MessagePassword = "* Por favor, debe indicar la contraseña";
-                return View("index");
-            }
+        var claims = new List<Claim> {
+            new Claim(ClaimTypes.Name, empleado.Crfb9_nombre),
+            new Claim("Codigo", empleado.Crfb9_codigo),
+            new Claim(ClaimTypes.Role, empleado.Crfb9_rol ?? "Empleado")
+        };
+        var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+        var principal = new ClaimsPrincipal(identity);
+        await HttpContext.SignInAsync("MyCookieAuth", principal);
 
-            if ((!login.User.Equals("admin") || login.User.IsNullOrEmpty()) && (!login.Password.Equals("123456") || login.Password.IsNullOrEmpty()))
-            {
-                ViewBag.MessageUser = "* Usuario incorrecto.";
-                ViewBag.MessagePassword = "* Contraseña incorrecta.";
-                return View("index");
-            }
-           else if (!login.User.Equals("admin") || login.User.IsNullOrEmpty())
-            {
-                ViewBag.MessageUser = "* Usuario incorrecto.";
-                return View("index");
-            }
-            else if (!login.Password.Equals("123456") || login.Password.IsNullOrEmpty())
-            {
-                ViewBag.MessagePassword = "* Contraseña incorrecta.";
-                return View("index");
-            }
-            else
-            {
-                TempData["Mensaje"] = "const Toast = Swal.mixin({toast: true, position: \"top-end\", showConfirmButton: false, timer: 3000, timerProgressBar: true, didOpen: (toast) => {toast.onmouseenter = Swal.stopTimer; toast.onmouseleave = Swal.resumeTimer;}});\n" +
-            "Toast.fire({icon: \"success\", title: \"Bienvenido " + login.User + "\"});";
-                return RedirectToAction("Index", "Home");
-            }
-        }
+        TempData["Mensaje"] = @"
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+            Toast.fire({
+                icon: 'success',
+                title: 'Bienvenido " + empleado.Crfb9_nombre + @"'
+            });
+        ";
+
+        return RedirectToAction("Index", "Home");
     }
+
+    [Authorize]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync("MyCookieAuth");
+        return RedirectToAction("Index", "Login");
+    }
+
+    public IActionResult AccessDenied() => View();
 }

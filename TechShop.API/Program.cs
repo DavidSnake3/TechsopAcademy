@@ -13,12 +13,7 @@ if (string.IsNullOrWhiteSpace(endpoint))
 {
     throw new InvalidOperationException("No se encontró la configuración 'Dataverse:Endpoint' en appsettings.json");
 }
-builder.Services.AddHttpClient<IDataverseService, DataverseService>(client =>
-{
-    client.BaseAddress = new Uri(endpoint);
-    client.DefaultRequestHeaders.Accept
-          .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-});
+builder.Services.AddHttpClient<IDataverseService, DataverseService>();
 
 // configuracion previa del fking sql server
 builder.Services.AddDbContext<TechAcademyContext>(options =>
