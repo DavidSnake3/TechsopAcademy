@@ -1,120 +1,101 @@
 ﻿@{
     ViewData["Title"] = "Inicio";
 }
-
 @using System.Security.Claims
 @{
     var nombre = User.Identity?.Name ?? "Usuario";
     var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D";
     var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Empleado";
+    var puesto = User.Claims.FirstOrDefault(c => c.Type == "Puesto")?.Value ?? "N/D";
 }
 
 <div class="parent">
 
     <div class="div1 p-3 d-flex flex-column justify-content-between">
-        <div>
-            <div class="d-flex justify-content-between align-items-start mb-3">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-person-circle fs-1 text-primary me-2"></i>
-                    <div>
-                        <h5 class="mb-0">@nombre</h5>
-                        <small class="text-muted">Código: @codigo</small><br />
-                        <small class="text-muted">@rol</small>
-                    </div>
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-person-circle fs-1 text-primary me-2"></i>
+                <div>
+                    <h5 class="mb-0">@nombre</h5>
+                    <small class="text-muted">Código: @codigo &nbsp;|&nbsp; @puesto</small><br />
+                    <small class="text-muted">@rol</small>
                 </div>
-                <a class="btn btn-outline-primary btn-sm" href="#">Ver información</a>
             </div>
+            <a class="btn btn-outline-primary btn-sm" href="#">Ver información</a>
         </div>
-
-        <div class="row g-2 mt-auto">
+        <div class="row g-2 mt-auto text-center">
             <div class="col-6">
-                <div class="bg-opacity-50 bg-success text-white p-2 rounded d-flex justify-content-center">
-                    <i class="bi bi-award-fill fs-4"></i>
+                <div class="p-6 rounded border border-success bg-success bg-opacity-10">
+                    <i class="bi bi-award-fill fs-4 text-success"></i>
+                    <div class="fw-bold mt-1 text-success">0</div>
                 </div>
             </div>
             <div class="col-6">
-                <div class="bg-opacity-50 bg-info text-white p-2 rounded d-flex justify-content-center">
-                    <i class="bi bi-book-fill fs-4"></i>
+                <div class="p-6 rounded border border-info bg-info bg-opacity-10">
+                    <i class="bi bi-book-fill fs-4 text-info"></i>
+                    <div class="fw-bold mt-1 text-info">0</div>
                 </div>
             </div>
             <div class="col-6">
-                <div class="bg-opacity-50 bg-secondary text-white p-2 rounded d-flex justify-content-center">
-                    <i class="bi bi-clock-fill fs-4"></i>
+                <div class="p-6 rounded border border-secondary bg-secondary bg-opacity-10">
+                    <i class="bi bi-clock-fill fs-4 text-secondary"></i>
+                    <div class="fw-bold mt-1 text-secondary">0h</div>
                 </div>
             </div>
             <div class="col-6">
-                <div class="bg-opacity-50 bg-warning text-dark p-2 rounded d-flex justify-content-center">
-                    <i class="bi bi-graph-up fs-4"></i>
+                <div class="p-6 rounded border border-warning bg-warning bg-opacity-10">
+                    <i class="bi bi-graph-up fs-4 text-warning"></i>
+                    <div class="fw-bold mt-1 text-warning">0%</div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="div2 p-3">
-        <h6 class="mb-3"><i class="bi bi-journal-bookmark-fill me-1"></i>Mis Cursos</h6>
-
-        <div class="mb-3">
-            <h6 class="text-success mb-2"><i class="bi bi-check-circle-fill me-1"></i>Completados</h6>
-            <div class="bg-light-success text-success text-center py-2 rounded">
-                <i class="bi bi-dash-circle me-1"></i>Vacío
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <h6 class="text-primary mb-2"><i class="bi bi-play-circle-fill me-1"></i>En Proceso</h6>
-            <div class="bg-light-info text-primary text-center py-2 rounded">
-                <i class="bi bi-dash-circle me-1"></i>Vacío
-            </div>
-        </div>
-
-        <div>
-            <h6 class="text-secondary mb-2"><i class="bi bi-archive-fill me-1"></i>Finalizados</h6>
-            <div class="bg-light text-secondary text-center py-2 rounded border">
-                <i class="bi bi-dash-circle me-1"></i>Vacío
             </div>
         </div>
     </div>
 
     <div class="div3 p-3">
-        <h6 class="text-center mb-3"><i class="bi bi-pie-chart-fill me-1"></i>Rendimiento del Mes</h6>
-        <canvas id="chartRendimiento" width="250" height="250" class="mx-auto d-block mb-3"></canvas>
-
-    </div>
-
-    <div class="div4 p-3 d-flex flex-column justify-content-center align-items-center text-center">
-        <i class="bi bi-layout-text-window fs-1 text-muted mb-2"></i>
-        <h6 class="text-muted">No hay cursos disponibles en este momento</h6>
-    </div>
-
-    <div class="div5 p-3 d-flex justify-content-center align-items-center text-center">
-
-        <div class="text-muted">
-            <i class="bi bi-info-circle fs-1 mb-2 d-block"></i>
-            <h6>No hay avisos por el momento</h6>
+        <h6 class="mb-3 text-success">
+            <i class="bi bi-check-circle-fill me-1"></i>Completados
+        </h6>
+        <div class="p-3 rounded border border-success bg-success bg-opacity-10 text-success text-center">
+            <i class="bi bi-dash-circle me-1"></i>Vacío
         </div>
     </div>
-</div>
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('chartRendimiento').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Completado', 'Pendiente'],
-                datasets: [{
-                    data: [75, 25],
-                    backgroundColor: ['#198754', '#dee2e6'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                cutout: '70%',
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-    </script>
-}
+    <div class="div4 p-3">
+        <h6 class="mb-3 text-primary">
+            <i class="bi bi-play-circle-fill me-1"></i>En Proceso
+        </h6>
+        <div class="p-3 rounded border border-primary bg-primary bg-opacity-10 text-primary text-center">
+            <i class="bi bi-dash-circle me-1"></i>Vacío
+        </div>
+    </div>
+
+    <div class="div5 p-3">
+        <h6 class="mb-3 text-secondary">
+            <i class="bi bi-archive-fill me-1"></i>Finalizados
+        </h6>
+        <div class="p-3 rounded border border-secondary bg-secondary bg-opacity-10 text-secondary text-center">
+            <i class="bi bi-dash-circle me-1"></i>Vacío
+        </div>
+    </div>
+
+    <div class="div7 p-3 text-center">
+        <h6 class="mb-3 text-info">
+            <i class="bi bi-journal-bookmark-fill me-1"></i>Cursos Disponibles
+        </h6>
+        <div class="p-5 rounded border border-info bg-info bg-opacity-10 text-info">
+            <i class="bi bi-dash-circle me-1 fs-2"></i><br />
+            <small>No hay cursos disponibles en este momento</small>
+        </div>
+    </div>
+
+    <div class="div8 p-3 text-center">
+        <h6 class="mb-3">
+            <i class="bi bi-bell-fill me-1"></i>Avisos
+        </h6>
+        <div>
+            <i class="bi bi-dash-circle fs-2 text-muted mb-2 d-block"></i>
+            <small class="text-muted">No hay avisos por el momento</small>
+        </div>
+    </div>
+
+</div>
