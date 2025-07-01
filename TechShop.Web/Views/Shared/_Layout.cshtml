@@ -15,13 +15,15 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100 overflow-hidden">
     <header>
         @await Html.PartialAsync("_Menu")
     </header>
     <div class="container-fluid p-0">
-        <main class="p-0">
-            @RenderBody()
+        <main class="flex-grow-1 overflow-hidden p-0">
+            <div class="container-fluid h-100 p-0">
+                @RenderBody()
+            </div>
         </main>
     </div>
     <footer class="border-top footer text-muted">
@@ -44,5 +46,6 @@
             @Html.Raw(@ViewBag.NotificationMessage);
         </script>
     }
+    @await Html.PartialAsync("_Footer")
 </body>
 </html>

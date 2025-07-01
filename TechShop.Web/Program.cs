@@ -53,6 +53,10 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 
+// al reiniciar se mantiene y gestiona cosas en memoria
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<AvisosService>();
+
 var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();

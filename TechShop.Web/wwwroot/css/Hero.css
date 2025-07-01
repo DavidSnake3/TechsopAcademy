@@ -1,7 +1,7 @@
 ﻿:root {
     --login-blue: rgba(40, 134, 222, 1);
-    --cell-bg: #ffffff; 
-    --cell-border: rgba(180, 214, 250, 1); 
+    --cell-bg: #ffffff;
+    --cell-border: rgba(180, 214, 250, 1);
 }
 
 html, body, .container-fluid, main {
@@ -18,22 +18,24 @@ html, body, .container-fluid, main {
 
 .parent {
     display: grid;
-    height: calc(100vh - 56px - 60px);
-    width: 100%;
-    margin: 0 auto; 
-    padding: 0 40px;
     gap: 8px;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(9, 1fr);
+    padding: 0 40px;
+    height: calc(100vh - 56px - 60px - 60px);
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(8, 1fr);
     overflow: hidden;
+    position: relative; 
 }
 
     .parent > div {
+        overflow: hidden;
+        max-height: 100%;
         background: var(--cell-bg);
         border: 4px solid var(--cell-border);
         border-radius: 8px;
         position: relative;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        transition: none;
     }
 
         .parent > div::after {
@@ -47,93 +49,69 @@ html, body, .container-fluid, main {
             border-right: 4px solid var(--cell-border);
         }
 
+
 .div1 {
-    grid-column: span 4;
-    grid-row: span 4;
+    grid-column-start: 1;
+    grid-column-end: span 3; 
+    grid-row-start: 1;
+    grid-row-end: span 3; 
 }
-.div2 {
-    grid-column: 5 / span 3;
-    grid-row: span 7;
-}
+
 .div3 {
-    grid-column: 1 / span 2;
-    grid-row: 5 / span 5;
+    grid-column-start: 4;
+    grid-column-end: span 3;
+    grid-row-start: 1;
+    grid-row-end: span 2;
+    transition: grid-row-end 0.4s ease;
 }
+
 .div4 {
-    grid-column: 3 / span 2;
-    grid-row: 5 / span 5;
+    grid-column-start: 4;
+    grid-column-end: span 3;
+    grid-row-start: 3;
+    grid-row-end: span 2;
+    transition: grid-row-end 0.4s ease;
 }
+
 .div5 {
-    grid-column: 5 / span 3;
-    grid-row: 8 / span 2;
+    grid-column-start: 4;
+    grid-column-end: span 3;
+    grid-row-start: 5;
+    grid-row-end: span 2;
+    transition: grid-row-end 0.4s ease;
 }
 
-@media (max-width: 992px) {
-    .parent {
-        box-sizing: border-box;
-        max-width: none;
-        width: 100%;
-        margin: 0;
-        padding: 0 16px;
-        height: calc(100vh - 56px - 60px);
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        grid-template-rows: repeat(6, 1fr);
-        gap: 8px;
-        overflow: hidden;
-    }
-
-    .div4, .div5 {
-        display: none;
-    }
-
-    .div1 {
-        grid-column: span 3;
-        grid-row: span 6;
-    }
-
-    .div2 {
-        grid-column: 4 / 7;
-        grid-row: span 3;
-    }
-
-    .div3 {
-        grid-column: 4 / 7;
-        grid-row: 4 / 7;
-    }
+.div7 {
+    grid-column-start: 1;
+    grid-column-end: span 3; 
+    grid-row-start: 4;
+    grid-row-end: span 5; 
 }
 
-@media (max-width: 576px) {
-    .parent {
-        box-sizing: border-box;
-        max-width: none;
-        width: 100%;
-        margin: 0;
-        padding: 0 12px;
-        height: calc(100vh - 56px - 60px);
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(3, 1fr);
-        gap: 8px;
-        overflow: hidden;
-    }
+.div8 {
+    grid-column-start: 4;
+    grid-column-end: span 3;
+    grid-row-start: 7;
+    grid-row-end: span 2;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+.div3.expanded {
+    grid-row-end: span 5 !important;
+}
 
-    .div4, .div5 {
-        display: none;
-    }
+.div4.expanded {
+    grid-row-end: span 5 !important;
+}
 
-    .div1 {
-        grid-column: 1 / -1;
-        grid-row: 1 / 2;
-    }
+.div5.expanded {
+    grid-row-end: span 5 !important;
+}
 
-    .div2 {
-        grid-column: 1 / -1;
-        grid-row: 2 / 3;
-    }
+.div8 .avisos-list {
+    overflow-y: auto;
+}
 
-    .div3 {
-        grid-column: 1 / -1;
-        grid-row: 3 / 4;
-    }
+.modal-backdrop {
+    opacity: 0,4 !important;
 }
