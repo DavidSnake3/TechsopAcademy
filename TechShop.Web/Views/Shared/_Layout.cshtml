@@ -27,8 +27,8 @@
         </main>
     </div>
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - TechShop International - <a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+        <div class="container text-center">
+            &copy; 2025 - <span style="font-weight: bold;">TechShop International</span> - Todos los derechos reservados.
         </div>
     </footer>
 
@@ -46,6 +46,6 @@
             @Html.Raw(@ViewBag.NotificationMessage);
         </script>
     }
-    @await Html.PartialAsync("_Footer")
+    @* @await Html.PartialAsync("_Footer") *@
 </body>
 </html>
