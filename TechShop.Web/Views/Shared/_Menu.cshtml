@@ -12,22 +12,12 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between p-0 m-0">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">Inicio</a>
-                    </li>
-                    <!--
-                    <li class="nav-item">
-                      <a class="nav-link" asp-controller="Empleados" asp-action="Index">Empleados</a>
-                    </li>
-                    -->
-                </ul>
 
-                <ul class="navbar-nav">
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
                             <form asp-controller="Login" asp-action="Logout" method="post" class="d-inline">
-                                <button type="submit" class="nav-link btn btn-link">Cerrar sesión</button>
+                                <button type="submit" class="nav-link btn btn-link logout">Cerrar sesión</button>
                             </form>
                         </li>
                     }
@@ -37,6 +27,11 @@
                             <a class="nav-link" asp-controller="Login" asp-action="Index">Iniciar sesión</a>
                         </li>
                     }
+                    
+                    <li class="nav-item">
+                      <a class="nav-link" asp-controller="CursosAdmin" asp-action="Index">Administrador de Cursos</a>
+                    </li>
+                    
                 </ul>
             </div>
         </div>
@@ -44,5 +39,6 @@
         <a class="navbar-brand NavbarImg" asp-controller="Home" asp-action="Index">
             <img src="~/img/TechShop Academy blanco sin fondo.png" alt="TechShop Academy" />
         </a>
+        <a asp-controller="Home" asp-action="Index"><i class="fi fi-rr-home"></i></a>
     </div>
 </nav>
