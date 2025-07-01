@@ -13,6 +13,8 @@ public partial class Capacitaciones
 
     public DateTime FechaCreacion { get; set; }
 
+    public bool Activo { get; set; } = true;
+
     public virtual ICollection<CapacitacionPuestoZona> CapacitacionPuestoZona { get; set; } = new List<CapacitacionPuestoZona>();
 
     public virtual ICollection<HistorialCapacitacionEmpleado> HistorialCapacitacionEmpleado { get; set; } = new List<HistorialCapacitacionEmpleado>();

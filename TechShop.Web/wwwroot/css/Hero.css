@@ -19,19 +19,23 @@ html, body, .container-fluid, main {
 .parent {
     display: grid;
     gap: 8px;
-    padding: 0 40px; 
-    height: calc(100vh - 56px - 60px); 
+    padding: 0 40px;
+    height: calc(100vh - 56px - 60px - 60px);
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(8, 1fr);
     overflow: hidden;
+    position: relative; 
 }
 
     .parent > div {
+        overflow: hidden;
+        max-height: 100%;
         background: var(--cell-bg);
         border: 4px solid var(--cell-border);
         border-radius: 8px;
         position: relative;
         box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        transition: none;
     }
 
         .parent > div::after {
@@ -45,6 +49,7 @@ html, body, .container-fluid, main {
             border-right: 4px solid var(--cell-border);
         }
 
+
 .div1 {
     grid-column-start: 1;
     grid-column-end: span 3; 
@@ -54,63 +59,59 @@ html, body, .container-fluid, main {
 
 .div3 {
     grid-column-start: 4;
-    grid-column-end: span 3; 
+    grid-column-end: span 3;
     grid-row-start: 1;
-    grid-row-end: span 2; 
+    grid-row-end: span 2;
+    transition: grid-row-end 0.4s ease;
 }
 
 .div4 {
     grid-column-start: 4;
-    grid-column-end: span 3; /* 4,5,6 */
+    grid-column-end: span 3;
     grid-row-start: 3;
-    grid-row-end: span 2; /* filas 3,4 */
+    grid-row-end: span 2;
+    transition: grid-row-end 0.4s ease;
 }
 
 .div5 {
     grid-column-start: 4;
-    grid-column-end: span 3; /* 4,5,6 */
+    grid-column-end: span 3;
     grid-row-start: 5;
-    grid-row-end: span 2; /* filas 5,6 */
+    grid-row-end: span 2;
+    transition: grid-row-end 0.4s ease;
 }
 
 .div7 {
     grid-column-start: 1;
-    grid-column-end: span 3; /* 1,2,3 */
+    grid-column-end: span 3; 
     grid-row-start: 4;
-    grid-row-end: span 5; /* filas 4,5,6,7,8 */
+    grid-row-end: span 5; 
 }
 
 .div8 {
     grid-column-start: 4;
-    grid-column-end: span 3; /* 4,5,6 */
+    grid-column-end: span 3;
     grid-row-start: 7;
-    grid-row-end: span 2; /* filas 7,8 */
+    grid-row-end: span 2;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+.div3.expanded {
+    grid-row-end: span 5 !important;
 }
 
-/* Tablet: apila todo en 2 columnas, altura automática */
-@media (max-width: 992px) {
-    .parent {
-        grid-template-columns: repeat(2,1fr);
-        grid-template-rows: repeat(6, auto);
-        padding: 0 16px;
-        height: auto;
-    }
-
-        .parent > div {
-            grid-column: 1 / -1 !important;
-        }
+.div4.expanded {
+    grid-row-end: span 5 !important;
 }
 
-/* Móvil: 1 columna */
-@media (max-width: 576px) {
-    .parent {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(6, auto);
-        padding: 0 12px;
-        height: auto;
-    }
+.div5.expanded {
+    grid-row-end: span 5 !important;
+}
 
-        .parent > div {
-            grid-column: 1 / -1 !important;
-        }
+.div8 .avisos-list {
+    overflow-y: auto;
+}
+
+.modal-backdrop {
+    opacity: 0,4 !important;
 }

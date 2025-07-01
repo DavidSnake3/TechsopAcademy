@@ -1,8 +1,8 @@
-﻿@{
-    ViewData["Title"] = "Inicio";
-}
+﻿@model TechShop.Web.Models.DashboardViewModel
 @using System.Security.Claims
+
 @{
+    ViewData["Title"] = "Inicio";
     var nombre = User.Identity?.Name ?? "Usuario";
     var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D";
     var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Empleado";
@@ -10,9 +10,9 @@
 }
 
 <div class="parent">
-
-    <div class="div1 p-3 d-flex flex-column justify-content-between">
-        <div class="d-flex justify-content-between align-items-start mb-3">
+    <div class="div1 p-3 d-flex flex-column justify-content-start"
+         style="grid-row-end: span 2;">
+        <div class="d-flex justify-content-between align-items-start mb-1">
             <div class="d-flex align-items-center">
                 <i class="bi bi-person-circle fs-1 text-primary me-2"></i>
                 <div>
@@ -23,79 +23,276 @@
             </div>
             <a class="btn btn-outline-primary btn-sm" href="#">Ver información</a>
         </div>
-        <div class="row g-2 mt-auto text-center">
-            <div class="col-6">
+
+        <div class="row g-2 text-center">
+            <div class="col">
                 <div class="p-6 rounded border border-success bg-success bg-opacity-10">
-                    <i class="bi bi-award-fill fs-4 text-success"></i>
-                    <div class="fw-bold mt-1 text-success">0</div>
+                    <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+                    <div class="fw-bold mt-1 text-success">
+                        @Model.Completados.Count()
+                    </div>
+                    <small class="d-block text-success">Completados</small>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="p-6 rounded border border-info bg-info bg-opacity-10">
-                    <i class="bi bi-book-fill fs-4 text-info"></i>
-                    <div class="fw-bold mt-1 text-info">0</div>
+            <div class="col">
+                <div class="p-6 rounded border border-primary bg-primary bg-opacity-10">
+                    <i class="bi bi-play-circle-fill fs-4 text-primary"></i>
+                    <div class="fw-bold mt-1 text-primary">
+                        @Model.EnProceso.Count()
+                    </div>
+                    <small class="d-block text-primary">En Proceso</small>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col">
                 <div class="p-6 rounded border border-secondary bg-secondary bg-opacity-10">
-                    <i class="bi bi-clock-fill fs-4 text-secondary"></i>
-                    <div class="fw-bold mt-1 text-secondary">0h</div>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="p-6 rounded border border-warning bg-warning bg-opacity-10">
-                    <i class="bi bi-graph-up fs-4 text-warning"></i>
-                    <div class="fw-bold mt-1 text-warning">0%</div>
+                    <i class="bi bi-archive-fill fs-4 text-secondary"></i>
+                    <div class="fw-bold mt-1 text-secondary">
+                        @Model.Finalizados.Count()
+                    </div>
+                    <small class="d-block text-secondary">Finalizados</small>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="div3 p-3">
+    <div class="div3 p-3 d-flex flex-column">
         <h6 class="mb-3 text-success">
             <i class="bi bi-check-circle-fill me-1"></i>Completados
         </h6>
-        <div class="p-3 rounded border border-success bg-success bg-opacity-10 text-success text-center">
-            <i class="bi bi-dash-circle me-1"></i>Vacío
+        <div class="flex-grow-1 overflow-auto">
+            @if (!Model.Completados.Any())
+            {
+                <div class="text-center text-success py-4">
+                    <i class="bi bi-dash-circle me-1"></i>Vacío
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var c in Model.Completados)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">@c.Nombre</div>
+                                <small class="text-muted">@c.Descripcion</small>
+                            </div>
+                            <span class="badge rounded-pill text-success">
+                                @c.Fecha.ToShortDateString()
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
+        <button id="btnCompletados"
+                style="width: 861px;"
+                class="btn btn-primary btn-sm d-flex justify-content-center align-items-center">
+            <i class="bi bi-chevron-down text-white"></i>
+        </button>
     </div>
 
-    <div class="div4 p-3">
+    <div class="div4 p-3 d-flex flex-column">
         <h6 class="mb-3 text-primary">
             <i class="bi bi-play-circle-fill me-1"></i>En Proceso
         </h6>
-        <div class="p-3 rounded border border-primary bg-primary bg-opacity-10 text-primary text-center">
-            <i class="bi bi-dash-circle me-1"></i>Vacío
+        <div class="flex-grow-1 overflow-auto">
+            @if (!Model.EnProceso.Any())
+            {
+                <div class="text-center text-primary py-4">
+                    <i class="bi bi-dash-circle me-1"></i>Vacío
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var c in Model.EnProceso)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">@c.Nombre</div>
+                                <small class="text-muted">@c.Descripcion</small>
+                            </div>
+                            <span class="badge rounded-pill text-primary">
+                                @c.Fecha.ToShortDateString()
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
+        <button id="btnEnProceso"
+                style="width: 861px;"
+                class="btn btn-primary btn-sm d-flex justify-content-center align-items-center">
+            <i class="bi bi-chevron-down text-white"></i>
+        </button>
     </div>
 
-    <div class="div5 p-3">
+    <div class="div5 p-3 d-flex flex-column">
         <h6 class="mb-3 text-secondary">
             <i class="bi bi-archive-fill me-1"></i>Finalizados
         </h6>
-        <div class="p-3 rounded border border-secondary bg-secondary bg-opacity-10 text-secondary text-center">
-            <i class="bi bi-dash-circle me-1"></i>Vacío
+        <div class="flex-grow-1 overflow-auto">
+            @if (!Model.Finalizados.Any())
+            {
+                <div class="text-center text-secondary py-4">
+                    <i class="bi bi-dash-circle me-1"></i>Vacío
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var c in Model.Finalizados)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">@c.Nombre</div>
+                                <small class="text-muted">@c.Descripcion</small>
+                            </div>
+                            <span class="badge rounded-pill text-secondary">
+                                @c.Fecha.ToShortDateString()
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
+        <button id="btnFinalizados"
+                style="width: 861px;"
+                class="btn btn-primary btn-sm d-flex justify-content-center align-items-center">
+            <i class="bi bi-chevron-down text-white"></i>
+        </button>
     </div>
 
-    <div class="div7 p-3 text-center">
-        <h6 class="mb-3 text-info">
+    <div class="div7 p-3 d-flex flex-column"
+         style="grid-row-start: 3; grid-row-end: span 6;">
+        <h6 class="mb-3 text-info text-center">
             <i class="bi bi-journal-bookmark-fill me-1"></i>Cursos Disponibles
         </h6>
-        <div class="p-5 rounded border border-info bg-info bg-opacity-10 text-info">
-            <i class="bi bi-dash-circle me-1 fs-2"></i><br />
-            <small>No hay cursos disponibles en este momento</small>
+        <div class="flex-grow-1 overflow-auto">
+            @if (!Model.Disponibles.Any())
+            {
+                <div class="text-center text-info py-4">
+                    <i class="bi bi-dash-circle fs-2 mb-2"></i>
+                    <small>No hay cursos disponibles en este momento</small>
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var c in Model.Disponibles)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">@c.Nombre</div>
+                                <small class="text-muted">@c.Descripcion</small>
+                            </div>
+                            <span class="badge rounded-pill text-info">
+                                @c.Fecha.ToShortDateString()
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
     </div>
 
-    <div class="div8 p-3 text-center">
+    <div class="div8 d-flex flex-column p-3">
         <h6 class="mb-3">
             <i class="bi bi-bell-fill me-1"></i>Avisos
         </h6>
-        <div>
-            <i class="bi bi-dash-circle fs-2 text-muted mb-2 d-block"></i>
-            <small class="text-muted">No hay avisos por el momento</small>
-        </div>
-    </div>
 
+        @if (Model.Avisos.Any())
+        {
+            <ul class="list-unstyled avisos-list flex-grow-1 mb-2">
+                @foreach (var a in Model.Avisos)
+                {
+                    <li class="d-flex justify-content-between align-items-center alert alert-warning py-2 px-3 mb-1">
+                        <div>
+                            <strong>¡Aviso!</strong> @a.Texto<br />
+                            <small class="text-muted">@a.FechaCreacion.ToLocalTime().ToShortDateString()</small>
+                        </div>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#modalEditarAviso"
+                                    data-aviso-id="@a.FechaCreacion.Ticks"
+                                    data-aviso-text="@a.Texto">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <form asp-action="EliminarAviso" asp-controller="Home" method="post" class="d-inline">
+                                <input type="hidden" name="fechaTicks" value="@a.FechaCreacion.Ticks" />
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="flex-grow-1 d-flex align-items-center justify-content-center mb-2">
+                <i class="bi bi-dash-circle fs-2 text-muted"></i>
+                <small class="text-muted ms-2">No hay avisos por el momento</small>
+            </div>
+        }
+
+        @if (codigo == "2693" || codigo == "2692")
+        {
+            <div>
+                <button class="btn btn-warning btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modalAgregarAviso">
+                    <i class="bi bi-bell-plus me-1"></i>Agregar aviso
+                </button>
+            </div>
+        }
+    </div>
 </div>
+
+<div class="modal fade" id="modalAgregarAviso" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-action="AgregarAviso" asp-controller="Home" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nuevo Aviso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <textarea name="texto" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar aviso</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarAviso" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form asp-action="EditarAviso" asp-controller="Home" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Aviso</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="fechaTicks" id="editFechaTicks" />
+                <textarea name="texto" id="editTexto" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Actualizar aviso</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var editarModal = document.getElementById('modalEditarAviso');
+    editarModal.addEventListener('show.bs.modal', function (event) {
+      var btn = event.relatedTarget;
+      var texto = btn.getAttribute('data-aviso-text');
+      var fecha = btn.getAttribute('data-aviso-id');
+      document.getElementById('editTexto').value = texto;
+      document.getElementById('editFechaTicks').value = fecha;
+    });
+</script>
+

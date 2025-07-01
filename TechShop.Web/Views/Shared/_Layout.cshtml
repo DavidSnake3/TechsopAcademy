@@ -14,13 +14,15 @@
     <link rel="stylesheet" href="~/css/Hero.css" asp-append-version="true" />
 
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100 overflow-hidden">
     <header>
         @await Html.PartialAsync("_Menu")
     </header>
     <div class="container-fluid p-0">
-        <main class="p-0">
-            @RenderBody()
+        <main class="flex-grow-1 overflow-hidden p-0">
+            <div class="container-fluid h-100 p-0">
+                @RenderBody()
+            </div>
         </main>
     </div>
 
@@ -38,5 +40,6 @@
             @Html.Raw(@ViewBag.NotificationMessage);
         </script>
     }
+    @await Html.PartialAsync("_Footer")
 </body>
 </html>

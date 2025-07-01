@@ -27,7 +27,7 @@ builder.Services
   .AddAuthentication("MyCookieAuth")
   .AddCookie("MyCookieAuth", options =>
   {
-      options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+      options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
       options.SlidingExpiration = true;
 
       options.LoginPath = "/Login";
@@ -52,6 +52,10 @@ builder.Services
   });
 
 builder.Services.AddControllersWithViews();
+
+// al reiniciar se mantiene y gestiona cosas en memoria
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<AvisosService>();
 
 var app = builder.Build();
 app.UseStaticFiles();
