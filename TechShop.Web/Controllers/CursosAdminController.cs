@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TechShop.Web.Models;
 
 namespace TechShop.Web.Controllers
 {
@@ -9,7 +10,21 @@ namespace TechShop.Web.Controllers
             return View();
         }
 
-        public IActionResult Create()
+        [HttpPost]
+        public IActionResult Create(CrearCursoConfigModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return View("CreateMaterial", model);
+        }
+
+        public IActionResult CreateMaterial()
+        {
+            return View();
+        }
+        public IActionResult CreateTest()
         {
             return View();
         }

@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_layoutCursos";
+    ViewData["Title"] = "Crear Cursos";
+    ViewData["Style"] = "~/css/CrearCrusos.css";
+    ViewData["Script"] = "";
+}
+
+<div id="CrearCurso" class="container-xl">
+    <header>
+        <h1>Configuracion del Examen</h1>
+    </header>
+
+    <footer class="footer">
+        <div class="botonDiv">
+            <a class="btnPage" asp-action="CreateMaterial" asp-controller="CursosAdmin">Anterior</a>
+            <a class="btnDesactivado" href="#">Siguiente</a>
+        </div>
+        <div class="LinkDiv">
+            <a asp-action="Create" asp-controller="CursosAdmin">Curso</a> -
+            <a asp-action="CreateMaterial" asp-controller="CursosAdmin">Material</a> -
+            <a class="Select" asp-action="CreateTest" asp-controller="CursosAdmin">Examen</a>
+        </div>
+    </footer>
+</div>
+
+<script>
+    let page = 1;
+
+    function cambiarPagina(delta) {
+        page += delta;
+        if (page < 1) page = 1;
+        document.getElementById("numeroPagina").innerText = page;
+    }
+</script>
