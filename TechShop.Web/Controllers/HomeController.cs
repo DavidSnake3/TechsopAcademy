@@ -38,19 +38,6 @@ namespace TechShop.Web.Controllers
                 }
             ).ToListAsync();
 
-            //  no aprobados
-            var finalizados = await (
-                from r in _ctx.ResultadosCapacitacion
-                join c in _ctx.Capacitaciones on r.CapacitacionId equals c.Id
-                where r.EmpleadoId == empleadoId && !r.Aprobado
-                select new CursoDto
-                {
-                    Id = c.Id,
-                    Nombre = c.Nombre,
-                    Descripcion = c.Descripcion,
-                    Fecha = r.FechaEvaluacion
-                }
-            ).ToListAsync();
 
             // en proceso
             var enProceso = await (
@@ -84,7 +71,6 @@ namespace TechShop.Web.Controllers
             var vm = new DashboardViewModel
             {
                 Completados = completados,
-                Finalizados = finalizados,
                 EnProceso = enProceso,
                 Disponibles = disponibles
             };
