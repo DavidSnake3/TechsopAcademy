@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: techshop-web
-    env: dotnet
-    plan: free
-    branch: main
-    buildCommand: dotnet publish TechShop.Web/TechShop.Web.csproj -c Release -o ./publish
-    startCommand: dotnet TechShop.Web.dll
-    rootDir: publish
