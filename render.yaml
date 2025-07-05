@@ -1,7 +1,7 @@
 services:
   - type: web
     name: techshop-web
-    runtime: dotnet
+    runtime: dotnetcore-7.0
     plan: free
     branch: main
     buildCommand: dotnet publish TechShop.Web/TechShop.Web.csproj -c Release -o ./publish
