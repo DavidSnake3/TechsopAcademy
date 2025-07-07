@@ -15,7 +15,10 @@ html {
 
 body {
     margin-bottom: 60px;
+<<<<<<< HEAD
     overflow-y: auto;
+=======
+>>>>>>> jeshua_dev
 }
 
 .PrimaryBtn {
@@ -33,3 +36,7 @@ body {
     .PrimaryBtn:hover {
         background-color: RGBA(15, 84, 140, 1);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> jeshua_dev

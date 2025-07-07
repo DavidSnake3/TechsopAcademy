@@ -1,0 +1,54 @@
+﻿body {
+}
+
+.navbar {
+    background-color: RGBA(15, 84, 140, 1);
+    padding: 0;
+    padding-left: 0px;
+    margin: 0;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+
+.NavbarImg {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 85px;
+    margin-bottom: -15px;
+    margin-top: -10px;
+}
+
+.navbar img {
+    height: 100%
+}
+
+.navbar .atras {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    color: white;
+    gap: 5px;
+    text-align: center;
+    margin: 0;
+}
+
+.navbar i {
+    font-size: 1.3rem;
+    height: 25px;
+    font-weight: normal;
+    transition: all ease 0.2s;
+}
+
+    .navbar .atras:Hover {
+        color: RGBA(40, 134, 222, 1);
+    }
+
