@@ -7,8 +7,9 @@
     ViewData["Style"] = "~/css/CrearCrusos.css";
     ViewData["Script"] = "";
     var dificultades = new[] { "Principiante", "Intermedio", "Avanzado" };
-    var departamentos = new[] { "Producción", "Administración", "Desarrollo" };
-    var roles = new[] { "ADMIN", "PRO", "ADM", "BOD" };
+    var departamentos = new[] { "C.D.S", "Calidad", "Contabilidad", "Desarrollo y Analisis", "Gerencia", "Importacion y Exportaciones", "Mantenimiento", "Mejora Continua", "Produccion", "Programacion", "Recursos Humanos" };
+    var roles = new[] { "ADMIN", "PRO", "ADM", "BOD", "PROG", "MAN", "SUP", "RH", "QUA", "PAR" };
+    var zonas = new[] { "GH", "TSI", "TANDEM" };
 }
 
 <div id="CrearCurso" class="container-xl">
@@ -18,40 +19,41 @@
 
     @model CrearCursoConfigModel
     <form asp-action="Create" method="post" enctype="multipart/form-data">
-        <h2>Configuración del Curso</h2>
 
-        <div class="form-group">
-            <label asp-for="Nombre"></label>
-            <input asp-for="Nombre" class="form-control" />
+        <div class="row">
+            <div class="form-group col-sm-9 col-12 mb-2">
+                <label asp-for="Nombre">Nombre del Curso *</label>
+                <input asp-for="Nombre" class="form-control" />
+            </div>
+
+            <div class="form-group col mb-2">
+                <label asp-for="Codigo">Código del Curso *</label>
+                <input asp-for="Codigo" class="form-control" />
+            </div>
         </div>
 
-        <div class="form-group">
-            <label asp-for="Codigo">Código personalizado</label>
-            <input asp-for="Codigo" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="DescripcionCorta">Descripción corta</label>
+        <div class="form-group mb-2">
+            <label asp-for="DescripcionCorta">Descripción corta *</label>
             <input asp-for="DescripcionCorta" class="form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="form-group mb-2">
             <label asp-for="DescripcionLarga">Descripción larga (opcional)</label>
             <textarea asp-for="DescripcionLarga" class="form-control"></textarea>
         </div>
 
-        <div class="form-group">
-            <label asp-for="Foto">Foto del curso</label>
-            <input asp-for="Foto" type="file" class="form-control" />
+        <div class="form-group mb-2">
+            <label asp-for="Foto">Foto del curso (Opcional)</label>
+            <input asp-for="Foto" type="file" accept="image/*" class="form-control" />
         </div>
 
-        <div class="form-group">
-            <label asp-for="DuracionHoras">Duración (en días)</label>
-            <input asp-for="DuracionHoras" type="number" class="form-control" min="1" max="365" />
+        <div class="form-group mb-2">
+            <label asp-for="DuracionHoras">Duración (en horas) *</label>
+            <input asp-for="DuracionHoras" type="number" class="form-control" min="1" max="300" />
         </div>
 
-        <div class="form-group">
-            <label asp-for="Dificultad">Dificultad</label>
+        <div class="form-group mb-2">
+            <label asp-for="Dificultad">Dificultad *</label>
             <select asp-for="Dificultad" class="form-control">
                 <option disabled selected>Seleccione dificultad</option>
                 @foreach (var d in dificultades)
@@ -61,32 +63,45 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <label>Asignar por departamento:</label>
-            @foreach (var dept in departamentos)
-            {
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="Departamentos" value="@dept" id="@dept" />
-                    <label class="form-check-label" for="@dept">@dept</label>
-                </div>
-            }
+        <div class="row row-cols-3">
+
+            <div class="form-group col-md-5 col-8 mb-2">
+                <label>Asignar por departamento:</label>
+                @foreach (var dept in departamentos)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="Departamentos" value="@dept" id="@dept" />
+                        <label class="form-check-label" for="@dept">@dept</label>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group col-4 mb-2">
+                <label>Asignar por rol:</label>
+                @foreach (var rol in roles)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="Roles" value="@rol" id="@rol" />
+                        <label class="form-check-label" for="@rol">@rol</label>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group col-12 col-md-3 mb-2">
+                <label>Asignar por zona:</label>
+                @foreach (var zona in zonas)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="Zonas" value="@zona" id="@zona" />
+                        <label class="form-check-label" for="@zona">@zona</label>
+                    </div>
+                }
+            </div>
         </div>
 
-        <div class="form-group">
-            <label>Asignar por rol:</label>
-            @foreach (var rol in roles)
-            {
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="Roles" value="@rol" id="@rol" />
-                    <label class="form-check-label" for="@rol">@rol</label>
-                </div>
-            }
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Siguiente</button>
         <footer class="footer">
             <div class="botonDiv">
-                <button class="btnDesactivado">Anterior</button>
+                <button class="btnDesactivado" type="button">Anterior</button>
                 <button class="btnPage" type="submit">Siguiente</button>
             </div>
             <div class="LinkDiv">

@@ -8,7 +8,7 @@ namespace TechShop.Web.Models
             public string Nombre { get; set; }
 
             [Required]
-            public string Codigo { get; set; } // Código personalizado del curso
+            public string Codigo { get; set; }//Codigo personalizado
 
             [Required]
             public string DescripcionCorta { get; set; }
@@ -26,5 +26,6 @@ namespace TechShop.Web.Models
 
             public List<string> Departamentos { get; set; } = new();
             public List<string> Roles { get; set; } = new();
+            public List<string> Zonas { get; set; } = new();
     }
 }
