@@ -4,7 +4,6 @@
     background-color: RGBA(15, 84, 140, 1);
     padding: 0;
     padding-left: 10px;
-    overflow-y: hidden;
 }
 
 .navbar-nav {
@@ -12,7 +11,6 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    overflow-y: hidden;
 }
 
 .NavbarImg {

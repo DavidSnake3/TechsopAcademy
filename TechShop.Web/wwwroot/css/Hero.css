@@ -4,7 +4,7 @@
     --cell-border: rgba(180, 214, 250, 1);
 }
 
-html, body, .container-fluid, main {
+html, body, main {
     margin: 0;
     padding: 0;
     height: 100%;
