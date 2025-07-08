@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Cursos";
+    ViewData["Style"] = "~/css/CursosAdmin.css";
+    ViewData["Script"] = "";
+}
+<div class="CursoAdmin container-xl"> 
+    <header>
+        <h1>Administrar Cursos</h1>
+        <div class="acciones">
+            <form method="get" asp-action="Index" class="filter-form">
+                <label for="searchString">Buscar:</label>
+                <input type="text"
+                       id="searchString"
+                       name="searchString"
+                       class="form-control"
+                       placeholder="Nombre del Curso" />
+
+                <button type="submit" class="BuscarBtn">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </form>
+            <a asp-controller="CursosAdmin" asp-action="Create" class="CreateBtn">
+                <i class="bi bi-plus-lg"></i> Crear Curso
+            </a>
+        </div>
+    </header>
+
+</div>

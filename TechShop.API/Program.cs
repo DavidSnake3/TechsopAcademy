@@ -20,8 +20,8 @@ builder.Services.AddDbContext<TechAcademyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerDataBase")));
 
 // inyección del servicio
-builder.Services
-    .AddScoped<IDatosPersonalesService, DatosPersonalesService>();
+//builder.Services
+//    .AddScoped<IDatosPersonalesService, DatosPersonalesService>();
 
 builder.Services.AddControllersWithViews();
 

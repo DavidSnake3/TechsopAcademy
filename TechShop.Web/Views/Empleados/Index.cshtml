@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TechShop.Application.DTOs.EmpleadoDto>
+﻿@* @model IEnumerable<TechShop.Application.DTOs.EmpleadoDto>
 @{
     ViewData["Title"] = "Empleados";
 }
@@ -26,4 +26,197 @@
             </tr>
         }
     </tbody>
-</table>
+</table> *@
+
+
+
+@model IEnumerable<TechShop.Application.DTOs.EmpleadoDto>
+@{
+    ViewData["Title"] = "Empleados";
+    var currentFilter = ViewData["CurrentFilter"] as string ?? "";
+    int pageNumber = (int)ViewData["PageNumber"];
+    int pageSize = (int)ViewData["PageSize"];
+    int totalPages = (int)ViewData["TotalPages"];
+}
+
+<style>
+    .top-bar {
+        background-color: #004b87;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+        .top-bar h2 {
+            flex-grow: 1;
+            text-align: center;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+    .filter-bar {
+        background-color: #3399ff;
+        padding: 0.75rem;
+        border-radius: 0.25rem;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+        .filter-bar label {
+            color: white;
+            font-weight: 600;
+        }
+
+        .filter-bar .btn-create {
+            background-color: #004b87;
+            color: white;
+        }
+
+    .data-table {
+        border: 2px solid #004b87;
+        border-radius: 0.25rem;
+        overflow: hidden;
+    }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid #004b87;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .data-table th {
+            background-color: #66b3ff;
+            color: #004b87;
+            font-weight: 600;
+        }
+
+        .data-table tr:nth-child(even) td {
+            background-color: #e6f2ff;
+        }
+</style>
+
+<div class="container-fluid">
+    <div class="top-bar">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+
+    <form method="get" asp-action="Index" class="filter-bar">
+        <label for="searchString">Buscar:</label>
+        <input type="text"
+               id="searchString"
+               name="searchString"
+               value="@currentFilter"
+               class="form-control"
+               placeholder="Nombre, Apellido o Email" />
+
+        <input type="hidden" name="pageNumber" value="1" />
+        <input type="hidden" name="pageSize" value="@pageSize" />
+
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i> Ir
+        </button>
+
+        <a asp-action="Create" class="btn btn-create ms-auto">
+            <i class="bi bi-plus-lg"></i> Nuevo Registro
+        </a>
+    </form>
+
+    <div class="data-table mb-3">
+        <table>
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Area</th>
+                    <th>Puesto</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.Crfb9_codigo</td>
+                        <td>@p.Crfb9_nombre</td>
+                        <td>
+                            @if (string.IsNullOrWhiteSpace(p.Crfb9_correo))
+                            {
+                                <span class="text-muted fst-italic">—</span>
+                            }
+                            else
+                            {
+                                <a>@p.Crfb9_correo</a>
+                            }
+                        </td>
+                        
+                        <td>@p.Crfb9_area</td>
+                        <td>@p.Crfb9_departamento</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@p.Crfb9_codigo" class="btn btn-sm btn-info" title="Ver">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@p.Crfb9_codigo" class="btn btn-sm btn-warning" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@p.Crfb9_codigo" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                        title="Desactivar"
+                                        onclick="return confirm('¿Desactivar este registro?');">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Paginación">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(pageNumber == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-searchString="@currentFilter"
+                   asp-route-pageNumber="@(pageNumber - 1)"
+                   asp-route-pageSize="@pageSize">
+                    « Anterior
+                </a>
+            </li>
+
+            @for (var i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == pageNumber ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-searchString="@currentFilter"
+                       asp-route-pageNumber="@i"
+                       asp-route-pageSize="@pageSize">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(pageNumber == totalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-searchString="@currentFilter"
+                   asp-route-pageNumber="@(pageNumber + 1)"
+                   asp-route-pageSize="@pageSize">
+                    Siguiente »
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

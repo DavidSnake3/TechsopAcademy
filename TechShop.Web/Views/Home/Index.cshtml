@@ -2,6 +2,7 @@
 @using System.Security.Claims
 
 @{
+    ViewData["Style"] = "~/css/Hero.css";
     ViewData["Title"] = "Inicio";
     var nombre = User.Identity?.Name ?? "Usuario";
     var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D";
