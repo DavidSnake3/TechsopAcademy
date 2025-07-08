@@ -1,0 +1,100 @@
+﻿@model TechShop.Web.Models.CursoDetailViewModel
+@{
+    Layout = "~/Views/Shared/_CursoLayout.cshtml";
+}
+
+@functions {
+    string GetYoutubeId(string url)
+    {
+        if (string.IsNullOrEmpty(url))
+            return "";
+
+        try
+        {
+            var uri = new Uri(url);
+
+            if (uri.Host.Contains("youtu.be"))
+            {
+                return uri.AbsolutePath.Trim('/');
+            }
+            else if (uri.Host.Contains("youtube.com"))
+            {
+                var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+                return query["v"] ?? "";
+            }
+        }
+        catch
+        {
+            return "";
+        }
+
+        return "";
+    }
+}
+
+<div class="parent">
+    <div class="div1">
+        <h2>@Model.Nombre</h2>
+        <p><i class="bi bi-info-circle-fill me-2"></i><strong>Descripción corta:</strong> @Model.DescripcionCorta</p>
+
+        <p class="descripcion-larga">
+            <i class="bi bi-card-text me-2"></i><strong>Detalle:</strong> @Model.DescripcionLarga
+        </p>
+
+        <p><i class="bi bi-calendar-date me-2"></i><strong>Fecha de creación:</strong> @Model.FechaCreacion.ToShortDateString()</p>
+    </div>
+
+    <div class="div2">
+        <span><strong>Código:</strong> @Model.Codigo</span>
+        <i class="bi bi-hash"></i>
+    </div>
+
+    <div class="div3">
+        <i class="bi bi-bar-chart-line"></i>
+        <span><strong>Dificultad:</strong> @Model.Dificultad</span>
+    </div>
+
+    <div class="div4">
+        <i class="bi bi-clock-history"></i>
+        <span><strong>Duración:</strong> @Model.DuracionHoras hrs</span>
+    </div>
+
+    <div class="div5 text-center">
+        <h4><i class="bi bi-folder2-open"></i> Material del Curso</h4>
+    </div>
+
+    <div class="div6">
+        <h4 class="archivos-title"><i class="bi bi-paperclip"></i> Archivos:</h4>
+    </div>
+
+    <div class="div7">
+        <ul class="archivos-list">
+            @foreach (var m in Model.Materiales)
+            {
+                <li>
+                    <i class="bi bi-file-earmark-text"></i>
+                    <a href="@m.RutaArchivo" target="_blank" rel="noopener noreferrer">
+                        @m.NombreArchivo
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="div8 scrollable-content">
+        @foreach (var m in Model.Materiales)
+        {
+            if (!string.IsNullOrEmpty(m.VideoUrl))
+            {
+                var videoId = GetYoutubeId(m.VideoUrl);
+                if (!string.IsNullOrEmpty(videoId))
+                {
+                    <div>
+                        <h5><i class="bi bi-play-btn-fill"></i> Video</h5>
+                        <iframe src="https://www.youtube.com/embed/@(videoId)?rel=0" allowfullscreen></iframe>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>

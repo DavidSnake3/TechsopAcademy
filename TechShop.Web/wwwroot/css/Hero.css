@@ -147,7 +147,6 @@ html, body, .container-fluid, main {
         flex: 0 0 auto;
     }
 
-
 .modal-backdrop {
     opacity: 0,4 !important;
 }

@@ -18,6 +18,4 @@ public partial class HistorialCapacitacionEmpleado
     public string Estado { get; set; } = null!;
 
     public virtual Capacitaciones Capacitacion { get; set; } = null!;
-
-    public virtual Empleados Empleado { get; set; } = null!;
 }

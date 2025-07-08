@@ -18,10 +18,6 @@ public partial class TechAcademyContext : DbContext
 
     public virtual DbSet<Certificados> Certificados { get; set; }
 
-    public virtual DbSet<DatosPersonales> DatosPersonales { get; set; }
-
-    public virtual DbSet<Empleados> Empleados { get; set; }
-
     public virtual DbSet<HistorialCapacitacionEmpleado> HistorialCapacitacionEmpleado { get; set; }
 
     public virtual DbSet<MaterialCurso> MaterialCurso { get; set; }
@@ -30,15 +26,11 @@ public partial class TechAcademyContext : DbContext
 
     public virtual DbSet<Preguntas> Preguntas { get; set; }
 
-    public virtual DbSet<Puestos> Puestos { get; set; }
-
     public virtual DbSet<RespuestasEmpleado> RespuestasEmpleado { get; set; }
 
     public virtual DbSet<ResultadosCapacitacion> ResultadosCapacitacion { get; set; }
 
     public virtual DbSet<VwResultadoPorEmpleado> VwResultadoPorEmpleado { get; set; }
-
-    public virtual DbSet<Zonas> Zonas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -61,20 +53,16 @@ public partial class TechAcademyContext : DbContext
             entity.HasOne(d => d.Capacitacion).WithMany(p => p.CapacitacionPuestoZona)
                 .HasForeignKey(d => d.CapacitacionId)
                 .HasConstraintName("FK_CapacitacionPuestoZona_Capacitacion");
-
-            entity.HasOne(d => d.Puesto).WithMany(p => p.CapacitacionPuestoZona)
-                .HasForeignKey(d => d.PuestoId)
-                .HasConstraintName("FK_CapacitacionPuestoZona_Puesto");
-
-            entity.HasOne(d => d.Zona).WithMany(p => p.CapacitacionPuestoZona)
-                .HasForeignKey(d => d.ZonaId)
-                .HasConstraintName("FK_CapacitacionPuestoZona_Zona");
         });
 
         modelBuilder.Entity<Capacitaciones>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Capacita__3214EC0776363370");
 
+            entity.Property(e => e.Codigo)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Dificultad).HasMaxLength(50);
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -95,36 +83,6 @@ public partial class TechAcademyContext : DbContext
             entity.HasOne(d => d.Resultado).WithMany(p => p.Certificados)
                 .HasForeignKey(d => d.ResultadoId)
                 .HasConstraintName("FK_Certificados_Resultado");
-        });
-
-        modelBuilder.Entity<DatosPersonales>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Datos_Pe__3214EC072DBD933D");
-
-            entity.ToTable("Datos_Personales");
-
-            entity.HasIndex(e => e.Email, "UQ__Datos_Pe__A9D10534A423F74C").IsUnique();
-
-            entity.Property(e => e.Apellidos).HasMaxLength(100);
-            entity.Property(e => e.Email).HasMaxLength(200);
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.Nombres).HasMaxLength(100);
-        });
-
-        modelBuilder.Entity<Empleados>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Empleado__3214EC07FF0AA102");
-
-            entity.Property(e => e.Estado)
-                .HasMaxLength(50)
-                .HasDefaultValue("Activo");
-            entity.Property(e => e.FechaIngreso)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-
-            entity.HasOne(d => d.DatosPersonales).WithMany(p => p.Empleados)
-                .HasForeignKey(d => d.DatosPersonalesId)
-                .HasConstraintName("FK_Empleados_DatosPersonales");
         });
 
         modelBuilder.Entity<HistorialCapacitacionEmpleado>(entity =>
@@ -148,10 +106,6 @@ public partial class TechAcademyContext : DbContext
             entity.HasOne(d => d.Capacitacion).WithMany(p => p.HistorialCapacitacionEmpleado)
                 .HasForeignKey(d => d.CapacitacionId)
                 .HasConstraintName("FK_HistorialCapacitacion_Capacitaciones");
-
-            entity.HasOne(d => d.Empleado).WithMany(p => p.HistorialCapacitacionEmpleado)
-                .HasForeignKey(d => d.EmpleadoId)
-                .HasConstraintName("FK_HistorialCapacitacion_Empleado");
         });
 
         modelBuilder.Entity<MaterialCurso>(entity =>
@@ -168,6 +122,7 @@ public partial class TechAcademyContext : DbContext
             entity.Property(e => e.NombreArchivo).HasMaxLength(255);
             entity.Property(e => e.RutaArchivo).HasMaxLength(500);
             entity.Property(e => e.TipoArchivo).HasMaxLength(50);
+            entity.Property(e => e.VideoUrl).HasMaxLength(500);
 
             entity.HasOne(d => d.Capacitacion).WithMany(p => p.MaterialCurso)
                 .HasForeignKey(d => d.CapacitacionId)
@@ -200,14 +155,6 @@ public partial class TechAcademyContext : DbContext
                 .HasConstraintName("FK_Preguntas_Capacitaciones");
         });
 
-        modelBuilder.Entity<Puestos>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Puestos__3214EC07B9B64D1D");
-
-            entity.Property(e => e.Descripcion).HasMaxLength(255);
-            entity.Property(e => e.NombrePuesto).HasMaxLength(100);
-        });
-
         modelBuilder.Entity<RespuestasEmpleado>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Respuest__3214EC0709A6C438");
@@ -219,10 +166,6 @@ public partial class TechAcademyContext : DbContext
             entity.Property(e => e.FechaRespuesta)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-
-            entity.HasOne(d => d.Empleado).WithMany(p => p.RespuestasEmpleado)
-                .HasForeignKey(d => d.EmpleadoId)
-                .HasConstraintName("FK_RespuestasEmpleado_Empleado");
 
             entity.HasOne(d => d.OpcionRespuesta).WithMany(p => p.RespuestasEmpleado)
                 .HasForeignKey(d => d.OpcionRespuestaId)
@@ -249,10 +192,6 @@ public partial class TechAcademyContext : DbContext
             entity.HasOne(d => d.Capacitacion).WithMany(p => p.ResultadosCapacitacion)
                 .HasForeignKey(d => d.CapacitacionId)
                 .HasConstraintName("FK_ResultadosCapacitacion_Capacitaciones");
-
-            entity.HasOne(d => d.Empleado).WithMany(p => p.ResultadosCapacitacion)
-                .HasForeignKey(d => d.EmpleadoId)
-                .HasConstraintName("FK_ResultadosCapacitacion_Empleado");
         });
 
         modelBuilder.Entity<VwResultadoPorEmpleado>(entity =>
@@ -262,14 +201,6 @@ public partial class TechAcademyContext : DbContext
                 .ToView("vw_ResultadoPorEmpleado");
 
             entity.Property(e => e.NotaPorcentaje).HasColumnType("decimal(5, 2)");
-        });
-
-        modelBuilder.Entity<Zonas>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Zonas__3214EC07D1B70AB5");
-
-            entity.Property(e => e.Descripcion).HasMaxLength(255);
-            entity.Property(e => e.NombreZona).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);

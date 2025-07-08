@@ -33,7 +33,7 @@ namespace TechShop.Web.Controllers
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
-                    Descripcion = c.Descripcion,
+                    Descripcion = c.DescripcionCorta,
                     Fecha = r.FechaEvaluacion
                 }
             ).ToListAsync();
@@ -48,7 +48,7 @@ namespace TechShop.Web.Controllers
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
-                    Descripcion = c.Descripcion,
+                    Descripcion = c.DescripcionCorta,
                     Fecha = h.FechaAsignacion
                 }
             ).ToListAsync();
@@ -63,7 +63,7 @@ namespace TechShop.Web.Controllers
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
-                    Descripcion = c.Descripcion,
+                    Descripcion = c.DescripcionCorta,
                     Fecha = c.FechaCreacion
                 }
             ).ToListAsync();

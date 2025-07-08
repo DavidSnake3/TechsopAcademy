@@ -16,8 +16,4 @@ public partial class CapacitacionPuestoZona
     public DateTime FechaAsignacion { get; set; }
 
     public virtual Capacitaciones Capacitacion { get; set; } = null!;
-
-    public virtual Puestos Puesto { get; set; } = null!;
-
-    public virtual Zonas Zona { get; set; } = null!;
 }

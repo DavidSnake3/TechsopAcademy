@@ -1,10 +1,10 @@
-﻿using Libreria.Infraestructure.Models;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TechShop.Application.Interfaces;
+using TechShop.Web.Models;
 
 public class LoginController : Controller
 {
@@ -18,9 +18,9 @@ public class LoginController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Index(LoginTest login)
+    public async Task<IActionResult> Index(LoginViewModel login)
     {
-        var empleado = await _dataverse.GetEmpleadoByCodigoAsync(login.User);
+        var empleado = await _dataverse.GetEmpleadoByCodigoAsync(login.Codigo);
         if (empleado == null || empleado.Crfb9_contrasena != login.Password)
         {
             ViewBag.MessageUser = empleado == null ? "* Usuario no existe" : null;

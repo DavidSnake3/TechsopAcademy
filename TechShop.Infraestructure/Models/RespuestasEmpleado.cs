@@ -17,8 +17,6 @@ public partial class RespuestasEmpleado
 
     public DateTime FechaRespuesta { get; set; }
 
-    public virtual Empleados Empleado { get; set; } = null!;
-
     public virtual OpcionesRespuesta? OpcionRespuesta { get; set; }
 
     public virtual Preguntas Pregunta { get; set; } = null!;
