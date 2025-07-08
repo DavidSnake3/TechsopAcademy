@@ -176,6 +176,10 @@
                             <span class="badge rounded-pill text-info">
                                 @c.Fecha.ToShortDateString()
                             </span>
+                            <a asp-controller="Curso" asp-action="Details" asp-route-id="@c.Id"
+                               class="btn btn-outline-info btn-sm ms-3">
+                                <i class="bi bi-eye"></i> Visualizar Curso
+                            </a>
                         </li>
                     }
                 </ul>

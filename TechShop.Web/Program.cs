@@ -57,6 +57,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<AvisosService>();
 
+//inyectamos
+builder.Services.AddScoped<ICursoService, CursoService>();
+
 var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();

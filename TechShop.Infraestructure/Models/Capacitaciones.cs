@@ -9,11 +9,19 @@ public partial class Capacitaciones
 
     public string Nombre { get; set; } = null!;
 
-    public string? Descripcion { get; set; }
+    public string? DescripcionCorta { get; set; }
 
     public DateTime FechaCreacion { get; set; }
 
-    public bool Activo { get; set; } = true;
+    public bool Activo { get; set; }
+
+    public string? Codigo { get; set; }
+
+    public string? DescripcionLarga { get; set; }
+
+    public TimeOnly? DuracionHoras { get; set; }
+
+    public string? Dificultad { get; set; }
 
     public virtual ICollection<CapacitacionPuestoZona> CapacitacionPuestoZona { get; set; } = new List<CapacitacionPuestoZona>();
 
