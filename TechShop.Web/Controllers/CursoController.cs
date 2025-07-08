@@ -12,9 +12,8 @@ namespace TechShop.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var dto = await _cursoService.GetCursoDetailAsync(id);
-            var vm = new CursoDetailViewModel
+            var vm = new CrearCursoConfigModel
             {
-                Id = dto.Id,
                 Nombre = dto.Nombre,
                 Codigo = dto.Codigo,
                 DescripcionCorta = dto.DescripcionCorta,

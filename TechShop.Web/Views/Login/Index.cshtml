@@ -1,4 +1,4 @@
-﻿@model Libreria.Infraestructure.Models.LoginTest;
+﻿@model TechShop.Web.Models.LoginViewModel;
 @{
     Layout = "_layoutLogin";
     ViewData["Title"] = "Login";
@@ -17,10 +17,10 @@
                     <h2 class="LoginText">
                         Iniciar Sesion
                     </h2>
-                    @Html.LabelFor(model => model.User,"Usuario", htmlAttributes:
+                    @Html.LabelFor(model => model.Codigo,"Usuario", htmlAttributes:
                     new { @class = "control-label col-md-2 LoginLabel" })
                 <div class="col-md-12">
-                    @Html.EditorFor(model => model.User, new {
+                    @Html.EditorFor(model => model.Codigo, new {
                                         htmlAttributes = new { @class = "form-control" } })
                     @{
                         if (!string.IsNullOrEmpty(ViewBag.MessageUser))
