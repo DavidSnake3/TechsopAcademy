@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using TechShop.Application.DTOs;
 using TechShop.Infraestructure.Data;
 using TechShop.Web.Models;
 
@@ -29,13 +30,17 @@ namespace TechShop.Web.Controllers
                 from r in _ctx.ResultadosCapacitacion
                 join c in _ctx.Capacitaciones on r.CapacitacionId equals c.Id
                 where r.EmpleadoId == empleadoId && r.Aprobado
-                select new CursoDto
+                select new CursoDetallelDto
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
-                    Descripcion = c.DescripcionCorta,
-                    Fecha = r.FechaEvaluacion
-                }
+                    DescripcionCorta = c.DescripcionCorta,
+                    FechaCreacion = c.FechaCreacion,
+                    DuracionHoras = c.DuracionHoras,
+                    Codigo = c.Codigo,
+                    Dificultad = c.Dificultad,
+                    Foto = c.Foto
+                } 
             ).ToListAsync();
 
 
@@ -44,12 +49,16 @@ namespace TechShop.Web.Controllers
                 from h in _ctx.HistorialCapacitacionEmpleado
                 join c in _ctx.Capacitaciones on h.CapacitacionId equals c.Id
                 where h.EmpleadoId == empleadoId && h.FechaCompletado == null
-                select new CursoDto
+                select new CursoDetallelDto
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
-                    Descripcion = c.DescripcionCorta,
-                    Fecha = h.FechaAsignacion
+                    DescripcionCorta = c.DescripcionCorta,
+                    FechaCreacion = c.FechaCreacion,
+                    DuracionHoras = c.DuracionHoras,
+                    Codigo = c.Codigo,
+                    Dificultad = c.Dificultad,
+                    Foto = c.Foto
                 }
             ).ToListAsync();
 
@@ -59,12 +68,16 @@ namespace TechShop.Web.Controllers
                 where c.Activo
                    && !_ctx.HistorialCapacitacionEmpleado
                        .Any(h => h.EmpleadoId == empleadoId && h.CapacitacionId == c.Id)
-                select new CursoDto
+                select new CursoDetallelDto
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
-                    Descripcion = c.DescripcionCorta,
-                    Fecha = c.FechaCreacion
+                    DescripcionCorta = c.DescripcionCorta,
+                    FechaCreacion = c.FechaCreacion,
+                    DuracionHoras = c.DuracionHoras,
+                    Codigo = c.Codigo,
+                    Dificultad = c.Dificultad,
+                    Foto = c.Foto
                 }
             ).ToListAsync();
 

@@ -9,6 +9,6 @@ namespace TechShop.Application.Interfaces
 {
     public interface ICursoService
     {
-        Task<CursoDetailDto> GetCursoDetailAsync(int id);
+        Task<CursoDetallelDto> GetCursoDetailAsync(int id);
     }
 }

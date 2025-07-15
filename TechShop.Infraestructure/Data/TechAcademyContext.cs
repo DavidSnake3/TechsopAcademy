@@ -62,11 +62,20 @@ public partial class TechAcademyContext : DbContext
             entity.Property(e => e.Codigo)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.Departamento)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Dificultad).HasMaxLength(50);
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Nombre).HasMaxLength(200);
+            entity.Property(e => e.Puestos)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Zonas)
+                .HasMaxLength(20)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Certificados>(entity =>

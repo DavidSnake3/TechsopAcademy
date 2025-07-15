@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TechShop.Application.DTOs
 {
-    public class CursoDetailDto
+    public class CursoDetallelDto
     {
         public int Id { get; set; }
         public string? Nombre { get; set; }

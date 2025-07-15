@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Footer.css" asp-append-version="true" />
     <link rel="stylesheet" href="@(ViewData["Style"])" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechShop.Web.styles.css" asp-append-version="true" />
+   
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
@@ -26,10 +29,8 @@
             </div>
         </main>
     </div>
-    <footer class="border-top footer text-muted">
-        <div class="container text-center">
-            &copy; 2025 - <span style="font-weight: bold;">TechShop International</span>
-        </div>
+    <footer >
+        @await Html.PartialAsync("_Footer")
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

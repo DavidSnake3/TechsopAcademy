@@ -15,11 +15,11 @@ namespace TechShop.Infraestructure.Services
         private readonly TechAcademyContext _ctx;
         public CursoService(TechAcademyContext ctx) => _ctx = ctx;
 
-        public async Task<CursoDetailDto> GetCursoDetailAsync(int id)
+        public async Task<CursoDetallelDto> GetCursoDetailAsync(int id)
         {
             var cap = await _ctx.Capacitaciones
                 .Where(c => c.Id == id)
-                .Select(c => new CursoDetailDto
+                .Select(c => new CursoDetallelDto
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
@@ -30,6 +30,11 @@ namespace TechShop.Infraestructure.Services
                     Dificultad = c.Dificultad,
                     Activo = c.Activo,
                     FechaCreacion = c.FechaCreacion,
+                    Foto = c.Foto,
+                    Departamento = c.Departamento,
+                    Puestos = c.Puestos,
+                    Zonas = c.Zonas,
+                    Usuario = c.Usuario,
                     Materiales = c.MaterialCurso.Select(m => new MaterialDto
                     {
                         Id = m.Id,
@@ -39,18 +44,6 @@ namespace TechShop.Infraestructure.Services
                         FechaSubida = m.FechaSubida,
                          VideoUrl = m.VideoUrl 
                     }).ToList(),
-                    Preguntas = c.Preguntas.Select(p => new PreguntaDto
-                    {
-                        Id = p.Id,
-                        TextoPregunta = p.TextoPregunta,
-                        TipoPregunta = p.TipoPregunta,
-                        Opciones = p.OpcionesRespuesta.Select(o => new OpcionRespuestaDto
-                        {
-                            Id = o.Id,
-                            TextoOpcion = o.TextoOpcion,
-                            EsCorrecta = o.EsCorrecta
-                        }).ToList()
-                    }).ToList()
                 })
                 .FirstOrDefaultAsync();
 

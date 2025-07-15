@@ -23,6 +23,16 @@ public partial class Capacitaciones
 
     public string? Dificultad { get; set; }
 
+    public byte[]? Foto { get; set; }
+
+    public string? Departamento { get; set; }
+
+    public string? Puestos { get; set; }
+
+    public string? Zonas { get; set; }
+
+    public string? Usuario { get; set; }
+
     public virtual ICollection<CapacitacionPuestoZona> CapacitacionPuestoZona { get; set; } = new List<CapacitacionPuestoZona>();
 
     public virtual ICollection<HistorialCapacitacionEmpleado> HistorialCapacitacionEmpleado { get; set; } = new List<HistorialCapacitacionEmpleado>();

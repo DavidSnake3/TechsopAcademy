@@ -9,7 +9,6 @@
     var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Empleado";
     var puesto = User.Claims.FirstOrDefault(c => c.Type == "Puesto")?.Value ?? "N/D";
 }
-
 <div class="parent">
     <div class="div1 p-3 d-flex flex-column justify-content-start">
         <div class="d-flex justify-content-between align-items-start mb-1">
@@ -46,151 +45,130 @@
         </div>
     </div>
 
-@*     <div class="div3 p-3 d-flex flex-column">
-        <h6 class="mb-3 text-success">
-            <i class="bi bi-check-circle-fill me-1"></i>Completados
-        </h6>
-        <div class="flex-grow-1 overflow-auto">
-            @if (!Model.Completados.Any())
-            {
-                <div class="text-center text-success py-4">
-                    <i class="bi bi-dash-circle me-1"></i>Vacío
-                </div>
-            }
-            else
-            {
-                <ul class="list-group">
-                    @foreach (var c in Model.Completados)
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">@c.Nombre</div>
-                                <small class="text-muted">@c.Descripcion</small>
-                            </div>
-                            <span class="badge rounded-pill text-success">
-                                @c.Fecha.ToShortDateString()
-                            </span>
-                        </li>
-                    }
-                </ul>
-            }
-        </div>
-        <button id="btnCompletados"
-                class="btn btn-primary btn-sm w-100 d-flex justify-content-center align-items-center">
-            <i class="bi bi-chevron-down text-white"></i>
-        </button>
-    </div> *@
-
     <div class="div4 p-3 d-flex flex-column">
-        <h6 class="mb-3 text-primary">
+        <h6 class="mb-4 text-primary text-center">
             <i class="bi bi-play-circle-fill me-1"></i>En Proceso
         </h6>
-        <div class="scrollable-content">
+        <div class="scrollable-grid px-2">
             @if (!Model.EnProceso.Any())
             {
                 <div class="text-center text-primary py-4">
-                    <i class="bi bi-dash-circle me-1"></i>Vacío
+                    <i class="bi bi-dash-circle fs-2 mb-2"></i>
+                    <p class="mb-0">No hay cursos en proceso</p>
                 </div>
             }
             else
             {
-                <ul class="list-group">
-                    @foreach (var c in Model.EnProceso)
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">@c.Nombre</div>
-                                <small class="text-muted">@c.Descripcion</small>
+                @foreach (var c in Model.EnProceso)
+                {
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@Url.Action("Imagen", "Curso", new { id = c.Id })"
+                             alt="@c.Nombre"
+                             class="me-3"
+                             style="width:100px; height:60px; object-fit:cover; border-radius:4px;" />
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1">@c.Codigo - @c.Nombre</h6>
                             </div>
-                            <span class="badge rounded-pill text-primary">
-                                @c.Fecha.ToShortDateString()
-                            </span>
-                        </li>
-                    }
-                </ul>
+                            <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
+                            <div class="small text-muted">
+                                @c.Dificultad | @(c.DuracionHoras?.ToString("h\\:mm") ?? "N/A") h
+                            </div>
+                        </div>
+                        <a 
+                           class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                            <i class="bi bi-eye"> Continuar</i>
+                        </a>
+                    </div>
+                }
             }
         </div>
-        <button id="btnEnProceso"
-                class="btn btn-primary btn-sm w-100 d-flex justify-content-center align-items-center">
-            <i class="bi bi-list-ul text-white me-1"></i> Ver todos
-        </button>
+        <div class="text-center mt-3">
+            <a href="#" class="btn btn-outline-primary btn-sm">Mostrar todos</a>
+        </div>
     </div>
 
     <div class="div5 p-3 d-flex flex-column">
-        <h6 class="mb-3 text-secondary">
+        <h6 class="mb-4 text-secondary text-center">
             <i class="bi bi-archive-fill me-1"></i>Finalizados
         </h6>
-        <div class="scrollable-content">
+        <div class="scrollable-grid px-2">
             @if (!Model.Completados.Any())
             {
                 <div class="text-center text-secondary py-4">
-                    <i class="bi bi-dash-circle me-1"></i>Vacío
+                    <i class="bi bi-dash-circle fs-2 mb-2"></i>
+                    <p class="mb-0">No hay cursos finalizados</p>
                 </div>
             }
             else
             {
-                <ul class="list-group">
-                    @foreach (var c in Model.Completados)
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">@c.Nombre</div>
-                                <small class="text-muted">@c.Descripcion</small>
+                @foreach (var c in Model.Completados)
+                {
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@Url.Action("Imagen", "Curso", new { id = c.Id })"
+                             alt="@c.Nombre"
+                             class="me-3"
+                             style="width:100px; height:60px; object-fit:cover; border-radius:4px;" />
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1">@c.Codigo - @c.Nombre</h6>
                             </div>
-                            <span class="badge rounded-pill text-secondary">
-                                @c.Fecha.ToShortDateString()
-                            </span>
-                        </li>
-                    }
-                </ul>
+                            <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
+                            <div class="small text-muted">
+                                @c.Dificultad | @(c.DuracionHoras?.ToString("h\\:mm") ?? "N/A") h
+                            </div>
+                        </div>
+                        <a 
+                           class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                            <i class="bi bi-eye"> Visualizar</i>
+                        </a>
+                    </div>
+                }
             }
         </div>
-        <button id="btnFinalizados"
-                class="btn btn-primary btn-sm w-100 d-flex justify-content-center align-items-center">
-            <i class="bi bi-list-ul text-white me-1"></i> Ver todos
-        </button>
+        <div class="text-center mt-3">
+            <a href="#" class="btn btn-outline-primary btn-sm">Mostrar todos</a>
+        </div>
     </div>
 
+    
     <div class="div7 p-3 d-flex flex-column">
-        <h6 class="mb-3 text-info text-center">
+        <h6 class="mb-4 text-info text-center">
             <i class="bi bi-journal-bookmark-fill me-1"></i>Cursos Disponibles
         </h6>
-        <div class="scrollable-content">
+        <div class="scrollable-grid px-2">
             @if (!Model.Disponibles.Any())
             {
-                <div class="text-center text-info py-4">
+                <div class="text-center text-info py-5">
                     <i class="bi bi-dash-circle fs-2 mb-2"></i>
-                    <small>No hay cursos disponibles en este momento</small>
+                    <p class="mb-0">No hay cursos disponibles en este momento</p>
                 </div>
             }
             else
             {
-                <ul class="list-group">
-                    @foreach (var c in Model.Disponibles)
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">@c.Nombre</div>
-                                <small class="text-muted">@c.Descripcion</small>
+                @foreach (var c in Model.Disponibles)
+                {
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@Url.Action("Imagen", "Curso", new { id = c.Id })"
+                             alt="@c.Nombre" class="me-3" style="width:100px; height:60px; object-fit:cover; border-radius:4px;" />
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="mb-1"> @c.Codigo - @c.Nombre</h6>
                             </div>
-                            <span class="badge rounded-pill text-info">
-                                @c.Fecha.ToShortDateString()
-                            </span>
-                            <a asp-controller="Curso" asp-action="Details" asp-route-id="@c.Id"
-                               class="btn btn-outline-info btn-sm ms-3">
-                                <i class="bi bi-eye"></i> Visualizar Curso
-                            </a>
-                        </li>
-                    }
-                </ul>
+                            <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
+                            <div class="small text-muted">
+                                 @c.Dificultad &nbsp;|&nbsp;
+                                 @(c.DuracionHoras?.ToString("h:mm") ?? "N/A") h
+                            </div>
+                        </div>
+                        <a asp-controller="Curso" asp-action="Detalles" asp-route-id="@c.Id"
+                           class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                            <i class="bi bi-eye"> Visualizar Curso</i>
+                        </a>
+                    </div>
+                }
             }
-
         </div>
-        <button id="btnDisponibles"
-                class="btn btn-primary btn-sm w-100 d-flex justify-content-center align-items-center">
-            <i class="bi bi-list-ul text-white me-1"></i> Ver todos
-
-        </button>
     </div>
 
     <div class="div8 d-flex flex-column p-3">
