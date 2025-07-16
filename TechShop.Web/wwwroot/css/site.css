@@ -9,26 +9,28 @@ html {
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+  /*position: relative;*/
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
 body {
-    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-.PrimaryBtn {
-    background-color: RGBA(40, 134, 222, 1);
+.myFooter {
+    background-color: rgba(15, 84, 140, 1);
     color: white;
-    border: 3px solid RGBA(40, 134, 222, 1);
-    border-radius: 8px;
-    height: 40px;
-    width: 50%;
-    margin: 15px auto 0 auto;
-    transition: all ease 0.2s;
-    font-weight: bold;
+    padding: 10px;
+    p
+{
+    margin: auto;
+    text-align: center;
+    color: white;
 }
-
-    .PrimaryBtn:hover {
-        background-color: RGBA(15, 84, 140, 1);
-    }
+}

@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/NavbarCursos.css" asp-append-version="true" />
-    <link rel="stylesheet" href="@(ViewData["Style"])" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechShop.Web.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/CursoDetalle.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Footer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="@(ViewData["Style"])" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
@@ -28,8 +26,11 @@
                     <div class="navbar justify-content-between p-0 m-0">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link atras" asp-controller="Home" asp-action="Index"><i class="fi fi-rr-arrow-circle-left"></i>Atras</a>
+                                <a class="nav-link atras" asp-controller="Home" asp-action="Index">
+                                    <i class="fi fi-rr-arrow-circle-left"></i> Atrás
+                                </a>
                             </li>
+
                         </ul>
                     </div>
                 </div>
@@ -40,17 +41,11 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid p-0">
-        <main class="flex-grow-1 p-0">
-            <div class="container-fluid h-100 px-2 py-0">
-                @RenderBody()
-            </div>
-        </main>
-    </div>
+    <main class="flex-grow-1">
+        @RenderBody()
+    </main>
 
-    <footer>
-        @await Html.PartialAsync("_Footer")
-    </footer>
+    @await Html.PartialAsync("_Footer")
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

@@ -26,7 +26,9 @@
                     <div class="navbar justify-content-between p-0 m-0">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link atras" asp-controller="CursosAdmin" asp-action="Index"><i class="fi fi-rr-arrow-circle-left"></i>Atras</a>
+                                <a class="nav-link atras" asp-controller="CursosAdmin" asp-action="Index">
+                                    <i class="fi fi-rr-arrow-circle-left"></i> Atrás
+                                </a>
                             </li>
 
                         </ul>
@@ -39,19 +41,10 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid p-0">
-        <main class="flex-grow-1 p-0">
-            <div class="container-fluid px-2 py-0">
-                @RenderBody()
-            </div>
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container text-center">
-            &copy; 2025 - <span style="font-weight: bold;">TechShop International</span>
-        </div>
-    </footer>
+    <main class="flex-grow-1">
+        @RenderBody()
+    </main>
+    @await Html.PartialAsync("_Footer")
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
