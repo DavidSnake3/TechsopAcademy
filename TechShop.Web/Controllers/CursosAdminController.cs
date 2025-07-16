@@ -33,23 +33,23 @@ namespace TechShop.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CrearCursoConfigModel model)
+        public IActionResult Create(CrearCursoConfigModel config)
         {
-            if (model.Equals == null)
+            if (config.Equals == null)
             {
                 return View();
             }
             var datos = new
             {
-                model.Nombre,
-                model.Codigo,
-                model.DescripcionCorta,
-                model.DescripcionLarga,
-                model.DuracionHoras,
-                model.Dificultad,
-                Departamentos = model.Departamentos != null ? string.Join(", ", model.Departamentos) : "Ninguno",
-                Roles = model.Roles != null ? string.Join(", ", model.Roles) : "Ninguno",
-                Zonas = model.Zonas != null ? string.Join(", ", model.Zonas) : "Ninguno"
+                config.Nombre,
+                config.Codigo,
+                config.DescripcionCorta,
+                config.DescripcionLarga,
+                config.DuracionHoras,
+                config.Dificultad,
+                Departamentos = config.Departamentos != null ? string.Join(", ", config.Departamentos) : "Ninguno",
+                Roles = config.Roles != null ? string.Join(", ", config.Roles) : "Ninguno",
+                Zonas = config.Zonas != null ? string.Join(", ", config.Zonas) : "Ninguno"
             };
 
             var mensaje = $@"Swal.fire({{
@@ -63,11 +63,11 @@ namespace TechShop.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateMaterial(int a)
+        public IActionResult CreateMaterial(CrearMaterialViewModel material)
         {
-            if (TempData.ContainsKey("Mensaje"))
+            if (material.Secciones.LongCount() == 0)
             {
-                ViewBag.NotificationMessage = TempData["Mensaje"];
+                return View("CreateMaterial");
             }
             return View("CreateTest");
         }

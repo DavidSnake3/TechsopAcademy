@@ -156,6 +156,23 @@ section {
     height: 315px;
 }
 
+.topHeader {
+    display: flex;
+    justify-content: space-between;
+}
+    .topHeader button {
+        background-color: transparent;
+            border: none
+    }
+    .topHeader i {
+        color: red;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+    .topHeader i:hover {
+        color: darkred;
+    }
 /*      Footer      */
 #CrearCurso footer {
     padding: 10px 20px;

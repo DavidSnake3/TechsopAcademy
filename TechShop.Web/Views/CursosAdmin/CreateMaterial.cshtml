@@ -77,7 +77,10 @@
 
     <div class="plantilla-seccion d-none">
         <section class="seccion">
-            <h4>Sección <span class="indice-seccion">X</span></h4>
+            <div class="topHeader">
+                <h4>Sección <span class="indice-seccion">X</span></h4>
+                <button onclick="eliminarSeccion(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
             <input name="Secciones[X].TituloSeccion" class="form-control mb-2" placeholder="Título de la Sección" />
 
             <main class="contenedor-componentes"></main>
@@ -108,7 +111,10 @@
 
     <template id="componente-Texto">
         <div class="form-group mb-2">
-            <label>Texto</label>
+            <div class="topHeader">
+                <label>Texto</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
             <textarea name="Secciones[X].Componentes[Y].Contenido" class="form-control TextComponent"></textarea>
             <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Texto" />
         </div>
@@ -116,7 +122,10 @@
 
     <template id="componente-Video">
         <div class="form-group mb-2">
-            <label>Video (YouTube)</label>
+            <div class="topHeader">
+                <label>Video (YouTube)</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
             <input name="Secciones[X].Componentes[Y].Contenido" class="form-control LinkComponent" placeholder="https://youtube.com/..." />
             <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Video" />
         </div>
@@ -124,7 +133,10 @@
 
     <template id="componente-Archivo">
         <div class="form-group mb-2">
-            <label>Archivo (.pdf, .docx, .xlsx)</label>
+            <div class="topHeader">
+                <label>Archivo (.pdf, .docx, .xlsx)</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
             <input accept=".pdf,.docx,.xlsx" type="file" name="Secciones[X].Componentes[Y].Archivo" class="form-control ArcivhoComponent" />
             <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Archivo" />
         </div>
@@ -132,7 +144,10 @@
 
     <template id="componente-Titulo">
         <div class="form-group mb-2">
-            <label>Título</label>
+            <div class="topHeader">
+                <label>Título</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
             <input name="Secciones[X].Componentes[Y].Contenido" class="form-control TituloComponent" placeholder="Título del contenido" />
             <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Titulo" />
         </div>
@@ -175,6 +190,7 @@
 
     function eliminarSeccion(btn) {
         btn.closest('.seccion').remove();
+        indexSeccion = indexSeccion - 1;
     }
 
     function eliminarComponente(btn) {
