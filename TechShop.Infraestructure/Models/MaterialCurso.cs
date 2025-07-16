@@ -17,5 +17,7 @@ public partial class MaterialCurso
 
     public DateTime FechaSubida { get; set; }
 
+    public string? VideoUrl { get; set; }
+
     public virtual Capacitaciones Capacitacion { get; set; } = null!;
 }

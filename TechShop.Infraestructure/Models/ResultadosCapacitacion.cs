@@ -20,6 +20,4 @@ public partial class ResultadosCapacitacion
     public virtual Capacitaciones Capacitacion { get; set; } = null!;
 
     public virtual ICollection<Certificados> Certificados { get; set; } = new List<Certificados>();
-
-    public virtual Empleados Empleado { get; set; } = null!;
 }

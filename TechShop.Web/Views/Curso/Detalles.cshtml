@@ -1,0 +1,123 @@
+﻿@using Newtonsoft.Json
+@model TechShop.Web.Models.CrearCursoConfigModel
+
+@{
+    ViewData["Title"] = "Detalle del curso";
+    Layout = "~/Views/Shared/_CursoLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/CursoDetalle.css" />
+
+<!-- 1. Sección degradada -->
+<div class="gradient-section">
+    <!-- Hero -->
+    <div class="position-relative overflow-hidden py-5">
+        <div class="position-absolute top-0 start-0 w-100 h-100 overlay-black"></div>
+        <div class="container position-relative text-white">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-6">
+                    <div class="mb-3 d-flex gap-2">
+                        <span class="badge bg-white bg-opacity-25 text-white">@Model.Codigo</span>
+                    </div>
+                    <h1 class="display-5 fw-bold">@Model.Codigo - @Model.Nombre</h1>
+                    <p class="fs-5 text-white-50">@Model.DescripcionCorta</p>
+
+                    <div class="row text-center mt-4 gx-3">
+                        <div class="col-4">
+                            <div class="p-3 rounded glass-card">
+                                <i class="bi bi-graph-up-arrow fs-2 text-white mb-2"></i>
+                                <div class="small text-white-50">Dificultad</div>
+                                <div class="fw-semibold text-white">@Model.Dificultad</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3 rounded glass-card">
+                                <i class="bi bi-hourglass-split fs-2 text-white mb-2"></i>
+                                <div class="small text-white-50">Duración</div>
+                                <div class="fw-semibold text-white">@Model.DuracionHoras?.ToString("h\\:mm") h</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 text-center">
+                    <div class="course-image-wrapper d-inline-block rounded-3 overflow-hidden shadow-lg">
+                        @if (Model.Foto != null && Model.Foto.Length > 0)
+                        {
+                            <img src="@Url.Action("Imagen", "Curso", new { id = Model.Id })"
+                                 alt="Foto del curso"
+                                 class="img-fluid" />
+                        }
+                        else
+                        {
+                            <div class="bg-light bg-opacity-25 d-flex align-items-center justify-content-center" style="height:300px; width:100%;">
+                                <i class="bi bi-image fs-1 text-white"></i>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-11 col-sm-12">
+                <div class="card glass-card mb-5 border-0">
+                    <div class="card-body">
+                        <h1 class="h4 text-white mb-3">
+                            <i class="bi bi-journal-text me-2"></i>Descripción del Curso
+                        </h1>
+                        <div class="descripcion-larga text-white">
+                            @Model.DescripcionLarga
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="text-center mb-5">
+    <a href="#" class="btn btn-lg btn-primary btn-comenzar shadow">Empezar curso</a>
+</div>
+<!--
+<div class="content-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <i class="bi bi-chevron-double-down text-info fs- animated-arrow"></i>
+        </div>
+        <h2 class="text-center fw-bold mb-4">Especializado para:</h2>
+
+        <div class="row gx-4 gy-4 mb-5">
+            @foreach (var sec in new[]
+            {
+            new { Icon = "globe",    Title = "Zonas",        Items = Model.Zonas },
+            new { Icon = "building", Title = "Departamentos", Items = Model.Departamentos },
+            new { Icon = "people",   Title = "Puestos",      Items = Model.Puestos }
+            })
+            {
+                <div class="col-md-4">
+                    <div class="card glass-card main-card h-100 border-0 text-center p-3">
+                        <div class="mb-3">
+                            <div class="info-icon rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
+                                <i class="bi bi-@sec.Icon-fill fs-4"></i>
+                            </div>
+                            <h5 class="fw-bold">@sec.Title</h5>
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in sec.Items)
+                            {
+                                <li class="list-group-item glass-card d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-dot me-2"></i> @item
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+ -->
