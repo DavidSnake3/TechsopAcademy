@@ -13,25 +13,41 @@
         <h1>Configuracion del Examen</h1>
     </header>
 
-    <footer class="footer">
-        <div class="botonDiv">
-            <a class="btnPage" asp-action="CreateMaterial" asp-controller="CursosAdmin">Anterior</a>
-            <a class="btnDesactivado" href="#">Siguiente</a>
+    <form asp-action="CreateMaterial" method="post" enctype="multipart/form-data">
+        <div class="addComponents">
+            <h2>
+                Agregar Componentes
+            </h2>
+            <div class="addComponentList">
+                <div class="addComponent">
+                    <i class="fi fi-rr-text"></i>
+                    <p>Sección</p>
+                </div>
+                <div class="addComponent">
+                    <i class="fi fi-rr-screen-play"></i>
+                    <p>Respuesta Unica</p>
+                </div>
+                <div class="addComponent">
+                    <i class="fi fi-rr-folder-upload"></i>
+                    <p>Selección Multiple</p>
+                </div>
+                @* <div>
+                    <i class="fi fi-br-screen-play"></i>
+                    <span>Sección</span>
+                </div> *@
+            </div>
         </div>
-        <div class="LinkDiv">
-            <a asp-action="Create" asp-controller="CursosAdmin">Curso</a> -
-            <a asp-action="CreateMaterial" asp-controller="CursosAdmin">Material</a> -
-            <a class="Select" asp-action="CreateTest" asp-controller="CursosAdmin">Examen</a>
-        </div>
-    </footer>
+
+        <footer class="footer">
+            <div class="botonDiv">
+                <button class="btnPage" type="button">Anterior</button>
+                <button class="btnDesactivado" type="submit">Siguiente</button>
+            </div>
+            <div class="LinkDiv">
+                <a asp-action="Create" asp-controller="CursosAdmin">Curso</a> -
+                <a asp-action="CreateMaterial" asp-controller="CursosAdmin">Material</a> -
+                <a class="Select" asp-action="CreateTest" asp-controller="CursosAdmin">Examen</a>
+            </div>
+        </footer>
+    </form>
 </div>
-
-<script>
-    let page = 1;
-
-    function cambiarPagina(delta) {
-        page += delta;
-        if (page < 1) page = 1;
-        document.getElementById("numeroPagina").innerText = page;
-    }
-</script>

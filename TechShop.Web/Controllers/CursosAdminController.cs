@@ -7,6 +7,10 @@ namespace TechShop.Web.Controllers
     {
         public IActionResult Index()
         {
+            if (TempData.ContainsKey("Mensaje"))
+            {
+                ViewBag.NotificationMessage = TempData["Mensaje"];
+            }
             return View();
         }
 
@@ -16,12 +20,24 @@ namespace TechShop.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult CreateMaterial()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult CreateTest()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult Create(CrearCursoConfigModel model)
         {
             if (model.Equals == null)
             {
-                return View(model);
+                return View();
             }
             var datos = new
             {
@@ -43,21 +59,21 @@ namespace TechShop.Web.Controllers
             }})";
 
             TempData["Mensaje"] = mensaje;
-            return View("CreateMaterial", model);
+            return View();
         }
 
         [HttpPost]
-        public IActionResult CreateMaterial()
+        public IActionResult CreateMaterial(int a)
         {
             if (TempData.ContainsKey("Mensaje"))
             {
                 ViewBag.NotificationMessage = TempData["Mensaje"];
             }
-            return View();
+            return View("CreateTest");
         }
 
         [HttpPost]
-        public IActionResult CreateTest()
+        public IActionResult CreateTest(int a)
         {
             return View();
         }

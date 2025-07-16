@@ -8,7 +8,7 @@
     background-color: RGBA(180, 214, 250, 0.5)
 }
 
-/*      Header      */
+    /*      Header      */
 
     #CrearCurso header {
         background-color: RGBA(40, 134, 222, 1);
@@ -26,63 +26,187 @@
             padding: 0;
         }
 
-/*      Form        */
-#CrearCurso form {
-    padding: 0 20px;
+    /*      Form        */
+    #CrearCurso form {
+        padding: 0 20px;
+    }
+
+/*------    Material    ------*/
+.addSeccion {
+    background-color: rgb(242, 242, 242);
+    border: 3px solid rgb(177, 177, 177);
+    box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    margin: 0 0 10px 0;
+    text-align: center;
+    padding: 10px;
 }
 
+.addSeccionGroup {
+    display: flex;
+    flex-direction: column;
+    height: 70px;
+    width: 130px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: auto;
+    transition: all ease 0.2s;
+    border: none;
+}
+
+    .addSeccionGroup i {
+        font-size: 2rem;
+        margin: 0 0 -10px 0;
+        padding: 0;
+    }
+
+    .addSeccionGroup p {
+        margin: 0;
+        padding: 0;
+    }
+
+.addSeccion .addSeccionGroup:hover {
+    background-color: rgb(226, 226, 226);
+    transform: scale(1.05);
+}
+
+section {
+    background-color: white;
+    border: 3.5px solid rgb(152, 201, 252);
+    box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    margin: 0 0 20px 0;
+    padding: 10px 20px;
+}
+
+.addComponent {
+    background-color: rgb(242, 242, 242);
+    border: 3px solid rgb(177, 177, 177);
+    box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    margin: 20px 0 10px 0;
+    text-align: center;
+    padding: 0 0 8px 0;
+}
+
+    .addComponent h4 {
+        background-color: rgb(226, 226, 226);
+        padding: 0 0 5px 0;
+    }
+
+.addComponentList {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px
+}
+
+.addComponentGroup {
+    display: flex;
+    height: 30px;
+    width: auto;
+    padding: 0 10px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all ease 0.2s;
+    border: none;
+    gap: 5px
+}
+
+    .addComponentGroup i {
+        font-size: 1.5rem;
+        margin: 0 0 -5px 0;
+        padding: 0;
+    }
+
+    .addComponentGroup p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .addComponentGroup:hover {
+        background-color: rgb(226, 226, 226);
+        transform: scale(1.05);
+    }
+
+    section label {
+        text-align: left;
+        color: darkgray
+    }
+
+.TituloComponent {
+    font-size: 1.5rem;
+    font-weight: bold
+}
+.VideoPreviewDiv{
+    display: flex;
+
+}
+
+.VideoPreview {
+    border-radius: 7px;
+    border: 3.5px solid rgb(152, 201, 252);
+    box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+    margin: 10px auto;
+    width: 560px;
+    height: 315px;
+}
 
 /*      Footer      */
-    #CrearCurso footer {
-        padding: 10px 0;
+#CrearCurso footer {
+    padding: 10px 20px;
+}
+
+#CrearCurso .botonDiv {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#CrearCurso .btnPage, #CrearCurso .btnDesactivado {
+    background-color: RGBA(40, 134, 222, 1);
+    height: 30px;
+    width: 100px;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.15rem;
+    border: none;
+}
+
+    #CrearCurso .btnPage:hover {
+        background-color: RGBA(15, 84, 140, 1);
     }
 
-    #CrearCurso .botonDiv {
-        margin: 0 auto;
-        width: 100%;
-        max-width: 500px;
-        display: flex;
-        justify-content: space-between;
-    }
+#CrearCurso .btnDesactivado {
+    background-color: darkgray;
+    cursor: default;
+    opacity: 60%;
+}
 
-    #CrearCurso .btnPage, #CrearCurso .btnDesactivado {
-        background-color: RGBA(40, 134, 222, 1);
-        height: 30px;
-        width: 100px;
-        color: white;
-        text-align: center;
-        border-radius: 5px;
+#CrearCurso .LinkDiv {
+    margin: 0 auto;
+    width: 200px;
+}
+
+    #CrearCurso .LinkDiv a {
         text-decoration: none;
-        font-size: 1.15rem;
-        border: none;
+        color: RGBA(40, 134, 222, 1);
     }
 
-        #CrearCurso .btnPage:hover {
-            background-color: RGBA(15, 84, 140, 1);
+        #CrearCurso .LinkDiv a:hover {
+            color: RGBA(15, 84, 140, 1);
+            text-decoration: underline;
         }
 
-    #CrearCurso .btnDesactivado {
-        background-color: darkgray;
-        cursor: default;
-        opacity: 60%;
-    }
-
-    #CrearCurso .LinkDiv {
-        margin: 0 auto;
-        width: 200px;
-    }
-
-        #CrearCurso .LinkDiv a {
-            text-decoration: none;
-            color: RGBA(40, 134, 222, 1);
+        #CrearCurso .LinkDiv a.Select {
+            font-weight: bold;
+            text-decoration: underline;
         }
-
-            #CrearCurso .LinkDiv a:hover {
-                color: RGBA(15, 84, 140, 1);
-                text-decoration: underline;
-            }
-
-            #CrearCurso .LinkDiv a.Select {
-                font-weight: bold;
-                text-decoration: underline;
-            }

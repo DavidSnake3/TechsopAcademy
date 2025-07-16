@@ -8,32 +8,203 @@
     ViewData["Script"] = "";
 }
 
+
+
 <div id="CrearCurso" class="container-xl">
     <header>
         <h1>Configuración del Material</h1>
     </header>
+    @model CrearMaterialViewModel
 
-    <footer class="footer">
-        <div class="botonDiv">
-            <a class="btnPage" asp-action="Create" asp-controller="CursosAdmin">Anterior</a>
-            <a class="btnPage" asp-action="CreateTest" asp-controller="CursosAdmin">Siguiente</a>
+    <form asp-action="CreateMaterial" method="post" enctype="multipart/form-data" id="formMaterial">
+
+        <main id="contenedorSecciones">
+
+            <section class="seccion">
+                <h4>Sección <span class="indice-seccion">1</span></h4>
+                <input name="Secciones[0].TituloSeccion" class="form-control mb-2" placeholder="Título de la Sección" />
+
+                <main class="contenedor-componentes">
+
+                </main>
+
+                <div class="addComponent">
+                    <h4>Agregar Componentes</h4>
+                    <div class="addComponentList">
+                        <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Titulo')">
+                            <i class="fi fi-rr-heading"></i>
+                            <p>Titulo</p>
+                        </button>
+                        <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Texto')">
+                            <i class="fi fi-rr-text"></i>
+                            <p>Texto</p>
+                        </button>
+                        <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Video')">
+                            <i class="fi fi-rr-screen-play"></i>
+                            <p>Video</p>
+                        </button>
+                        <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Archivo')">
+                            <i class="fi fi-rr-folder-upload"></i>
+                            <p>Archivo</p>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </main>
+
+        <div class="addSeccion">
+            <button type="button" class="addSeccionGroup" onclick="agregarSeccion()">
+                <i class="fi fi-rr-square-plus"></i>
+                <p>Agregar Sección</p>
+            </button>
         </div>
-        <div class="LinkDiv">
-            <a asp-action="Create" asp-controller="CursosAdmin">Curso</a> -
-            <a class="Select" asp-action="CreateMaterial" asp-controller="CursosAdmin">Material</a> -
-            <a asp-action="CreateTest" asp-controller="CursosAdmin">Examen</a>
+
+        <footer class="footer">
+            <div class="botonDiv">
+                <button class="btnPage" type="button">Anterior</button>
+                <button class="btnPage" type="submit">Siguiente</button>
+            </div>
+            <div class="LinkDiv">
+                <a asp-action="Create" asp-controller="CursosAdmin">Curso</a> -
+                <a class="Select" asp-action="CreateMaterial" asp-controller="CursosAdmin">Material</a> -
+                <a asp-action="CreateTest" asp-controller="CursosAdmin">Examen</a>
+            </div>
+        </footer>
+    </form>
+
+    <div class="plantilla-seccion d-none">
+        <section class="seccion">
+            <h4>Sección <span class="indice-seccion">X</span></h4>
+            <input name="Secciones[X].TituloSeccion" class="form-control mb-2" placeholder="Título de la Sección" />
+
+            <main class="contenedor-componentes"></main>
+
+            <div class="addComponent">
+                <h4>Agregar Componentes</h4>
+                <div class="addComponentList">
+                    <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Titulo')">
+                        <i class="fi fi-rr-heading"></i>
+                        <p>Titulo</p>
+                    </button>
+                    <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Texto')">
+                        <i class="fi fi-rr-text"></i>
+                        <p>Texto</p>
+                    </button>
+                    <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Video')">
+                        <i class="fi fi-rr-screen-play"></i>
+                        <p>Video</p>
+                    </button>
+                    <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Archivo')">
+                        <i class="fi fi-rr-folder-upload"></i>
+                        <p>Archivo</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <template id="componente-Texto">
+        <div class="form-group mb-2">
+            <label>Texto</label>
+            <textarea name="Secciones[X].Componentes[Y].Contenido" class="form-control TextComponent"></textarea>
+            <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Texto" />
         </div>
-    </footer>
+    </template>
+
+    <template id="componente-Video">
+        <div class="form-group mb-2">
+            <label>Video (YouTube)</label>
+            <input name="Secciones[X].Componentes[Y].Contenido" class="form-control LinkComponent" placeholder="https://youtube.com/..." />
+            <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Video" />
+        </div>
+    </template>
+
+    <template id="componente-Archivo">
+        <div class="form-group mb-2">
+            <label>Archivo (.pdf, .docx, .xlsx)</label>
+            <input accept=".pdf,.docx,.xlsx" type="file" name="Secciones[X].Componentes[Y].Archivo" class="form-control ArcivhoComponent" />
+            <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Archivo" />
+        </div>
+    </template>
+
+    <template id="componente-Titulo">
+        <div class="form-group mb-2">
+            <label>Título</label>
+            <input name="Secciones[X].Componentes[Y].Contenido" class="form-control TituloComponent" placeholder="Título del contenido" />
+            <input type="hidden" name="Secciones[X].Componentes[Y].Tipo" value="Titulo" />
+        </div>
+    </template>
+
 </div>
 
-
-
 <script>
-    let page = 1;
+    let indexSeccion = 1;
 
-    function cambiarPagina(delta) {
-        page += delta;
-        if (page < 1) page = 1;
-        document.getElementById("numeroPagina").innerText = page;
+    function agregarSeccion() {
+        const contenedor = document.getElementById('contenedorSecciones');
+        const plantilla = document.querySelector('.plantilla-seccion').cloneNode(true);
+        plantilla.classList.remove('d-none');
+        plantilla.classList.remove('plantilla-seccion');
+
+        const idx = indexSeccion++;
+        plantilla.innerHTML = plantilla.innerHTML.replaceAll('X', idx);
+        plantilla.querySelector('.indice-seccion').innerText = idx + 1;
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function agregarComponente(btn, tipo) {
+        const seccion = btn.closest('.seccion');
+        const contenedor = seccion.querySelector('.contenedor-componentes');
+
+        let indexComponente = contenedor.children.length;
+        const plantilla = document.getElementById('componente-' + tipo).content.cloneNode(true);
+
+        // reemplazar X (índice sección) y Y (índice componente)
+        plantilla.querySelectorAll('input, textarea').forEach(el => {
+            if (el.name)
+                    el.name = el.name.replaceAll('X', seccion.querySelector('input').name.match(/\d+/)[0])
+                        .replaceAll('Y', indexComponente);
+        });
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function eliminarSeccion(btn) {
+        btn.closest('.seccion').remove();
+    }
+
+    function eliminarComponente(btn) {
+        btn.closest('.form-group').remove();
+    }
+
+    document.addEventListener('input', function (e) {
+        if (e.target.classList.contains('LinkComponent')) {
+            const url = e.target.value;
+            const iframe = document.createElement('iframe');
+            const div = document.createElement('div');
+            const parent = e.target.parentElement;
+
+            parent.querySelector('iframe')?.remove(); // elimina anterior
+
+            if (url.includes("youtube.com") || url.includes("youtu.be")) {
+                iframe.src = convertirURLaEmbed(url);
+                iframe.frameBorder = "0";
+                iframe.allowFullscreen = true;
+                iframe.classList.add('VideoPreview');
+                div.classList.add('VideoPreviewDiv');
+                div.appendChild(iframe);
+                parent.appendChild(div);
+            }
+        }
+    });
+
+    function convertirURLaEmbed(url) {
+        // Convierte https://www.youtube.com/watch?v=xxxx a https://www.youtube.com/embed/xxxx
+        const match = url.match(/(?:youtube\.com\/watch\?v=|youtu.be\/)([^&]+)/);
+        return match ? `https://www.youtube.com/embed/${match[1]}` : url;
     }
 </script>
