@@ -1,7 +1,37 @@
 ﻿@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authorization
 
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
+
+<nav class="navbar">
+    <div class="navbarUtils">
+        <div class="navbarSession">
+            <form asp-controller="Login" asp-action="Logout" method="post" class="formLogout">
+                <button type="submit" class="btnlogout"><i class="fi fi-rr-exit"></i> <p>Cerrar Sesión</p></button>
+            </form>
+        </div>
+        <div class="navbarInfo">
+            <a class="NavbarImg" asp-controller="Home" asp-action="Index">
+                <img src="~/img/TechShop Academy blanco sin fondo.png" alt="TechShop Academy" />
+            </a>
+        </div>
+    </div>
+    <details class="navbarDetail">
+        <summary><i class="fi fi-rr-angle-down"></i></summary>
+        <ul class="navbarItemsList">
+            <li class="navbarItem">
+                <a class="navbarlink" asp-controller="Home" asp-action="Index">Inicio</a>
+            </li>
+            <li class="navbarItem">
+                <a class="navbarlink" asp-controller="CursosAdmin" asp-action="Index">Administrador de Cursos</a>
+            </li>
+            <li class="navbarItem">
+                <a class="navbarlink" asp-controller="Empleados" asp-action="Index">Empleados</a>
+            </li>
+        </ul>
+    </details>
+</nav>
+
+@* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
     <div class="container-fluid" style="position: relative;">
         <div class="p-0 mt-2 mb-2">
             <button class="navbar-toggler" type="button"
@@ -41,4 +71,4 @@
         </a>
         <a asp-controller="Home" asp-action="Index"><i class="fi fi-rr-home"></i></a>
     </div>
-</nav>
+</nav> *@

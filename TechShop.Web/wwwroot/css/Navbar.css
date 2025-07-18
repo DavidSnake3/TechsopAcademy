@@ -1,11 +1,139 @@
 ﻿
-
 .navbar {
     background-color: RGBA(15, 84, 140, 1);
-    padding: 0;
-    padding-left: 10px;
+    padding: 5px 5px 5px 5px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    position: relative;
 }
 
+.navbarUtils {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .navbarUtils .navbarSession {
+    }
+
+    .navbarUtils .formLogout {
+    }
+
+    .navbarUtils .btnlogout {
+        background-color: transparent;
+        border: unset;
+        border-radius: 7px;
+        color: white;
+        font-size: 1rem;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        text-align: center;
+        gap: .5rem;
+    }
+        .navbarUtils .btnlogout p {
+            height: auto;
+            padding: 0;
+            margin: 3px 0 0 0;
+        }
+        .navbarUtils .btnlogout i {
+            background-color: red;
+            padding: 5px 8px 3px 10px;
+            border: 2px solid darkred;
+            border-radius: 7px;
+            color: white;
+        }
+
+        .navbarUtils .btnlogout:hover i {
+            transition: all .3s ease;
+            background-color: darkred;
+        }
+
+    .navbarUtils .atras {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        color: white;
+        gap: 5px;
+        text-align: center;
+        margin: 0;
+    }
+
+        .navbarUtils .atras:Hover {
+            color: RGBA(40, 134, 222, 1);
+        }
+
+
+    .navbarUtils .navbarInfo {
+    }
+
+.navbarInfo .NavbarImg {
+    height: 80px;
+}
+
+    .navbarInfo .NavbarImg img {
+        height: 65px;
+        margin: -10px 0 -15px;
+    }
+
+.navbarDetail {
+    position: absolute;
+    top: 30px;
+    width: auto;
+    min-width: 200px;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+
+    .navbarDetail summary {
+        color: white;
+        text-align: center;
+        list-style: none;
+    }
+
+    .navbarDetail .navbarItemsList {
+        overflow: hidden;
+        background-color: RGBA(15, 84, 140, 1);
+        list-style: none;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        transition: max-height 2s ease;
+        margin: 10px 0 0;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 20px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /*.navbarDetail[open] .navbarItemsList {
+        max-height: 200px;
+    }
+
+    .navbarDetail[close] .navbarItemsList {
+        max-height: 0px;
+    }*/
+
+    .navbarDetail .navbarItem {
+        color: white;
+        cursor: pointer;
+    }
+
+    .navbarDetail .navbarlink {
+        all: unset;
+        transition: .1s all revert;
+    }
+
+        .navbarDetail .navbarlink:hover {
+            border-bottom: 2px solid white;
+            font-weight: bold;
+        }
+
+/*
 .navbar-nav {
     display: flex;
     justify-content: center;
@@ -59,3 +187,4 @@
     .navbar .logout:hover {
         background-color: red;
     }
+*/

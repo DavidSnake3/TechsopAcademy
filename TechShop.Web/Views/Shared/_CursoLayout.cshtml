@@ -7,7 +7,7 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/NavbarCursos.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechShop.Web.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="@(ViewData["Style"])" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -20,24 +20,18 @@
         @using Microsoft.AspNetCore.Authentication
         @using Microsoft.AspNetCore.Authorization
 
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
-            <div class="container-fluid" style="position: relative;">
-                <div class="p-0 mt-2 mb-2">
-                    <div class="navbar justify-content-between p-0 m-0">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link atras" asp-controller="Home" asp-action="Index">
-                                    <i class="fi fi-rr-arrow-circle-left"></i> Atrás
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
+        <nav class="navbar">
+            <div class="navbarUtils">
+                <div class="navbarSession">
+                    <a class="nav-link atras" asp-controller="Home" asp-action="Index">
+                        <i class="fi fi-rr-arrow-circle-left"></i><p style="padding: 0; margin: 0; font-size: 1.1rem;">Atrás</p>
+                    </a>
                 </div>
-
-                <a class="navbar-brand NavbarImg" href="#">
-                    <img src="~/img/TechShop Academy blanco sin fondo.png" alt="TechShop Academy" />
-                </a>
+                <div class="navbarInfo">
+                    <a class="NavbarImg" asp-controller="Home" asp-action="Index">
+                        <img src="~/img/TechShop Academy blanco sin fondo.png" alt="TechShop Academy" />
+                    </a>
+                </div>
             </div>
         </nav>
     </header>
