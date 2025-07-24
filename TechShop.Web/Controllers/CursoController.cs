@@ -33,16 +33,25 @@ namespace TechShop.Web.Controllers
                 FechaCreacion = dto.FechaCreacion,
                 Foto = dto.Foto,
                 Departamentos = !string.IsNullOrWhiteSpace(dto.Departamento)
-        ? JsonConvert.DeserializeObject<List<string>>(dto.Departamento)
-        : new List<string>(),
-
-                Zonas = !string.IsNullOrWhiteSpace(dto.Zonas)
-        ? JsonConvert.DeserializeObject<List<string>>(dto.Zonas)
-        : new List<string>(),
+                ? dto.Departamento
+                     .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                     .Select(s => s.Trim())
+                     .ToList()
+                : new List<string>(),
 
                 Puestos = !string.IsNullOrWhiteSpace(dto.Puestos)
-        ? JsonConvert.DeserializeObject<List<string>>(dto.Puestos)
-        : new List<string>(),
+                ? dto.Puestos
+                     .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                     .Select(s => s.Trim())
+                     .ToList()
+                : new List<string>(),
+
+                Zonas = !string.IsNullOrWhiteSpace(dto.Zonas)
+                ? dto.Zonas
+                     .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                     .Select(s => s.Trim())
+                     .ToList()
+                : new List<string>(),
 
                 Usuario = dto.Usuario,
                 Materiales = dto.Materiales,

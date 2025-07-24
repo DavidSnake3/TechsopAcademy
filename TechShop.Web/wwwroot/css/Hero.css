@@ -37,11 +37,6 @@ html, body, main {
     overflow-y: auto;
 }
 
-.hero-bg {
-    background-color: var(--login-blue);
-    min-height: calc(100vh - 56px - 60px);
-    padding: 20px 0;
-}
 
 .parent {
     display: grid;
