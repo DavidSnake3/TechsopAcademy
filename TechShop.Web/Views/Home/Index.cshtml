@@ -10,36 +10,30 @@
     var puesto = User.Claims.FirstOrDefault(c => c.Type == "Puesto")?.Value ?? "N/D";
 }
 <div class="parent">
-    <div class="div1 p-3 d-flex flex-column justify-content-start">
-        <div class="d-flex justify-content-between align-items-start mb-1">
+    <div class="div1 p-3">
+        <div class="d-flex justify-content-between align-items-start mb-4">
             <div class="d-flex align-items-center">
-                <i class="bi bi-person-circle fs-1 text-primary me-2"></i>
+                <i class="bi bi-person-circle fs-1 text-white me-3"></i>
                 <div>
-                    <h5 class="mb-0">@nombre</h5>
-                    <small class="text-muted">Código: @codigo &nbsp;|&nbsp; @puesto</small><br />
-                    <small class="text-muted">@rol</small>
+                    <h5 class="mb-0 text-white">@nombre</h5>
+                    <small class="text-white">Código: @codigo | @puesto</small><br />
+                    <small class="text-white">@rol</small>
                 </div>
             </div>
-            <a class="btn btn-outline-primary btn-sm" href="#">Ver información</a>
+            <a class="btn btn-solid btn-sm align-self-start" href="#">Ver información</a>
         </div>
 
-        <div class="row g-2 text-center">
-            <div class="col">
-                <div class="p-6 rounded border border-success bg-success bg-opacity-10">
-                    <i class="bi bi-check-circle-fill fs-4 text-success"></i>
-                    <div class="fw-bold mt-1 text-success">
-                        @Model.Completados.Count()
-                    </div>
-                    <small class="d-block text-success">Completados</small>
+        <div class="row gx-3">
+            <div class="col-6">
+                <div class="stat-card success">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <small>Completado – @Model.Completados.Count()</small>
                 </div>
             </div>
-            <div class="col">
-                <div class="p-6 rounded border border-primary bg-primary bg-opacity-10">
-                    <i class="bi bi-play-circle-fill fs-4 text-primary"></i>
-                    <div class="fw-bold mt-1 text-primary">
-                        @Model.EnProceso.Count()
-                    </div>
-                    <small class="d-block text-primary">En Proceso</small>
+            <div class="col-6">
+                <div class="stat-card info">
+                    <i class="bi bi-play-circle-fill"></i>
+                    <small>En Proceso – @Model.EnProceso.Count()</small>
                 </div>
             </div>
         </div>
@@ -76,7 +70,7 @@
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Material" asp-route-id="@c.Id"
-                           class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                           class="btn btn-info btn-sm ms-3">
                             <i class="bi bi-eye"> Continuar curso</i>
                         </a>
                     </div>
@@ -84,7 +78,7 @@
             }
         </div>
         <div class="text-center mt-3">
-            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="enproceso" class="btn btn-outline-primary btn-sm">Mostrar todos</a>
+            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="enproceso" class="btn btn-primary btn-sm">Mostrar todos</a>
         </div>
     </div>
 
@@ -118,8 +112,7 @@
                                 @c.Dificultad | @(c.DuracionHoras?.ToString("h\\:mm") ?? "N/A") h
                             </div>
                         </div>
-                        <a 
-                           class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                        <a class="btn btn-info btn-sm ms-3">
                             <i class="bi bi-eye"> Visualizar</i>
                         </a>
                     </div>
@@ -127,7 +120,7 @@
             }
         </div>
         <div class="text-center mt-3">
-            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="finalizados" class="btn btn-outline-primary btn-sm">Mostrar todos</a>
+            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="finalizados" class="btn btn-primary btn-sm">Mostrar todos</a>
         </div>
     </div>
 
@@ -162,7 +155,7 @@
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Detalles" asp-route-id="@c.Id"
-                           class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                           class="btn btn-info btn-sm ms-3">
                             <i class="bi bi-eye"> Visualizar Curso</i>
                         </a>
                     </div>
@@ -170,7 +163,7 @@
             }
         </div>
         <div class="text-center mt-3">
-            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="disponibles" class="btn btn-outline-primary btn-sm">Mostrar todos</a>
+            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="disponibles" class="btn btn-primary btn-sm">Mostrar todos</a>
         </div>
     </div>
 

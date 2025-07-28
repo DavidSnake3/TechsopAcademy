@@ -134,71 +134,50 @@ namespace TechShop.Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Cursos(
-           string estado = "disponibles",
-           string searchString = null,
-           string codigo = null,
-           DateTime? fechaDesde = null,
-           DateTime? fechaHasta = null)
+            string estado = "disponibles",
+            string searchString = null)
         {
             var empleadoId = int.Parse(User.Claims.First(c => c.Type == "Codigo").Value);
             var model = new DashboardViewModel();
 
-            IQueryable<Capacitaciones> query;
-
-            switch (estado.ToLower())
+            IQueryable<Capacitaciones> query = estado.ToLower() switch
             {
-                case "enproceso":
-                    query = from h in _ctx.HistorialCapacitacionEmpleado
-                            join c in _ctx.Capacitaciones on h.CapacitacionId equals c.Id
-                            where h.EmpleadoId == empleadoId && h.FechaCompletado == null
-                            select c;
-                    break;
+                "enproceso" => from h in _ctx.HistorialCapacitacionEmpleado
+                               join c in _ctx.Capacitaciones on h.CapacitacionId equals c.Id
+                               where h.EmpleadoId == empleadoId && h.FechaCompletado == null
+                               select c,
 
-                case "finalizados":
-                    query = from r in _ctx.ResultadosCapacitacion
-                            join c in _ctx.Capacitaciones on r.CapacitacionId equals c.Id
-                            where r.EmpleadoId == empleadoId && r.Aprobado
-                            select c;
-                    break;
+                "finalizados" => from r in _ctx.ResultadosCapacitacion
+                                 join c in _ctx.Capacitaciones on r.CapacitacionId equals c.Id
+                                 where r.EmpleadoId == empleadoId && r.Aprobado
+                                 select c,
 
-                default:
-                    query = _ctx.Capacitaciones.Where(c => c.Activo &&
-                               !_ctx.HistorialCapacitacionEmpleado
-                                   .Any(h => h.EmpleadoId == empleadoId && h.CapacitacionId == c.Id));
-                    break;
-            }
+                _ => _ctx.Capacitaciones.Where(c =>
+                         c.Activo &&
+                         !_ctx.HistorialCapacitacionEmpleado
+                              .Any(h => h.EmpleadoId == empleadoId && h.CapacitacionId == c.Id))
+            };
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                query = query.Where(c => c.Nombre.Contains(searchString));
+                query = query.Where(c =>
+                    c.Nombre.Contains(searchString) ||
+                    c.Codigo.Contains(searchString));
             }
 
-            if (!string.IsNullOrWhiteSpace(codigo))
-            {
-                query = query.Where(c => c.Codigo.Contains(codigo));
-            }
-
-            if (fechaDesde.HasValue)
-            {
-                query = query.Where(c => c.FechaCreacion >= fechaDesde.Value);
-            }
-
-            if (fechaHasta.HasValue)
-            {
-                query = query.Where(c => c.FechaCreacion <= fechaHasta.Value);
-            }
-
-            var cursosFiltrados = await query.Select(c => new CursoDetallelDto
-            {
-                Id = c.Id,
-                Nombre = c.Nombre,
-                DescripcionCorta = c.DescripcionCorta,
-                FechaCreacion = c.FechaCreacion,
-                DuracionHoras = c.DuracionHoras,
-                Codigo = c.Codigo,
-                Dificultad = c.Dificultad,
-                Foto = c.Foto
-            }).ToListAsync();
+            var cursosFiltrados = await query
+                .Select(c => new CursoDetallelDto
+                {
+                    Id = c.Id,
+                    Nombre = c.Nombre,
+                    DescripcionCorta = c.DescripcionCorta,
+                    FechaCreacion = c.FechaCreacion,
+                    DuracionHoras = c.DuracionHoras,
+                    Codigo = c.Codigo,
+                    Dificultad = c.Dificultad,
+                    Foto = c.Foto
+                })
+                .ToListAsync();
 
             switch (estado.ToLower())
             {
@@ -214,6 +193,7 @@ namespace TechShop.Web.Controllers
             }
 
             ViewBag.Estado = estado;
+            ViewBag.SearchString = searchString;
             return View("~/Views/Curso/Cursos.cshtml", model);
         }
     }
