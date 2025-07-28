@@ -1,0 +1,92 @@
+﻿@model TechShop.Web.Models.MaterialCursoViewModel
+
+@{
+    Layout = "_Cursolayout";
+    ViewData["Title"] = "Material del Curso";
+    ViewData["Style"] = "~/css/MaterialCurso.css";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+<div id="VisualizarMaterial">
+  <div class="hero bg-gradient-to-r from-blue-900 via-blue-800 to-cyan-700 text-white text-center py-5 position-relative overflow-hidden">
+    <div class="layer-black position-absolute inset-0 bg-black opacity-25"></div>
+    <div class="container position-relative">
+            <h1 class="display-4 fw-bold mt-3">@Model.Nombre - @Model.Codigo</h1>
+      <p class="lead mt-2">@Model.DescripcionCorta</p>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <div class="row">
+      <nav class="col-lg-3 mb-4">
+        <div class="list-group sticky-top" style="top: 1rem;">
+          @for (int i = 0; i < Model.Secciones.Count; i++)
+          {
+              var sec = Model.Secciones[i];
+                        <a class="list-group-item list-group-item-action btn-section" href="@($"#sec{i}")">
+
+
+                <div class="fw-semibold">Sección @(i+1): @sec.Titulo</div>
+              </a>
+          }
+        </div>
+      </nav>
+
+      <div class="col-lg-9">
+        @for (int i = 0; i < Model.Secciones.Count; i++)
+        {
+            var sec = Model.Secciones[i];
+                    <div class="card mb-4 shadow-sm" id="@($"sec{i}")">
+
+
+              <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Sección @(i+1): @sec.Titulo</h2>
+              </div>
+              <div class="card-body">
+                @foreach (var comp in sec.Componentes)
+                {
+                                <div class="mb-4">
+                                    <span class="badge bg-info text-white me-2">@comp.Tipo</span>
+
+                                    @switch (comp.Tipo)
+                                    {
+                                        case "Titulo":
+                                            <div class="content-box">
+                                                <h5 class="fw-bold m-0">@comp.Contenido</h5>
+                                            </div>
+                                            break;
+                                        case "Texto":
+                                            <div class="content-box">
+                                                <p class="m-0">@comp.Contenido</p>
+                                            </div>
+                                            break;
+                                        case "Video":
+                                            <div class="ratio ratio-16x9 mt-3">
+                                                <iframe src="@comp.Contenido.Replace("watch?v=", "embed/")" allowfullscreen></iframe>
+                                            </div>
+                                            break;
+                                        case "Archivo":
+                                            <div class="content-box">
+                                                <a href="@comp.Contenido" class="btn btn-outline-primary" download>
+                                                    Descargar: @System.IO.Path.GetFileName(comp.Contenido)
+                                                </a>
+                                            </div>
+                                            break;
+                                    }
+                                </div>
+                }
+              </div>
+            </div>
+        }
+      </div>
+    </div>
+        <div class="text-center mt-5">
+            <a asp-action="Detalles" asp-route-id="@Model.CapacitacionId" class="btn btn-outline-warning btn-lg me-3 ">
+                Regresar a detalles
+            </a>
+            <a asp-action="Examen" asp-route-id="@Model.CapacitacionId" class="btn btn-success btn-lg">
+                Realizar examen
+            </a>
+        </div>
+  </div>
+</div>

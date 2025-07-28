@@ -42,5 +42,8 @@ namespace TechShop.Web.Models
         public List<string> Zonas { get; set; } = new();
 
         public IEnumerable<MaterialDto> Materiales { get; set; }
+
+        public bool EstadoProceso { get; set; }
+
     }
 }

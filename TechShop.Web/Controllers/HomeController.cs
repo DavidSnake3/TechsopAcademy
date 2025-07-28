@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TechShop.Application.DTOs;
 using TechShop.Infraestructure.Data;
+using TechShop.Infraestructure.Models;
 using TechShop.Web.Models;
 
 namespace TechShop.Web.Controllers
@@ -40,7 +41,7 @@ namespace TechShop.Web.Controllers
                     Codigo = c.Codigo,
                     Dificultad = c.Dificultad,
                     Foto = c.Foto
-                } 
+                }
             ).ToListAsync();
 
 
@@ -125,22 +126,95 @@ namespace TechShop.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Empleados()
-        {
-            return View();
-        }
-
-
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Cursos(
+           string estado = "disponibles",
+           string searchString = null,
+           string codigo = null,
+           DateTime? fechaDesde = null,
+           DateTime? fechaHasta = null)
+        {
+            var empleadoId = int.Parse(User.Claims.First(c => c.Type == "Codigo").Value);
+            var model = new DashboardViewModel();
+
+            IQueryable<Capacitaciones> query;
+
+            switch (estado.ToLower())
+            {
+                case "enproceso":
+                    query = from h in _ctx.HistorialCapacitacionEmpleado
+                            join c in _ctx.Capacitaciones on h.CapacitacionId equals c.Id
+                            where h.EmpleadoId == empleadoId && h.FechaCompletado == null
+                            select c;
+                    break;
+
+                case "finalizados":
+                    query = from r in _ctx.ResultadosCapacitacion
+                            join c in _ctx.Capacitaciones on r.CapacitacionId equals c.Id
+                            where r.EmpleadoId == empleadoId && r.Aprobado
+                            select c;
+                    break;
+
+                default:
+                    query = _ctx.Capacitaciones.Where(c => c.Activo &&
+                               !_ctx.HistorialCapacitacionEmpleado
+                                   .Any(h => h.EmpleadoId == empleadoId && h.CapacitacionId == c.Id));
+                    break;
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query = query.Where(c => c.Nombre.Contains(searchString));
+            }
+
+            if (!string.IsNullOrWhiteSpace(codigo))
+            {
+                query = query.Where(c => c.Codigo.Contains(codigo));
+            }
+
+            if (fechaDesde.HasValue)
+            {
+                query = query.Where(c => c.FechaCreacion >= fechaDesde.Value);
+            }
+
+            if (fechaHasta.HasValue)
+            {
+                query = query.Where(c => c.FechaCreacion <= fechaHasta.Value);
+            }
+
+            var cursosFiltrados = await query.Select(c => new CursoDetallelDto
+            {
+                Id = c.Id,
+                Nombre = c.Nombre,
+                DescripcionCorta = c.DescripcionCorta,
+                FechaCreacion = c.FechaCreacion,
+                DuracionHoras = c.DuracionHoras,
+                Codigo = c.Codigo,
+                Dificultad = c.Dificultad,
+                Foto = c.Foto
+            }).ToListAsync();
+
+            switch (estado.ToLower())
+            {
+                case "enproceso":
+                    model.EnProceso = cursosFiltrados;
+                    break;
+                case "finalizados":
+                    model.Completados = cursosFiltrados;
+                    break;
+                default:
+                    model.Disponibles = cursosFiltrados;
+                    break;
+            }
+
+            ViewBag.Estado = estado;
+            return View("~/Views/Curso/Cursos.cshtml", model);
+        }
     }
-}
+    }

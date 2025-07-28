@@ -5,6 +5,7 @@ namespace TechShop.Infraestructure.Models;
 
 public partial class MaterialCurso
 {
+
     public List<SeccionMaterial> Secciones { get; set; } = new();
 
     public virtual Capacitaciones Capacitacion { get; set; } = null!;

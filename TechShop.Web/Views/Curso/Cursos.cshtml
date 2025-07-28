@@ -1,0 +1,116 @@
+﻿@model TechShop.Web.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Cursos";
+    ViewData["Style"] = "~/css/CursosAdmin.css";
+    var estado = ViewBag.Estado as string ?? "disponibles";
+}
+
+<div class="CursoAdmin container-xl">
+    <header>
+        <h1>
+            @(
+                        estado.ToLower() switch
+                        {
+                            "enproceso" => "Cursos en Proceso",
+                            "finalizados" => "Cursos Finalizados",
+                            _ => "Cursos Disponibles"
+                        }
+                        )
+        </h1>
+        <div class="acciones">
+            <form method="get" asp-action="Cursos" class="filter-form">
+                <label for="searchString">Buscar:</label>
+                <input type="text" id="searchString" name="searchString" class="form-control" placeholder="Nombre del Curso" />
+
+                <label for="estado">Estado:</label>
+                <select id="estado" name="estado" class="form-select">
+                    <option value="disponibles" selected="@(estado == "disponibles" ? "selected" : null)">Disponibles</option>
+                    <option value="enproceso" selected="@(estado == "enproceso" ? "selected" : null)">En proceso</option>
+                    <option value="finalizados" selected="@(estado == "finalizados" ? "selected" : null)">Finalizados</option>
+                </select>
+
+                <label for="fechaDesde">Desde:</label>
+                <input type="date" id="fechaDesde" name="fechaDesde" class="form-control" />
+
+                <label for="fechaHasta">Hasta:</label>
+                <input type="date" id="fechaHasta" name="fechaHasta" class="form-control" />
+
+                <label for="codigo">Código:</label>
+                <input type="text" id="codigo" name="codigo" class="form-control" placeholder="Código (ej. CS-23)" />
+
+                <div class="d-flex gap-2 mt-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+
+                    <a asp-action="Cursos" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Limpiar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </header>
+    <div class="p-3 d-flex flex-column">
+        <div class="scrollable-grid px-2" style="max-height:550px; overflow-y:auto;">
+            @{
+                var cursos = estado switch
+                {
+                    "enproceso" => Model.EnProceso,
+                    "finalizados" => Model.Completados,
+                    _ => Model.Disponibles
+                };
+
+                if (!cursos.Any())
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-dash-circle fs-2 mb-2"></i>
+                        <p class="mb-0">No hay cursos para mostrar</p>
+                    </div>
+                }
+                else
+                {
+                    foreach (var c in cursos)
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="@Url.Action("Imagen", "Curso", new { id = c.Id })"
+                                 alt="@c.Nombre"
+                                 class="me-3"
+                                 style="width:100px; height:60px; object-fit:cover; border-radius:4px;" />
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">@c.Codigo - @c.Nombre</h6>
+                                </div>
+                                <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
+                                <div class="small text-muted">
+                                    @c.Dificultad &nbsp;|&nbsp; @(c.DuracionHoras?.ToString("h:mm") ?? "N/A") h
+                                </div>
+                            </div>
+
+                            @if (estado == "enproceso")
+                            {
+                                <a asp-controller="Curso" asp-action="Material" asp-route-id="@c.Id"
+                                   class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                                    <i class="bi bi-eye"> Continuar</i>
+                                </a>
+                            }
+                            else if (estado == "finalizados")
+                            {
+                                <a class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                                    <i class="bi bi-eye"> Visualizar</i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Curso" asp-action="Detalles" asp-route-id="@c.Id"
+                                   class="btn btn-outline-info btn-sm ms-3 flex-shrink-0">
+                                    <i class="bi bi-eye"> Ver Curso</i>
+                                </a>
+                            }
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>

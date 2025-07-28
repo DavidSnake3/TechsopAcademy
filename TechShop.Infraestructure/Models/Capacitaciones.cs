@@ -37,9 +37,9 @@ public partial class Capacitaciones
 
     public virtual ICollection<HistorialCapacitacionEmpleado> HistorialCapacitacionEmpleado { get; set; } = new List<HistorialCapacitacionEmpleado>();
 
-    public virtual ICollection<MaterialCurso> MaterialCurso { get; set; } = new List<MaterialCurso>();
-
     public virtual ICollection<Preguntas> Preguntas { get; set; } = new List<Preguntas>();
 
     public virtual ICollection<ResultadosCapacitacion> ResultadosCapacitacion { get; set; } = new List<ResultadosCapacitacion>();
+
+    public virtual ICollection<SeccionCurso> SeccionCurso { get; set; } = new List<SeccionCurso>();
 }

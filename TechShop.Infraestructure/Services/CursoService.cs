@@ -34,18 +34,10 @@ namespace TechShop.Infraestructure.Services
                     Departamento = c.Departamento,
                     Puestos = c.Puestos,
                     Zonas = c.Zonas,
-                    Usuario = c.Usuario,
-                    Materiales = c.MaterialCurso.Select(m => new MaterialDto
-                    {
-                        Id = m.Id,
-                        NombreArchivo = m.NombreArchivo,
-                        RutaArchivo = m.RutaArchivo,
-                        TipoArchivo = m.TipoArchivo,
-                        FechaSubida = m.FechaSubida,
-                         VideoUrl = m.VideoUrl 
-                    }).ToList(),
+                    Usuario = c.Usuario
                 })
                 .FirstOrDefaultAsync();
+
 
             if (cap == null) throw new KeyNotFoundException("Curso no encontrado");
             return cap;

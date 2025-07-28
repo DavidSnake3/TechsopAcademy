@@ -30,25 +30,60 @@
     overflow: hidden;
 }
 
-html, body, main {
+main {
+
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow-y: auto;
+    margin-top: -10px;
+    min-height: calc(100vh - 56px);
+    background: linear-gradient( -45deg, rgba(12, 59, 94, 1) 0%, rgba(40, 134, 222, 1) 50%, rgba(12, 59, 94, 1) 0% );
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 100%, transparent 100%);
+    padding: 4rem 2rem;
+    box-sizing: border-box;
+    z-index: 1;
 }
 
 
 .parent {
+    background-image: url('/img/TechShop%20Academy%20blanco%20sin%20fondo.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-size: 900px auto;
     display: grid;
-    gap: 16px;
+    gap: 24px;
     padding: 0 80px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
         "personal avisos"
         "disponibles enproceso"
         ". finalizados";
+    /* max-width: 1400px;*/
+    /*margin: 0 auto;*/
 }
+.div4 > h6.text-primary,
+.div5 > h6.text-secondary,
+.div7 > h6.text-info,
+.div8 > h6 {
+    background-color: rgba(12, 59, 94, 1) !important;
+    color: #ffffff !important;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .div4 > h6.text-primary .bi,
+    .div5 > h6.text-secondary .bi,
+    .div7 > h6.text-info .bi,
+    .div8 > h6 .bi {
+        color: #ffffff !important;
+    }
 
 .div1 {
     grid-area: personal;
@@ -100,11 +135,17 @@ html, body, main {
 }
 
 .parent > div {
-    background: var(--cell-bg);
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 2rem;
     border: 4px solid var(--cell-border);
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     position: relative;
+    color: #fff;
 }
 
     .parent > div::after {
@@ -116,6 +157,14 @@ html, body, main {
         height: 12px;
         border-bottom: 4px solid var(--cell-border);
         border-right: 4px solid var(--cell-border);
+    }
+    .parent > div:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    }
+    .parent > div small,
+    .parent > div .text-muted {
+        color: rgba(255, 255, 255, 0.7) !important;
     }
 
 .div4 .scrollable-content,
