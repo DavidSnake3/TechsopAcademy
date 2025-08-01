@@ -109,11 +109,11 @@
     margin-bottom: 1.5rem;
 }
 .btn-comenzar {
-    padding: 1rem 2.5rem;
-    font-size: 1.25rem;
+    background-color: rgba(12, 59, 94, 1) !important;
+    border: rgba(12, 59, 94, 1) !important;
+    color: white !important;
     font-weight: bold;
-    border-radius: 2rem;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease;
 }
 
     .btn-comenzar:hover {

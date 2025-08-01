@@ -1,1 +1,146 @@
-﻿
+﻿@model TechShop.Web.Models.ViewModels.ExamenVM
+
+@{
+    Layout = "_Cursolayout";
+    ViewData["Title"] = "Examen";
+    ViewData["Style"] = "~/css/Examen.css";
+    var totalPreguntas = Model.Preguntas.Count;
+}
+
+<div class="exam-container bg-gradient-exam min-vh-100 py-5 px-3 px-md-5">
+    <div class="container-xxl px-5">
+        <div class="card shadow-lg text-white bg-gradient-header mb-4">
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center py-4 px-4">
+                <div>
+                    <h2 class="fw-bold mb-1">@Model.Nombre - @Model.Codigo </h2>
+                    <small class="fs-6">Pregunta <span id="pregunta-actual">1</span> de @totalPreguntas</small>
+                </div>
+                <div class="text-end mt-3 mt-md-0">
+                    <small class="text-white d-block mt-1" id="respuestas-contador">0 de @totalPreguntas respondidas</small>
+                </div>
+            </div>
+            <div class="progress bg-white bg-opacity-25" style="height: 6px;">
+                <div class="progress-bar bg-warning" id="barra-progreso" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <form id="examenForm" asp-action="Examen" method="post">
+            <input asp-for="CapacitacionId" type="hidden" />
+            <input asp-for="Nombre" type="hidden" />
+            <input asp-for="Codigo" type="hidden" />
+
+            @for (int i = 0; i < totalPreguntas; i++)
+            {
+                var pregunta = Model.Preguntas[i];
+                <div class="card shadow pregunta mb-5" data-index="@i" style="display: @(i == 0 ? "block" : "none")">
+                    <div class="card-header bg-light d-flex align-items-center gap-3">
+                        <div class="circle-number bg-primary text-white">@((i + 1))</div>
+                        <div>
+                            <strong class="h5 mb-0">Pregunta @(i + 1)</strong>
+                            <div class="text-muted small">@((pregunta.TipoPregunta == "MultipleChoice") ? "Selección múltiple" : "Respuesta abierta")</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="fs-4 mb-4">@pregunta.TextoPregunta</p>
+                        <input type="hidden" name="Preguntas[@i].PreguntaId" value="@pregunta.PreguntaId" />
+                        <input type="hidden" name="Preguntas[@i].TipoPregunta" value="@pregunta.TipoPregunta" />
+
+
+                        @if (pregunta.TipoPregunta == "MultipleChoice")
+                        {
+                            foreach (var (op, j) in pregunta.Opciones.Select((op, j) => (op, j)))
+                            {
+                                var optionId = $"p{i}_o{j}";
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" name="Preguntas[@i].OpcionSeleccionada" value="@op.OpcionId" id="@optionId" />
+                                    <label class="form-check-label fs-5" for="@optionId">
+                                        <strong>@(Convert.ToChar(65 + j)).</strong> @op.TextoOpcion
+                                    </label>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <textarea name="Preguntas[@i].RespuestaTexto" class="form-control fs-5" rows="5" placeholder="Escribe tu respuesta..."></textarea>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <button type="button" id="anteriorBtn" class="btn btn-outline-secondary px-4" disabled>Anterior</button>
+                <div class="d-flex flex-wrap gap-1">
+                    @for (int i = 0; i < totalPreguntas; i++)
+                    {
+                        <button type="button" class="btn btn-sm btn-outline-dark nav-btn" data-target="@i">@(i + 1)</button>
+                    }
+                </div>
+                <button type="button" id="siguienteBtn" class="btn btn-primary px-4">Siguiente</button>
+            </div>
+        </form>
+    </div>
+    <div class="text-center botonera mt-3 d-flex flex-column flex-md-row justify-content-center gap-4">
+        <a asp-action="Material" asp-route-id="@Model.CapacitacionId"
+           class="btn btn-enviar-materiales btn-lg">
+            Volver a Materiales
+        </a>
+
+        <button id="enviarExamenBtn"
+                class="btn btn-enviar-materiales btn-lg"
+                disabled
+                onclick="document.getElementById('examenForm').submit();">
+            Enviar Examen
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+           let index = 0;
+        const total = @totalPreguntas;
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const preguntas = document.querySelectorAll('.pregunta');
+        const anteriorBtn = document.getElementById('anteriorBtn');
+        const siguienteBtn = document.getElementById('siguienteBtn');
+        const preguntaActualSpan = document.getElementById('pregunta-actual');
+        const progresoBar = document.getElementById('barra-progreso');
+        const contadorRespuestas = document.getElementById('respuestas-contador');
+        const radios = document.querySelectorAll("input[type=radio], textarea");
+        const enviarExamenBtn = document.getElementById('enviarExamenBtn');
+
+        function actualizarVista() {
+            preguntas.forEach((p, i) => p.style.display = (i === index) ? 'block' : 'none');
+            preguntaActualSpan.innerText = index + 1;
+            anteriorBtn.disabled = index === 0;
+            siguienteBtn.disabled = index === total - 1;
+
+            const respondidas = Array.from(preguntas).filter(card => {
+                const radioChecked = card.querySelector('input[type="radio"]:checked');
+                const textarea = card.querySelector('textarea');
+                return radioChecked || (textarea && textarea.value.trim().length > 0);
+            }).length;
+            const progreso = (respondidas / total) * 100;
+            progresoBar.style.width = `${progreso}%`;
+            contadorRespuestas.innerText = `${respondidas} de ${total} respondidas`;
+            enviarExamenBtn.disabled = respondidas < total;
+
+            navBtns.forEach((btn, i) => {
+                const card = preguntas[i];
+                const answered = card.querySelector('input[type="radio"]:checked')
+                               || (card.querySelector('textarea')?.value.trim().length > 0);
+                btn.classList.toggle('answered', Boolean(answered));
+                btn.classList.toggle('active', i === index);
+            });
+        }
+
+        anteriorBtn.addEventListener('click', () => { if (index > 0) index--; actualizarVista(); });
+        siguienteBtn.addEventListener('click', () => { if (index < total - 1) index++; actualizarVista(); });
+        navBtns.forEach(btn => btn.addEventListener('click', () => {
+            index = parseInt(btn.dataset.target);
+            actualizarVista();
+        }));
+        radios.forEach(r => r.addEventListener('change', actualizarVista));
+
+        actualizarVista();
+    </script>
+}

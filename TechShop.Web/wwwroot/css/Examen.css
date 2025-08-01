@@ -1,0 +1,134 @@
+﻿.bg-gradient-exam {
+position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    margin-top: -10px;
+    min-height: calc(100vh - 56px);
+    background: linear-gradient( -45deg, rgba(12, 59, 94, 1) 0%, rgba(40, 134, 222, 1) 50%, rgba(12, 59, 94, 1) 0% );
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    padding: 4rem 2rem;
+    box-sizing: border-box;
+    z-index: 0;
+}
+
+.bg-gradient-header {
+    background: rgba(12, 59, 94, 1);
+    border: 3px solid rgba(40, 134, 222, 1);
+    border-radius: 0.5rem;
+}
+
+.progress-bar {
+    background-color: #5fd3ff !important; 
+}
+
+.circle-number {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.pregunta {
+    border-left: 6px solid #3b82f6;
+    margin-bottom: 3rem;
+}
+
+:root {
+    --color-principal: rgba(12, 59, 94, 1);
+}
+
+.btn-outline-secondary,
+.btn-outline-dark,
+.btn-primary {
+    border: 3px solid var(--color-principal);
+    color: var(--color-principal);
+    font-weight: bold;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-secondary:hover,
+    .btn-outline-dark:hover,
+    .btn-primary:hover {
+        background-color: var(--color-principal);
+        color: white;
+    }
+
+.nav-btn.active,
+.nav-btn:focus {
+    background-color: var(--color-principal) !important;
+    color: white !important;
+    border-color: white !important;
+}
+
+.nav-btn {
+    width: 42px;
+    height: 42px;
+    border: 3px solid var(--color-principal);
+    color: var(--color-principal);
+    font-weight: bold;
+    border-radius: 50%;
+    background-color: white;
+}
+
+    .nav-btn:hover {
+        background-color: var(--color-principal);
+        color: white;
+    }
+    .nav-btn.answered {
+        background-color: #28a745 !important;
+        border-color: var(--color-principal) !important;
+        color: white !important;
+    }
+
+
+.card-body {
+    padding: 2rem !important;
+}
+
+.card-header {
+    padding: 1.5rem !important;
+}
+input[type="radio"].form-check-input {
+    transform: scale(1.4); 
+    margin-right: 0.5rem;
+}
+
+.form-check-label {
+    font-size: 1.2rem;
+}
+
+textarea.form-control {
+    font-size: 1.2rem;
+    padding: 1rem;
+}
+.botonera {
+    margin-top: 9rem !important; 
+}
+.btn-enviar-materiales {
+    background-color: rgba(12, 59, 94, 1) !important;
+    border: 3px solid white !important;
+    color: white !important;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+    .btn-enviar-materiales:hover {
+        background-color: white !important;
+        color: rgba(12, 59, 94, 1) !important;
+    }
+
+
+#anteriorBtn,
+#siguienteBtn {
+    border-radius: 8px;
+    font-size: 1.1rem;
+    padding: 0.6rem 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}

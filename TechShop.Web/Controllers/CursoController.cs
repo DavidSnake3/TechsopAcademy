@@ -6,6 +6,7 @@ using TechShop.Application.Interfaces;
 using TechShop.Infraestructure.Data;
 using TechShop.Infraestructure.Models;
 using TechShop.Web.Models;
+using TechShop.Web.Models.ViewModels;
 
 namespace TechShop.Web.Controllers
 {
@@ -126,7 +127,7 @@ namespace TechShop.Web.Controllers
                 return NotFound("Capacitación no encontrada.");
 
             var estado = await EstaCapacitacionEnProcesoAsync(id);
-            var vm = new MaterialCursoViewModel
+            var vm = new Models.MaterialCursoViewModel
             {
                 CapacitacionId = cap.Id,
                 Nombre = cap.Nombre,
@@ -186,5 +187,250 @@ namespace TechShop.Web.Controllers
                     h.CapacitacionId == capacitacionId &&
                     h.Estado == "En Proceso");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Examen(int id)
+        {
+            var capacitacion = await _ctx.Capacitaciones
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (capacitacion == null)
+            {
+                return NotFound(); 
+            }
+
+            var preguntas = await _ctx.Preguntas
+                .Where(p => p.CapacitacionId == id)
+                .Include(p => p.OpcionesRespuesta)
+                .OrderBy(p => p.Id)
+                .ToListAsync();
+
+            var vm = new ExamenVM
+            {
+                CapacitacionId = capacitacion.Id,
+                Nombre = capacitacion.Nombre,            
+                Codigo = capacitacion.Codigo,             
+                DescripcionCorta = capacitacion.DescripcionCorta,      
+                Preguntas = preguntas.Select(p => new PreguntaVM
+                {
+                    PreguntaId = p.Id,
+                    TextoPregunta = p.TextoPregunta,
+                    TipoPregunta = p.TipoPregunta,
+                    Opciones = p.OpcionesRespuesta.Select(o => new OpcionVM
+                    {
+                        OpcionId = o.Id,
+                        TextoOpcion = o.TextoOpcion
+                    }).ToList()
+                }).ToList()
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Examen(ExamenVM model)
+        {
+            var codigo = User.FindFirst("Codigo")?.Value;
+            if (string.IsNullOrEmpty(codigo)) return Forbid();
+
+            var emp = await _dataverse.GetEmpleadoByCodigoAsync(codigo);
+            if (emp == null || !int.TryParse(emp.Crfb9_codigo, out var empleadoId)) return Forbid();
+
+
+
+
+
+            var ahora = DateTime.Now;
+
+            var preguntasBD = await _ctx.Preguntas
+                .Include(p => p.OpcionesRespuesta)
+                .Where(p => p.CapacitacionId == model.CapacitacionId)
+                .ToListAsync();
+
+            var detalles = new List<ResultadoDetalleVM>();
+            int total = 0, correctas = 0;
+
+            foreach (var preguntaVM in model.Preguntas)
+            {
+                var preguntaBD = preguntasBD.FirstOrDefault(p => p.Id == preguntaVM.PreguntaId);
+                if (preguntaBD == null) continue;
+
+                total++;
+                bool esCorrecta = false;
+                string respuestaUsuario = "";
+                string respuestaCorrecta = "";
+
+                if (preguntaVM.TipoPregunta == "MultipleChoice")
+                {
+                    var opcionCorrecta = preguntaBD.OpcionesRespuesta.FirstOrDefault(o => o.EsCorrecta);
+                    respuestaCorrecta = opcionCorrecta?.TextoOpcion;
+
+                    var opcionUsuario = preguntaBD.OpcionesRespuesta
+                        .FirstOrDefault(o => o.Id == preguntaVM.OpcionSeleccionada);
+                    respuestaUsuario = opcionUsuario?.TextoOpcion;
+
+                    if (opcionCorrecta != null && opcionUsuario?.Id == opcionCorrecta.Id)
+                        esCorrecta = true;
+                }
+                else if (preguntaVM.TipoPregunta == "Abierta")
+                {
+                    respuestaUsuario = preguntaVM.RespuestaTexto?.Trim();
+                    respuestaCorrecta = preguntaBD.OpcionesRespuesta.FirstOrDefault()?.TextoOpcion?.Trim();
+
+                    if (!string.IsNullOrEmpty(respuestaCorrecta) &&
+                        string.Equals(respuestaUsuario, respuestaCorrecta, StringComparison.OrdinalIgnoreCase))
+                    {
+                        esCorrecta = true;
+                    }
+                }
+
+                if (esCorrecta) correctas++;
+
+                detalles.Add(new ResultadoDetalleVM
+                {
+                    TextoPregunta = preguntaBD.TextoPregunta,
+                    RespuestaUsuario = respuestaUsuario,
+                    RespuestaCorrecta = respuestaCorrecta,
+                    EsCorrecta = esCorrecta
+                });
+            }
+
+            decimal nota = total > 0 ? Math.Round(correctas * 100m / total, 2) : 0m;
+            bool aprobado = nota >= 70m;
+
+            if (aprobado)
+            {
+                foreach (var p in model.Preguntas)
+                {
+                    _ctx.RespuestasEmpleado.Add(new RespuestasEmpleado
+                    {
+                        EmpleadoId = empleadoId,
+                        PreguntaId = p.PreguntaId,
+                        OpcionRespuestaId = p.TipoPregunta == "MultipleChoice" ? p.OpcionSeleccionada : null,
+                        RespuestaTexto = p.TipoPregunta == "Abierta" ? p.RespuestaTexto : null,
+                        FechaRespuesta = ahora
+                    });
+                }
+
+                _ctx.ResultadosCapacitacion.Add(new ResultadosCapacitacion
+                {
+                    EmpleadoId = empleadoId,
+                    CapacitacionId = model.CapacitacionId,
+                    Nota = nota,
+                    Aprobado = true,
+                    FechaEvaluacion = ahora
+                });
+
+
+
+                var hist = await _ctx.HistorialCapacitacionEmpleado
+                    .FirstOrDefaultAsync(h =>
+                        h.EmpleadoId == empleadoId &&
+                        h.CapacitacionId == model.CapacitacionId &&
+                        h.Estado == "En Proceso");
+
+                if (hist != null)
+                {
+                    hist.Estado = "Aprobado";
+                    hist.FechaCompletado = ahora;
+                }
+
+                await _ctx.SaveChangesAsync();
+            }
+
+            return View("Resultados", new ResultadosVM
+            {
+                CapacitacionId = model.CapacitacionId,
+                Nombre = model.Nombre,
+                Codigo = model.Codigo,
+                TotalPreguntas = total,
+                Correctas = correctas,
+                Nota = nota,
+                Aprobado = aprobado,
+                Detalles = detalles
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Resultados(int id)
+        {
+            var codigo = User.FindFirst("Codigo")?.Value;
+            if (string.IsNullOrEmpty(codigo)) return Forbid();
+            var emp = await _dataverse.GetEmpleadoByCodigoAsync(codigo);
+            if (emp == null || !int.TryParse(emp.Crfb9_codigo, out var empleadoId))
+                return Forbid();
+
+            var cap = await _ctx.Capacitaciones
+                .Where(c => c.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (cap == null)
+            {
+                return NotFound();
+            }
+
+
+            var res = await _ctx.ResultadosCapacitacion
+                .Where(r => r.EmpleadoId == empleadoId && r.CapacitacionId == id)
+                .FirstOrDefaultAsync();
+
+            var preguntasMC = await _ctx.Preguntas
+                .Where(p => p.CapacitacionId == id && p.TipoPregunta == "MultipleChoice")
+                .ToListAsync();
+
+            var detalles = new List<ResultadoDetalleVM>();
+            foreach (var p in preguntasMC)
+            {
+                var resp = await _ctx.RespuestasEmpleado
+                    .Where(r => r.EmpleadoId == empleadoId && r.PreguntaId == p.Id)
+                    .OrderByDescending(r => r.FechaRespuesta)
+                    .FirstOrDefaultAsync();
+                if (resp == null) continue;
+
+                var correcta = await _ctx.OpcionesRespuesta
+                    .Where(o => o.PreguntaId == p.Id && o.EsCorrecta)
+                    .Select(o => o.TextoOpcion)
+                    .FirstOrDefaultAsync();
+
+                string usuarioText = resp.OpcionRespuestaId.HasValue
+                    ? await _ctx.OpcionesRespuesta
+                        .Where(o => o.Id == resp.OpcionRespuestaId.Value)
+                        .Select(o => o.TextoOpcion)
+                        .FirstOrDefaultAsync()
+                    : resp.RespuestaTexto;
+
+                bool esOK = await _ctx.OpcionesRespuesta
+                    .Where(o => o.Id == resp.OpcionRespuestaId)
+                    .Select(o => o.EsCorrecta)
+                    .FirstOrDefaultAsync();
+
+                detalles.Add(new ResultadoDetalleVM
+                {
+                    TextoPregunta = p.TextoPregunta,
+                    RespuestaUsuario = usuarioText,
+                    RespuestaCorrecta = correcta,
+                    EsCorrecta = esOK
+                });
+            }
+
+            var vm = new ResultadosVM
+            {
+                Nombre = cap.Nombre,
+                Codigo = cap.Codigo,
+                CapacitacionId = id,
+                TotalPreguntas = detalles.Count,
+                Correctas = detalles.Count(d => d.EsCorrecta),
+                Nota = res?.Nota ?? 0m,
+                Aprobado = res?.Aprobado ?? false,
+                Detalles = detalles
+            };
+
+            return View(vm);
+        }
+
+
     }
 }

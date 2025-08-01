@@ -7,6 +7,7 @@
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 
+<div class="gradient-section">
 <div id="VisualizarMaterial">
   <div class="hero bg-gradient-to-r from-blue-900 via-blue-800 to-cyan-700 text-white text-center py-5 position-relative overflow-hidden">
     <div class="layer-black position-absolute inset-0 bg-black opacity-25"></div>
@@ -15,7 +16,6 @@
       <p class="lead mt-2">@Model.DescripcionCorta</p>
     </div>
   </div>
-
   <div class="container py-5">
     <div class="row">
       <nav class="col-lg-3 mb-4">
@@ -81,12 +81,15 @@
       </div>
     </div>
         <div class="text-center mt-5">
-            <a asp-action="Detalles" asp-route-id="@Model.CapacitacionId" class="btn btn-outline-warning btn-lg me-3 ">
+            <a asp-action="Detalles" asp-route-id="@Model.CapacitacionId"
+               class="btn btn-material btn-lg me-3">
                 Regresar a detalles
             </a>
-            <a asp-action="Examen" asp-route-id="@Model.CapacitacionId" class="btn btn-success btn-lg">
+            <a asp-action="Examen" asp-route-id="@Model.CapacitacionId"
+               class="btn btn-material btn-lg">
                 Realizar examen
             </a>
         </div>
   </div>
+    </div>
 </div>
