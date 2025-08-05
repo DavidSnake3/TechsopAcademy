@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/css/Navbar.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TechShop.Web.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="@(ViewData["Style"])" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Spinner.css" asp-append-version="true" />
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -18,14 +19,15 @@
 
 </head>
 <body class="d-flex flex-column ">
+    @await Html.PartialAsync("_Spinner")
     <header>
         @await Html.PartialAsync("_Menu")
     </header>
     <main class="flex-grow-1">
         @RenderBody()
+
     </main>
     @await Html.PartialAsync("_Footer")
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
