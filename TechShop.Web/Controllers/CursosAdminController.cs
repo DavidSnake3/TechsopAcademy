@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TechShop.Infraestructure.Models;
 using TechShop.Web.Models;
 
 namespace TechShop.Web.Controllers
@@ -73,7 +74,7 @@ namespace TechShop.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTest(int a)
+        public IActionResult CreateTest(CrearPreguntasViewModel preguntas)
         {
             return View();
         }

@@ -12,29 +12,27 @@
     <header>
         <h1>Configuracion del Examen</h1>
     </header>
+   @model CrearPreguntasViewModel   
 
-    <form asp-action="CreateMaterial" method="post" enctype="multipart/form-data">
-        <div class="addComponents">
-            <h2>
-                Agregar Componentes
-            </h2>
+    <form asp-action="CreateTest" method="post" enctype="multipart/form-data" id="fromPreguntas">
+
+        <main id="contenedorSecciones">
+
+        </main>
+
+        <div class="addComponent">
+            <h4>
+                Agregar Preguntas
+            </h4>
             <div class="addComponentList">
-                <div class="addComponent">
-                    <i class="fi fi-rr-text"></i>
-                    <p>Sección</p>
-                </div>
-                <div class="addComponent">
-                    <i class="fi fi-rr-screen-play"></i>
-                    <p>Respuesta Unica</p>
-                </div>
-                <div class="addComponent">
-                    <i class="fi fi-rr-folder-upload"></i>
+                <button type="button" class="addComponentGroup" onclick="">
+                    <i class="fi fi-rr-message-question"></i>
+                    <p>Selección Unica</p>
+                </button>
+                <button type="button" class="addComponentGroup" onclick="">
+                    <i class="fi fi-rr-messages-question"></i>
                     <p>Selección Multiple</p>
-                </div>
-                @* <div>
-                    <i class="fi fi-br-screen-play"></i>
-                    <span>Sección</span>
-                </div> *@
+                </button>
             </div>
         </div>
 
