@@ -21,11 +21,14 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background: linear-gradient( -45deg, rgba(12, 59, 94, 1) 0%, rgba(40, 134, 222, 1) 50%, rgba(12, 59, 94, 1) 0% );
 }
 .myFooter {
     background-color: rgba(15, 84, 140, 1);
     color: white;
     padding: 10px;
+    border: none;
+    margin: 0;
     p
 {
     margin: auto;
@@ -41,3 +44,4 @@ i {
     align-items: center;
     margin: 0;
 }
+

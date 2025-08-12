@@ -8,6 +8,192 @@
     ViewData["Script"] = "";
 }
 
+@model CrearPreguntasViewModel
+
+<div id="CrearCurso" class="container-xl">
+    <header>
+        <h1>Configuración del Examen</h1>
+    </header>
+
+    <form asp-action="CreateTest" method="post" enctype="multipart/form-data" id="formPreguntas">
+
+        <main id="contenedorPreguntas"></main>
+
+        <div class="addComponent">
+            <h4>Agregar Pregunta</h4>
+            <div class="addComponentList">
+                <button type="button" class="addComponentGroup" onclick="agregarPregunta('Unica')">
+                    <i class="fi fi-rr-message-question"></i>
+                    <p>Selección Única</p>
+                </button>
+                <button type="button" class="addComponentGroup" onclick="agregarPregunta('Multiple')">
+                    <i class="fi fi-rr-messages-question"></i>
+                    <p>Selección Múltiple</p>
+                </button>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="botonDiv">
+                <button class="btnPage" type="button">Anterior</button>
+                <button class="btnPage" type="submit">Siguiente</button>
+            </div>
+            <div class="LinkDiv">
+                <a asp-action="Create" asp-controller="CursosAdmin">Curso</a> -
+                <a asp-action="CreateMaterial" asp-controller="CursosAdmin">Material</a> -
+                <a class="Select" asp-action="CreateTest" asp-controller="CursosAdmin">Examen</a>
+            </div>
+        </footer>
+    </form>
+
+    <template id="plantillaPregunta">
+        <section class="pregunta border rounded p-3 mb-3">
+            <div class="topHeader d-flex justify-content-between align-items-center mb-2">
+                <h4>Pregunta <span class="indice-pregunta">X</span></h4>
+                <button type="button" class="btn btn-sm btn-danger" onclick="eliminarPregunta(this)" title="Eliminar pregunta">
+                    <i class="fi fi-rr-trash"></i>
+                </button>
+            </div>
+
+            <input type="text" class="form-control mb-2" placeholder="Texto de la pregunta" name="Preguntas[X].TextoPregunta" required />
+
+            <input type="hidden" name="Preguntas[X].TipoPregunta" value="TIPO" />
+
+            <div class="contenedor-opciones" data-index-pregunta="X"></div>
+
+            <button type="button" class="btn btn-outline-primary mt-2" onclick="agregarOpcion(this)">Agregar Opción</button>
+        </section>
+    </template>
+
+    <template id="plantillaOpcion">
+        
+            <div class="form-group mb-2 opcion">
+                <div class="input-group">
+                    <div class="input-group-text">
+                        <input type="checkbox" class="input-es-correcta" />
+                    </div>
+                    <input type="text" class="form-control input-opcion" placeholder="Texto de opción" />
+                    <button type="button" class="btn btn-danger" onclick="eliminarOpcion(this)">
+                        <i class="fi fi-rr-trash"></i>
+                    </button>
+                </div>
+            </div>
+      
+    </template>
+</div>
+
+<script>
+    let indexPregunta = 0;
+
+    function agregarPregunta(tipo) {
+        const contenedor = document.getElementById('contenedorPreguntas');
+        const plantilla = document.getElementById('plantillaPregunta').content.cloneNode(true);
+
+        const idx = indexPregunta++;
+
+        // Actualizar índices y valores
+        plantilla.querySelector('.indice-pregunta').innerText = idx + 1;
+        plantilla.querySelector('input[name$=".TextoPregunta"]').name = `Preguntas[${idx}].TextoPregunta`;
+        const inputTipo = plantilla.querySelector('input[type="hidden"]');
+        inputTipo.name = `Preguntas[${idx}].TipoPregunta`;
+        inputTipo.value = tipo;
+
+        // Actualizar contenedor opciones
+        const contenedorOpciones = plantilla.querySelector('.contenedor-opciones');
+        contenedorOpciones.setAttribute('data-index-pregunta', idx);
+
+        // Agregar una opción por defecto
+        agregarOpcionManual(contenedorOpciones);
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function agregarOpcion(btn) {
+        const contenedorOpciones = btn.closest('.pregunta').querySelector('.contenedor-opciones');
+        agregarOpcionManual(contenedorOpciones);
+    }
+
+    function agregarOpcionManual(contenedor) {
+        const idxPregunta = contenedor.getAttribute('data-index-pregunta');
+        const idxOpcion = contenedor.children.length;
+
+        const plantilla = document.getElementById('plantillaOpcion').content.cloneNode(true);
+
+        // Asignar name al texto de opción
+        const inputTexto = plantilla.querySelector('.input-opcion');
+        inputTexto.name = `Preguntas[${idxPregunta}].Opciones[${idxOpcion}].TextoOpcion`;
+
+        // Seleccionar input correcto (radio o checkbox) según tipoPregunta
+        const contenedorPregunta = contenedor.closest('.pregunta');
+        const tipoPregunta = contenedorPregunta.querySelector(`input[name="Preguntas[${idxPregunta}].TipoPregunta"]`).value;
+
+        const inputCorrecta = plantilla.querySelector('.input-es-correcta');
+
+        if (tipoPregunta === "Unica") {
+            inputCorrecta.type = "radio";
+            inputCorrecta.name = `Preguntas[${idxPregunta}].OpcionesCorrecta`; // mismo name para radio group
+            inputCorrecta.value = idxOpcion;
+        } else {
+            inputCorrecta.type = "checkbox";
+            inputCorrecta.name = `Preguntas[${idxPregunta}].Opciones[${idxOpcion}].EsCorrecta`;
+            inputCorrecta.value = "true";
+        }
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function eliminarPregunta(btn) {
+        btn.closest('.pregunta').remove();
+        indexPregunta--;
+        actualizarIndicesPreguntas();
+    }
+
+    function eliminarOpcion(btn) {
+        btn.closest('.opcion').remove();
+        // Opcional: podrías actualizar indices de opciones si quieres
+    }
+
+    function actualizarIndicesPreguntas() {
+        const preguntas = document.querySelectorAll('#contenedorPreguntas .pregunta');
+        preguntas.forEach((pregunta, idx) => {
+            pregunta.querySelector('.indice-pregunta').innerText = idx + 1;
+            pregunta.querySelector('input[name$=".TextoPregunta"]').name = `Preguntas[${idx}].TextoPregunta`;
+            pregunta.querySelector('input[type="hidden"]').name = `Preguntas[${idx}].TipoPregunta`;
+            pregunta.querySelector('input[type="hidden"]').value = pregunta.querySelector('input[type="hidden"]').value; // mantiene tipoPregunta
+
+            const contenedorOpciones = pregunta.querySelector('.contenedor-opciones');
+            contenedorOpciones.setAttribute('data-index-pregunta', idx);
+
+            // Actualizar nombres de opciones
+            const opciones = contenedorOpciones.querySelectorAll('.opcion');
+            opciones.forEach((opcion, idxOpcion) => {
+                opcion.querySelector('.input-opcion').name = `Preguntas[${idx}].Opciones[${idxOpcion}].TextoOpcion`;
+
+                const inputCorrecta = opcion.querySelector('.input-es-correcta');
+                const tipoPregunta = pregunta.querySelector('input[type="hidden"]').value;
+
+                if (tipoPregunta === "Unica") {
+                    inputCorrecta.name = `Preguntas[${idx}].OpcionesCorrecta`;
+                    inputCorrecta.value = idxOpcion;
+                } else {
+                    inputCorrecta.name = `Preguntas[${idx}].Opciones[${idxOpcion}].EsCorrecta`;
+                    inputCorrecta.value = "true";
+                }
+            });
+        });
+    }
+</script>
+
+
+
+
+@* @{
+    Layout = "_layoutCursos";
+    ViewData["Title"] = "Crear Cursos";
+    ViewData["Style"] = "~/css/CrearCrusos.css";
+    ViewData["Script"] = "";
+}
+
 <div id="CrearCurso" class="container-xl">
     <header>
         <h1>Configuracion del Examen</h1>
@@ -48,4 +234,4 @@
             </div>
         </footer>
     </form>
-</div>
+</div> *@
