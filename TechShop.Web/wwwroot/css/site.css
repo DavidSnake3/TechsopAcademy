@@ -1,7 +1,12 @@
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
 
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -12,17 +17,11 @@ html {
   /*position: relative;*/
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
-
 .myFooter {
     background-color: rgba(15, 84, 140, 1);
     color: white;

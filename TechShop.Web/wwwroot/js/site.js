@@ -1,4 +1,15 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿// site.js
 
-// Write your JavaScript code.
+window.showSpinner = function () {
+    document.getElementById('spinner-overlay')
+        .classList.remove('hidden');
+};
+window.hideSpinner = function () {
+    document.getElementById('spinner-overlay')
+        .classList.add('hidden');
+};
+
+// Cuando la página empieza a descargarse (antes de navegar away)
+window.addEventListener('beforeunload', showSpinner);
+// Cuando ya cargó completamente
+window.addEventListener('load', hideSpinner);
