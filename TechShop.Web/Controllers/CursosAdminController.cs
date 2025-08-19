@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TechShop.Web.Models;
+
+
 
 namespace TechShop.Web.Controllers
 {
+    [Authorize(AuthenticationSchemes = "MyCookieAuth", Roles = "ADMIN")]
     public class CursosAdminController : Controller
     {
+
         public IActionResult Index()
         {
             if (TempData.ContainsKey("Mensaje"))

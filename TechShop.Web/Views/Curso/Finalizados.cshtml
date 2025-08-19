@@ -1,0 +1,263 @@
+﻿@using Newtonsoft.Json
+@using TechShop.Web.Controllers
+@model TechShop.Web.Models.ViewModels.FinalizadosVM
+
+@{
+    ViewData["Title"] = "Detalle y Resultados";
+    Layout = "_Cursolayout";
+    ViewData["Style"] = "~/css/Finalizados.css";
+}
+
+
+@{
+    var aprobado = Model.Aprobado;
+    var porcentajeCorrectas = Model.TotalPreguntas > 0
+        ? (int)Math.Round((double)Model.Correctas * 100 / Model.TotalPreguntas)
+        : 0;
+}
+
+<div class="gradient-section">
+    <div class="position-relative overflow-hidden py-5">
+        <div class="position-absolute top-0 start-0 w-100 h-100 overlay-black"></div>
+        <div class="container position-relative text-white">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-6">
+                    <span class="badge bg-white bg-opacity-25 text-white">@Model.Codigo</span>
+                    <h1 class="display-5 fw-bold mt-2">@Model.Codigo - @Model.Nombre</h1>
+                    <p class="fs-5 text-white-50 mb-4">@Model.DescripcionCorta</p>
+                    <div class="row text-center gx-3">
+                        <div class="col-4">
+                            <div class="p-3 rounded glass-card">
+                                <i class="bi bi-graph-up-arrow fs-2 text-white mb-2"></i>
+                                <div class="small text-white-50">Dificultad</div>
+                                <div class="fw-semibold text-white">@Model.Dificultad</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3 rounded glass-card">
+                                <i class="bi bi-hourglass-split fs-2 text-white mb-2"></i>
+                                <div class="small text-white-50">Duración</div>
+                                <div class="fw-semibold text-white">
+                                    @Model.DuracionHoras?.ToString("HH\\:mm") h
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="course-image-wrapper d-inline-block rounded-3 overflow-hidden shadow-lg">
+                        @if (Model.Foto != null && Model.Foto.Length > 0)
+                        {
+                            <img src="@Url.Action("Imagen", "Curso", new { id = Model.Id })"
+                                 alt="Foto del curso" class="img-fluid" />
+                        }
+                        else
+                        {
+                            <div class="bg-light bg-opacity-25 d-flex align-items-center justify-content-center" style="height:300px;">
+                                <i class="bi bi-image fs-1 text-white"></i>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <div class="card glass-card mb-5 border-0">
+            <div class="card-body text-white">
+                <h4 class="mb-3"><i class="bi bi-journal-text me-2"></i>Descripción</h4>
+                <p>@Model.DescripcionLarga</p>
+            </div>
+        </div>
+    </div>
+
+<div class="container py-5">
+    <div class="result-header @(aprobado ? "success-theme" : "danger-theme")">
+        <div class="result-icon">
+            <i class="bi @(aprobado ? "bi-trophy-fill" : "bi-x-octagon-fill") fs-1"></i>
+            <div class="pulse-ring @(aprobado ? "success" : "danger")"></div>
+        </div>
+
+        <div class="result-info text-center">
+            <h1 class="course-name-big">@Model.Nombre - @Model.Codigo</h1>
+        </div>
+
+        <div class="status-badge @(aprobado ? "approved" : "failed")">
+            @(aprobado ? "Aprobado" : "Reprobado")
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <div class="chart-container">
+            <div class="chart-wrapper grade-wrapper">
+                <div class="score-label">Nota</div>
+                <div class="score-circle">
+                    <span class="score-number">@Model.Nota %</span>
+                </div>
+            </div>
+
+            <div class="chart-container single-chart">
+                <div class="chart-wrapper percent-chart">
+                    <canvas id="percentChart" width="200" height="200"></canvas>
+                    <div class="chart-center">
+                        <div class="center-correct">@porcentajeCorrectas<span>% Acertadas</span></div>
+                        <div class="center-incorrect">@((100 - porcentajeCorrectas))<span>% Erroneas</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-cards">
+            <div class="stat-card correct">
+                <div class="stat-icon"><i class="bi bi-check-circle-fill"></i></div>
+                <div class="stat-content">
+                    <h2 class="color">
+                        Obtuviste
+                        <strong>@Model.Correctas</strong> / <strong>@Model.TotalPreguntas</strong> respuestas correctas
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    @if (Model.Detalles?.Any() == true)
+    {
+        <div class="answers-section">
+            <button id="btnMostrarRespuestas" class="show-answers-btn">
+                <span class="btn-icon">
+                    <i class="bi bi-eye"></i>
+                </span>
+                <span class="btn-text">Visualizar Respuestas Detalladas</span>
+                <span class="btn-arrow">
+                    <i class="bi bi-chevron-down"></i>
+                </span>
+            </button>
+
+            <div id="detalleGrid" class="answers-grid">
+                @for (int i = 0; i < Model.Detalles.Count; i++)
+                {
+                    var d = Model.Detalles[i];
+                    <div class="answer-card @(d.EsCorrecta ? "correct" : "incorrect")" style="animation-delay: @(i * 0.1)s">
+                        <div class="question-header">
+                            <div class="question-number">@(i + 1)</div>
+                            <div class="question-status">
+                                <i class="bi @(d.EsCorrecta ? "bi-check-circle-fill" : "bi-x-circle-fill")"></i>
+                            </div>
+                        </div>
+
+                        <div class="question-content">
+                            <div class="question-text">
+                                <h6>Pregunta</h6>
+                                <p>@d.TextoPregunta</p>
+                            </div>
+
+                            <div class="user-answer">
+                                <h6>@(d.EsCorrecta ? "Tu Respuesta" : "Tu Respuesta")</h6>
+                                <p class="@(d.EsCorrecta ? "correct-text" : "incorrect-text")">@d.RespuestaUsuario</p>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+
+    @**@
+  
+    
+    
+  @**@  
+  
+  
+
+
+<div class="navigation-buttons text-center my-4">
+        <a asp-controller="Home" asp-action="Index" class="nav-btn secondary me-2">
+            Volver al inicio
+        </a>
+</div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+               function animateNumbers() {
+          document.querySelectorAll('.stat-number[data-target]').forEach(counter => {
+            const target = +counter.dataset.target;
+            const duration = 2000;
+            let current = 0;
+            const step = target / (duration / 16);
+            const timer = setInterval(() => {
+              current += step;
+              if (current >= target) {
+                clearInterval(timer);
+                current = target;
+              }
+              counter.textContent = Math.floor(current);
+            }, 16);
+          });
+        }
+
+        new Chart(document.getElementById('percentChart'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Correctas', 'Incorrectas'],
+            datasets: [{
+              data: [@Model.Correctas, @(Model.TotalPreguntas - Model.Correctas)],
+              backgroundColor: [
+                'rgba(34, 197, 94, 0.8)',
+                'rgba(239, 68, 68, 0.8)'
+              ],
+              borderColor: [
+                'rgba(34, 197, 94, 1)',
+                'rgba(239, 68, 68, 1)'
+              ],
+              borderWidth: 3,
+              cutout: '75%'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            animation: { animateRotate: true, duration: 1500 }
+          }
+        });
+
+
+        document.getElementById('btnMostrarRespuestas').addEventListener('click', function () {
+           const grid = document.getElementById('detalleGrid');
+           const btn  = this;
+           const arrow = btn.querySelector('.btn-arrow i');
+
+           grid.classList.toggle('expanded');
+           arrow.classList.toggle('rotated');
+
+           if (grid.classList.contains('expanded')) {
+             btn.querySelector('.btn-text').textContent = 'Ocultar Respuestas Detalladas';
+             document.body.classList.add('scroll-blur');
+
+             setTimeout(() => {
+               const navbarHeight = 70;
+               const extraOffset   = -0;
+               const rectTop = btn.getBoundingClientRect().top + window.pageYOffset;
+               const target  = rectTop - navbarHeight - extraOffset;
+               window.scrollTo({ top: target, behavior: 'smooth' });
+             }, 300);
+
+           } else {
+             btn.querySelector('.btn-text').textContent = 'Visualizar Respuestas Detalladas';
+
+             document.body.classList.remove('scroll-blur');
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+           }
+         });
+
+        setTimeout(animateNumbers, 500);
+    </script>
+}

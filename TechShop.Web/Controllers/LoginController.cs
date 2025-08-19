@@ -33,8 +33,9 @@ public class LoginController : Controller
         var claims = new List<Claim> {
             new Claim(ClaimTypes.Name, empleado.Crfb9_nombre),
             new Claim("Codigo", empleado.Crfb9_codigo),
-            new Claim(ClaimTypes.Role, empleado.Crfb9_rol ?? "Empleado"),
+            new Claim(ClaimTypes.Role, empleado.Crfb9_roles ?? "Empleado"),
             new Claim("Puesto", empleado.Crfb9_puesto ?? "Empleado"),
+             new Claim("Correo", empleado.Crfb9_correo ?? "Empleado"),
         };
         var identity = new ClaimsIdentity(claims, "MyCookieAuth");
         var principal = new ClaimsPrincipal(identity);

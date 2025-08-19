@@ -1,0 +1,171 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Open+Sans|Nova+Mono');
+
+:root {
+    --font-header: 'Nova Mono', monospace;
+    --font-text: 'Open Sans', sans-serif;
+    --color-theme: #F1EEDB;
+    --color-bg: rgba(9,7,7,0.85);
+    --anim-duration: 40s;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#error-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #090707 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.error-container {
+    align-items: center; 
+    text-align: center; 
+    color: var(--color-theme);
+    font-family: var(--font-text);
+}
+
+    .error-container h1 {
+        font-family: var(--font-header);
+        font-size: calc(4rem + 2vw);
+        text-transform: uppercase;
+    }
+
+    .error-container p {
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: .2rem;
+        margin: 1.5rem 0 3rem;
+    }
+
+.btn-reinicio {
+    display: block; 
+    width: max-content; 
+    margin: 2rem auto 0; 
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-theme) !important;
+    color: var(--color-bg);
+    text-decoration: none;
+    font-family: var(--font-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    border-radius: 0.5rem;
+    border: none;
+    opacity: 1 !important;
+}
+
+    .btn-reinicio:hover {
+        opacity: 0.2;
+        transform: translateY(-2px);
+    }
+
+svg.keyhole {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+    visibility: hidden;
+    animation: showKey 0.5s 0.5s paused ease-out forwards;
+}
+
+svg.key {
+    position: absolute;
+    width: 164px;
+    height: 164px;
+    opacity: 0;
+    visibility: hidden;
+    animation: showKey 0.5s 0.5s paused ease-out forwards;
+}
+
+.ghost {
+    position: absolute;
+    bottom: 10%; 
+    left: calc(50% - 100px);
+    width: 200px;
+    height: 200px;
+    animation: hoverGhost calc(var(--anim-duration)/2) ease-in-out 2;
+}
+
+    .ghost::before {
+        content: var(--anim-sent1);
+        position: absolute;
+        bottom: 100%;
+        width: 240px;
+        text-align: center;
+        padding: 1rem;
+        visibility: hidden;
+        opacity: 0;
+        animation: showText calc(var(--anim-duration)/8) calc(var(--anim-duration)*3/16) ease-out forwards, showText2 calc(var(--anim-duration)/8) calc(var(--anim-duration)*27/40) ease-out forwards, showText3 calc(var(--anim-duration)/8) var(--anim-duration) ease-out forwards;
+    }
+
+@keyframes hoverGhost {
+    25% {
+        transform: translateX(20vw);
+    }
+
+    75% {
+        transform: translateX(-20vw);
+    }
+}
+
+@keyframes showKey {
+    to {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@keyframes showText {
+    2%,98% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    99% {
+        opacity: 0;
+        visibility: hidden;
+        content: var(--anim-sent2);
+    }
+
+    100% {
+        content: var(--anim-sent2);
+    }
+}
+
+@keyframes showText2 {
+    2%,98% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    99% {
+        opacity: 0;
+        visibility: hidden;
+        content: var(--anim-sent3);
+    }
+
+    100% {
+        content: var(--anim-sent3);
+    }
+}
+
+@keyframes showText3 {
+    2%,98% {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}

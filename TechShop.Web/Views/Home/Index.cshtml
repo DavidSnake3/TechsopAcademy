@@ -8,6 +8,7 @@
     var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D";
     var rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Empleado";
     var puesto = User.Claims.FirstOrDefault(c => c.Type == "Puesto")?.Value ?? "N/D";
+    var correo = User.Claims.FirstOrDefault(c => c.Type == "Correo")?.Value ?? "N/D";
 }
 <div class="parent">
     <div class="div1 p-3">
@@ -16,11 +17,10 @@
                 <i class="bi bi-person-circle fs-1 text-white me-3"></i>
                 <div>
                     <h5 class="mb-0 text-white">@nombre</h5>
-                    <small class="text-white">Código: @codigo | @puesto</small><br />
-                    <small class="text-white">@rol</small>
+                    <small class="text-white">Código: @codigo | @puesto | @rol</small><br />
                 </div>
             </div>
-            <a class="btn btn-solid btn-sm align-self-start" href="#">Ver información</a>
+            <h6 class="text-white">@correo</h6> 
         </div>
 
         <div class="row gx-3">
@@ -112,8 +112,9 @@
                                 @c.Dificultad | @(c.DuracionHoras?.ToString("h\\:mm") ?? "N/A") h
                             </div>
                         </div>
-                        <a class="btn btn-info btn-sm ms-3">
-                            <i class="bi bi-eye"> Visualizar</i>
+                        <a asp-controller="Curso" asp-action="Finalizados" asp-route-id="@c.Id"
+                           class="btn btn-info btn-sm ms-3">
+                            <i class="bi bi-eye">Visualizar</i>
                         </a>
                     </div>
                 }
