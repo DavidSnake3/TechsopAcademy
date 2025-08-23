@@ -20,8 +20,9 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
     background: linear-gradient( -45deg, rgba(12, 59, 94, 1) 0%, rgba(40, 134, 222, 1) 50%, rgba(12, 59, 94, 1) 0% );
+    background-attachment: fixed; /* hace que cubra incluso al hacer scroll */
+    background-size: cover;
 }
 .myFooter {
     background-color: rgba(15, 84, 140, 1);
@@ -45,3 +46,6 @@ i {
     margin: 0;
 }
 
+.hidden {
+    display: none;
+}

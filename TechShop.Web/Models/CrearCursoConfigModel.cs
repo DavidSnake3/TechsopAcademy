@@ -17,11 +17,12 @@ namespace TechShop.Web.Models
 
         public string? DescripcionLarga { get; set; }
 
-        public byte[] Foto { get; set; }
+        public byte[]? Foto { get; set; }
+        public IFormFile? FotoFile { get; set; }
 
         [Required]
         [Range(1, 300)]
-        public TimeOnly? DuracionHoras { get; set; }
+        public int DuracionHoras { get; set; }
 
         [Required]
         public string? Dificultad { get; set; }
@@ -41,7 +42,7 @@ namespace TechShop.Web.Models
         [Display(Name = "Zonas")]
         public List<string> Zonas { get; set; } = new();
 
-        public IEnumerable<MaterialDto> Materiales { get; set; }
+        public IEnumerable<MaterialDto>? Materiales { get; set; }
 
         public bool EstadoProceso { get; set; }
 

@@ -50,18 +50,21 @@
 
     .filter-form .form-control {
         border: solid 2px RGBA(40, 134, 222, 1);
-        height: 35px;
+        height: 40px;
         border-radius: 7px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
     }
 
     .filter-form .BuscarBtn {
-        position: absolute;
+        margin-left: -5px;
+        position: static;
         top: 0px;
         right: 0px;
-        height: 35px;
+        height: 40px;
+        border: solid 2px RGBA(40, 134, 222, 1);
         border-top-right-radius: 7px;
         border-bottom-right-radius: 7px;
-        border: solid 0 RGBA(180, 214, 250, 1);
         background-color: RGBA(180, 214, 250, 1)
     }
 

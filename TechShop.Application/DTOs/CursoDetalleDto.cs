@@ -15,7 +15,7 @@ namespace TechShop.Application.DTOs
         public string? DescripcionLarga { get; set; }
 
         /// <summary>Corresponde directamente al campo SQL time(7)</summary>
-        public TimeOnly? DuracionHoras { get; set; }
+        public int DuracionHoras { get; set; }
 
         public string? Dificultad { get; set; }
 

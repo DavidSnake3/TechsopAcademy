@@ -19,7 +19,7 @@ public partial class Capacitaciones
 
     public string? DescripcionLarga { get; set; }
 
-    public TimeOnly? DuracionHoras { get; set; }
+    public int DuracionHoras { get; set; }
 
     public string? Dificultad { get; set; }
 

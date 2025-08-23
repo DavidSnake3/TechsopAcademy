@@ -44,7 +44,6 @@ namespace TechShop.Web.Controllers
                 }
             ).ToListAsync();
 
-
             // en proceso
             var enProceso = await (
                 from h in _ctx.HistorialCapacitacionEmpleado
