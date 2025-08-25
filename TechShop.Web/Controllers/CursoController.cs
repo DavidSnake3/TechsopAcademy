@@ -197,7 +197,7 @@ namespace TechShop.Web.Controllers
 
             if (capacitacion == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             var preguntas = await _ctx.Preguntas
@@ -209,9 +209,9 @@ namespace TechShop.Web.Controllers
             var vm = new ExamenVM
             {
                 CapacitacionId = capacitacion.Id,
-                Nombre = capacitacion.Nombre,            
-                Codigo = capacitacion.Codigo,             
-                DescripcionCorta = capacitacion.DescripcionCorta,      
+                Nombre = capacitacion.Nombre,
+                Codigo = capacitacion.Codigo,
+                DescripcionCorta = capacitacion.DescripcionCorta,
                 Preguntas = preguntas.Select(p => new PreguntaVM
                 {
                     PreguntaId = p.Id,
@@ -453,6 +453,130 @@ namespace TechShop.Web.Controllers
             return View(vm);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Finalizados(int id)
+        {
+            try
+            {
+                var dto = await _cursoService.GetCursoDetailAsync(id);
+                if (dto == null) return NotFound();
 
+                var codigo = User.FindFirst("Codigo")?.Value;
+                if (string.IsNullOrEmpty(codigo)) return Forbid();
+
+                var emp = await _dataverse.GetEmpleadoByCodigoAsync(codigo);
+                if (emp == null || !int.TryParse(emp.Crfb9_codigo, out var empleadoId))
+                    return Forbid();
+
+                // Obtener resultados del examen
+                var resultado = await _ctx.ResultadosCapacitacion
+                    .FirstOrDefaultAsync(r =>
+                        r.EmpleadoId == empleadoId &&
+                        r.CapacitacionId == id);
+
+                if (resultado == null)
+                    return RedirectToAction("Examen", new { id });
+
+                // Obtener todas las preguntas del examen
+                var preguntas = await _ctx.Preguntas
+                    .Where(p => p.CapacitacionId == id)
+                    .ToListAsync();
+
+                var detalles = new List<ResultadoDetalleVM>();
+
+                foreach (var pregunta in preguntas)
+                {
+                    // Obtener respuesta del empleado (más reciente)
+                    var respuesta = await _ctx.RespuestasEmpleado
+                        .Where(r =>
+                            r.EmpleadoId == empleadoId &&
+                            r.PreguntaId == pregunta.Id)
+                        .OrderByDescending(r => r.FechaRespuesta)
+                        .FirstOrDefaultAsync();
+
+                    // Obtener opción correcta
+                    var opcionCorrecta = await _ctx.OpcionesRespuesta
+                        .FirstOrDefaultAsync(o =>
+                            o.PreguntaId == pregunta.Id &&
+                            o.EsCorrecta);
+
+                    // Determinar si la respuesta fue correcta
+                    bool esCorrecta = false;
+                    string respuestaUsuario = "";
+
+                    if (respuesta != null)
+                    {
+                        if (pregunta.TipoPregunta == "MultipleChoice" && respuesta.OpcionRespuestaId.HasValue)
+                        {
+                            var opcionSeleccionada = await _ctx.OpcionesRespuesta
+                                .FirstOrDefaultAsync(o => o.Id == respuesta.OpcionRespuestaId.Value);
+
+                            respuestaUsuario = opcionSeleccionada?.TextoOpcion ?? "";
+                            esCorrecta = opcionSeleccionada?.EsCorrecta ?? false;
+                        }
+                        else if (pregunta.TipoPregunta == "Abierta")
+                        {
+                            respuestaUsuario = respuesta.RespuestaTexto ?? "";
+                            esCorrecta = string.Equals(
+                                respuesta.RespuestaTexto?.Trim(),
+                                opcionCorrecta?.TextoOpcion?.Trim(),
+                                StringComparison.OrdinalIgnoreCase
+                            );
+                        }
+                    }
+
+                    detalles.Add(new ResultadoDetalleVM
+                    {
+                        TextoPregunta = pregunta.TextoPregunta,
+                        RespuestaUsuario = respuestaUsuario,
+                        RespuestaCorrecta = opcionCorrecta?.TextoOpcion ?? "",
+                        EsCorrecta = esCorrecta
+                    });
+                }
+
+                // Calcular estadísticas
+                int totalPreguntas = detalles.Count;
+                int correctas = detalles.Count(d => d.EsCorrecta);
+                decimal nota = totalPreguntas > 0 ?
+                    Math.Round(correctas * 100m / totalPreguntas, 2) : 0;
+
+                var vm = new FinalizadosVM
+                {
+                    Id = dto.Id,
+                    Codigo = dto.Codigo,
+                    Nombre = dto.Nombre,
+                    DescripcionCorta = dto.DescripcionCorta,
+                    DescripcionLarga = dto.DescripcionLarga,
+                    DuracionHoras = dto.DuracionHoras,
+                    Dificultad = dto.Dificultad,
+                    Foto = dto.Foto,
+                    TotalPreguntas = totalPreguntas,
+                    Correctas = correctas,
+                    Nota = nota,
+                    Aprobado = nota >= 70,
+                    Detalles = detalles
+                };
+
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                // Manejar error
+                return StatusCode(500, "Error interno");
+            }
+        }
+
+    }
+
+    public static class StringExtensions
+    {
+        public static string Truncate(this string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Length <= maxLength ?
+                value :
+                value.Substring(0, maxLength) + "...";
+        }
     }
 }

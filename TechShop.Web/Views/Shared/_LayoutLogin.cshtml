@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="~/MVCFirstProject.styles.css" asp-append
           version="true" />
     <link rel="stylesheet" href="~/css/Spinner.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Error.css" asp-append-version="true" />
+
+    @* Permite que cada vista inyecte CSS adicional *@
+    @RenderSection("Styles", required: false)
 </head>
 <body class="">
     @await Html.PartialAsync("_Spinner")

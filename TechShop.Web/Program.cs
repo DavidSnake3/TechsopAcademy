@@ -30,24 +30,29 @@ builder.Services
       options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
       options.SlidingExpiration = true;
 
-      options.LoginPath = "/Login";
+      options.LoginPath = "/Login/Index";
       options.AccessDeniedPath = "/Login/AccessDenied";
 
-      options.Events = new CookieAuthenticationEvents
+      options.Events.OnRedirectToLogin = ctx =>
       {
-          OnValidatePrincipal = context =>
+          ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+          return Task.CompletedTask;
+      };
+      options.Events.OnRedirectToAccessDenied = ctx =>
+      {
+          ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+          return Task.CompletedTask;
+      };
+
+      options.Events.OnValidatePrincipal = context =>
+      {
+          var issuedUtc = context.Properties.IssuedUtc;
+          if (issuedUtc.HasValue && issuedUtc.Value.AddHours(2) < DateTimeOffset.UtcNow)
           {
-              var issuedUtc = context.Properties.IssuedUtc;
-              if (issuedUtc.HasValue)
-              {
-                  if (issuedUtc.Value.AddHours(2) < DateTimeOffset.UtcNow)
-                  {
-                      context.RejectPrincipal();
-                      return context.HttpContext.SignOutAsync("MyCookieAuth");
-                  }
-              }
-              return Task.CompletedTask;
+              context.RejectPrincipal();
+              return context.HttpContext.SignOutAsync("MyCookieAuth");
           }
+          return Task.CompletedTask;
       };
   });
 
@@ -60,13 +65,17 @@ builder.Services.AddSingleton<AvisosService>();
 //inyectamos
 builder.Services.AddScoped<ICursoService, CursoService>();
 
+
+
 var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
 
-
+app.UseExceptionHandler("/Error/500");
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 
 app.MapControllerRoute(

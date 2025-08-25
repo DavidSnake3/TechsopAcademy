@@ -47,4 +47,22 @@
         public List<ResultadoDetalleVM> Detalles { get; set; } = new();
     }
 
+    public class FinalizadosVM
+    {
+        public int Id { get; set; }
+        public string Codigo { get; set; }
+        public string Nombre { get; set; }
+        public string DescripcionCorta { get; set; }
+        public string DescripcionLarga { get; set; }
+        public TimeOnly? DuracionHoras { get; set; }    
+        public string Dificultad { get; set; }
+        public byte[] Foto { get; set; }
+
+        public int TotalPreguntas { get; set; }
+        public int Correctas { get; set; }
+        public decimal Nota { get; set; }
+        public bool Aprobado { get; set; }
+        public List<ResultadoDetalleVM> Detalles { get; set; }
+    }
+
 }

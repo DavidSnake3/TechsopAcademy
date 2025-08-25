@@ -7,7 +7,7 @@
     min-height: calc(100vh - 56px);
     background: linear-gradient( -45deg, rgba(12, 59, 94, 1) 0%, rgba(40, 134, 222, 1) 50%, rgba(12, 59, 94, 1) 0% );
     -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 100%, transparent 100%);
     padding: 4rem 2rem;
     box-sizing: border-box;
     z-index: 0;

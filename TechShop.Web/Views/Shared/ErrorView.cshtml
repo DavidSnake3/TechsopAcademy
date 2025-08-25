@@ -1,4 +1,16 @@
-﻿@model ErrorViewModel
+﻿@model TechShop.Web.Models.ErrorViewModel
+@{
+   // Layout = "_LayoutLogin.cshtml";           
+    ViewData["Title"] = Model.ErrorCode;
+    ViewData["Style"] = "~/css/Error.css";
+    ViewData["Script"] = "~/js/Error.js";
+}
+
+
+@await Html.PartialAsync("_ErrorAnimation", Model)
+
+
+@*@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
@@ -23,3 +35,5 @@
     For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
     and restarting the app.
 </p>
+
+*@

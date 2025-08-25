@@ -19,8 +19,8 @@ namespace TechShop.Application.DTOs
         public string Crfb9_nombre { get; set; } = "";
         [JsonProperty("crfb9_puesto")]
         public string Crfb9_puesto { get; set; } = "";
-        [JsonProperty("crfb9_rol")]
-        public string Crfb9_rol { get; set; } = "";
+        [JsonProperty("crfb9_roles")]
+        public string Crfb9_roles { get; set; } = "";
         [JsonProperty("crfb9_correo")]
         public string Crfb9_correo { get; set; } = "";
         [JsonProperty("crfb9_area")]
