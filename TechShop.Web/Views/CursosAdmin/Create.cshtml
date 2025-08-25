@@ -438,8 +438,8 @@
 
         if (tipoPregunta === "Unica") {
             inputCorrecta.type = "radio";
-            inputCorrecta.name = `examen.Preguntas[${idxPregunta}].EsCorrecta`; // mismo name para radio group
-            inputCorrecta.value = idxOpcion;
+            inputCorrecta.name = `examen.Preguntas[${idxPregunta}].Opciones[${idxOpcion}].EsCorrecta`; // mismo name para radio group
+            inputCorrecta.value = 'true';
         } else {
             inputCorrecta.type = "checkbox";
             inputCorrecta.name = `examen.Preguntas[${idxPregunta}].Opciones[${idxOpcion}].EsCorrecta`;

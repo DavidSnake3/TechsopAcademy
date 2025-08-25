@@ -66,7 +66,8 @@ namespace TechShop.Web.Controllers
             {
                 ModelState.AddModelError("config.Nombre", "Ya existe una capacitación con ese nombre");
                 return View(curso);
-            };
+            }
+            ;
 
             byte[]? fotoBytes = null;
             if (config.FotoFile != null && config.FotoFile.Length > 0)
@@ -76,7 +77,8 @@ namespace TechShop.Web.Controllers
                     await config.FotoFile.CopyToAsync(ms);
                     fotoBytes = ms.ToArray();
                 }
-            };
+            }
+            ;
 
             // Crear curso
             var nuevaCapacitacion = new Capacitaciones
@@ -111,7 +113,7 @@ namespace TechShop.Web.Controllers
                     //guarda la seccinon
                     var nuevoMaterial = new SeccionCurso
                     {
-                        CursoId =cursoId,
+                        CursoId = cursoId,
                         Titulo = seccion.TituloSeccion,
                         Posicion = 0
                     };
@@ -129,7 +131,7 @@ namespace TechShop.Web.Controllers
                             {
                                 SeccionId = seccionId,
                                 Tipo = componente.Tipo,
-                                Contenido = componente.Contenido,
+                                Contenido = componente.Tipo == "Video" ? ConvertirUrlAEmbed(componente.Contenido) : componente.Contenido,
                                 Posicion = 0
                             };
                             _ctx.MaterialComponente.Add(nuevoComponente);
@@ -174,5 +176,25 @@ namespace TechShop.Web.Controllers
 
             return RedirectToAction("index");
         }
+
+        //Convierte una url de youtube a su formato embed para que pueda ser mostrada en un iframe
+        public static string ConvertirUrlAEmbed(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return url;
+
+            // Buscar el ID del video (puede venir en watch?v=xxxx o youtu.be/xxxx)
+            var regex = new System.Text.RegularExpressions.Regex(@"(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)");
+            var match = regex.Match(url);
+
+            if (match.Success)
+            {
+                string videoId = match.Groups[1].Value;
+                return $"https://www.youtube.com/embed/{videoId}";
+            }
+
+            return url; // si no coincide, devolver la original
+        }
+
     }
 }

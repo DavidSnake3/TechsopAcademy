@@ -16,7 +16,7 @@
         public string TipoPregunta { get; set; }     // "MultipleChoice" o "Abierta"
         public List<OpcionVM> Opciones { get; set; } = new();
         public int? OpcionSeleccionada { get; set; } // Para radio buttons
-        public string RespuestaTexto { get; set; }   // Para input tipo texto
+        public List<int> OpcionesSeleccionadas { get; set; } = new(); // para checkbox
     }
 
     public class OpcionVM

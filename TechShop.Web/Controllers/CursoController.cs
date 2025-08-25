@@ -263,7 +263,7 @@ namespace TechShop.Web.Controllers
                 string respuestaUsuario = "";
                 string respuestaCorrecta = "";
 
-                if (preguntaVM.TipoPregunta == "MultipleChoice")
+                if (preguntaVM.TipoPregunta == "Unica")
                 {
                     var opcionCorrecta = preguntaBD.OpcionesRespuesta.FirstOrDefault(o => o.EsCorrecta);
                     respuestaCorrecta = opcionCorrecta?.TextoOpcion;
@@ -275,16 +275,25 @@ namespace TechShop.Web.Controllers
                     if (opcionCorrecta != null && opcionUsuario?.Id == opcionCorrecta.Id)
                         esCorrecta = true;
                 }
-                else if (preguntaVM.TipoPregunta == "Abierta")
+                else if (preguntaVM.TipoPregunta == "Multiple")
                 {
-                    respuestaUsuario = preguntaVM.RespuestaTexto?.Trim();
-                    respuestaCorrecta = preguntaBD.OpcionesRespuesta.FirstOrDefault()?.TextoOpcion?.Trim();
+                    var opcionesCorrectas = preguntaBD.OpcionesRespuesta.Where(p => p.EsCorrecta).Select(p => p.Id).ToList();
+                    var opcionesUsuario = preguntaVM.OpcionesSeleccionadas ?? new List<int>();
 
-                    if (!string.IsNullOrEmpty(respuestaCorrecta) &&
-                        string.Equals(respuestaUsuario, respuestaCorrecta, StringComparison.OrdinalIgnoreCase))
+                    // Se considera correcta solo si el conjunto es idéntico
+                    if (opcionesCorrectas.All(op => opcionesUsuario.Contains(op)) &&
+                        opcionesUsuario.All(op => opcionesCorrectas.Contains(op)))
                     {
                         esCorrecta = true;
                     }
+
+                    respuestaCorrecta = string.Join(", ",
+                        preguntaBD.OpcionesRespuesta.Where(o => opcionesCorrectas.Contains(o.Id))
+                        .Select(o => o.TextoOpcion));
+
+                    respuestaUsuario = string.Join(", ",
+                        preguntaBD.OpcionesRespuesta.Where(o => opcionesUsuario.Contains(o.Id))
+                        .Select(o => o.TextoOpcion));
                 }
 
                 if (esCorrecta) correctas++;
@@ -305,14 +314,29 @@ namespace TechShop.Web.Controllers
             {
                 foreach (var p in model.Preguntas)
                 {
-                    _ctx.RespuestasEmpleado.Add(new RespuestasEmpleado
+                    if (p.TipoPregunta == "Unica" && p.OpcionSeleccionada.HasValue)
                     {
-                        EmpleadoId = empleadoId,
-                        PreguntaId = p.PreguntaId,
-                        OpcionRespuestaId = p.TipoPregunta == "MultipleChoice" ? p.OpcionSeleccionada : null,
-                        RespuestaTexto = p.TipoPregunta == "Abierta" ? p.RespuestaTexto : null,
-                        FechaRespuesta = ahora
-                    });
+                        _ctx.RespuestasEmpleado.Add(new RespuestasEmpleado
+                        {
+                            EmpleadoId = empleadoId,
+                            PreguntaId = p.PreguntaId,
+                            OpcionRespuestaId = p.OpcionSeleccionada,
+                            FechaRespuesta = ahora
+                        });
+                    }
+                    else if (p.TipoPregunta == "Multiple" && p.OpcionesSeleccionadas?.Any() == true)
+                    {
+                        foreach (var opcionId in p.OpcionesSeleccionadas)
+                        {
+                            _ctx.RespuestasEmpleado.Add(new RespuestasEmpleado
+                            {
+                                EmpleadoId = empleadoId,
+                                PreguntaId = p.PreguntaId,
+                                OpcionRespuestaId = opcionId,
+                                FechaRespuesta = ahora
+                            });
+                        }
+                    }
                 }
 
                 _ctx.ResultadosCapacitacion.Add(new ResultadosCapacitacion
@@ -323,8 +347,6 @@ namespace TechShop.Web.Controllers
                     Aprobado = true,
                     FechaEvaluacion = ahora
                 });
-
-
 
                 var hist = await _ctx.HistorialCapacitacionEmpleado
                     .FirstOrDefaultAsync(h =>

@@ -37,7 +37,7 @@
                         <div class="circle-number bg-primary text-white">@((i + 1))</div>
                         <div>
                             <strong class="h5 mb-0">Pregunta @(i + 1)</strong>
-                            <div class="text-muted small">@((pregunta.TipoPregunta == "MultipleChoice") ? "Selección múltiple" : "Respuesta abierta")</div>
+                            <div class="text-muted small">@((pregunta.TipoPregunta == "Unica") ? "Respuesta Unica" : "Respuesta Multiple")</div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -46,7 +46,7 @@
                         <input type="hidden" name="Preguntas[@i].TipoPregunta" value="@pregunta.TipoPregunta" />
 
 
-                        @if (pregunta.TipoPregunta == "MultipleChoice")
+                        @if (pregunta.TipoPregunta == "Unica")
                         {
                             foreach (var (op, j) in pregunta.Opciones.Select((op, j) => (op, j)))
                             {
@@ -61,7 +61,16 @@
                         }
                         else
                         {
-                            <textarea name="Preguntas[@i].RespuestaTexto" class="form-control fs-5" rows="5" placeholder="Escribe tu respuesta..."></textarea>
+                            foreach (var (op, j) in pregunta.Opciones.Select((op, j) => (op, j)))
+                            {
+                                var optionId = $"p{i}_o{j}";
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="Preguntas[@i].OpcionesSeleccionadas" value="@op.OpcionId" id="@optionId" />
+                                    <label class="form-check-label fs-5" for="@optionId">
+                                        <strong>@(Convert.ToChar(65 + j)).</strong> @op.TextoOpcion
+                                    </label>
+                                </div>
+                            }
                         }
                     </div>
                 </div>
@@ -105,7 +114,7 @@
         const preguntaActualSpan = document.getElementById('pregunta-actual');
         const progresoBar = document.getElementById('barra-progreso');
         const contadorRespuestas = document.getElementById('respuestas-contador');
-        const radios = document.querySelectorAll("input[type=radio], textarea");
+        const radios = document.querySelectorAll("input[type=radio], input[type=checkbox]");
         const enviarExamenBtn = document.getElementById('enviarExamenBtn');
 
         function actualizarVista() {
@@ -116,9 +125,8 @@
 
             const respondidas = Array.from(preguntas).filter(card => {
                 const radioChecked = card.querySelector('input[type="radio"]:checked');
-                const textarea = card.querySelector('textarea');
-                return radioChecked || (textarea && textarea.value.trim().length > 0);
-            }).length;
+                const checkboxChecked = card.querySelector('input[type="checkbox"]:checked');
+                return radioChecked || checkboxChecked}).length;
             const progreso = (respondidas / total) * 100;
             progresoBar.style.width = `${progreso}%`;
             contadorRespuestas.innerText = `${respondidas} de ${total} respondidas`;
@@ -127,7 +135,7 @@
             navBtns.forEach((btn, i) => {
                 const card = preguntas[i];
                 const answered = card.querySelector('input[type="radio"]:checked')
-                               || (card.querySelector('textarea')?.value.trim().length > 0);
+                               || card.querySelector('input[type="checkbox"]:checked');
                 btn.classList.toggle('answered', Boolean(answered));
                 btn.classList.toggle('active', i === index);
             });
