@@ -12,103 +12,551 @@
     var zonas = new[] { "GH", "TSI", "TANDEM" };
 }
 
-<div id="CrearCurso" class="container-xl">
-    <header>
-        <h1>Configuración del Curso</h1>
-    </header>
 
-    @model CrearCursoConfigModel
-    <form asp-action="Create" method="post" enctype="multipart/form-data">
+<div class="flex-grow-1 ">
+    @model CrearCursoModel
+    <form asp-action="Create" method="post" enctype="multipart/form-data" id="formCurso">
+        <div id="CrearCurso" class="">
+            <div id="wizardSlides" class="wizard-slides">
+                @* Para crear y configurar el curso *@
+                <div id="config" class="wizard-step active container-xl">
+                    <header>
+                        <h1>Configuración del Curso</h1>
+                    </header>
+                    <div class="myContener">
+                        <div class="row">
+                            <div class="form-group col-sm-9 col-12 mb-2">
+                                <label asp-for="config.Nombre">Nombre del Curso *</label>
+                                <input asp-for="config.Nombre" class="form-control" />
+                            </div>
 
-        <div class="row">
-            <div class="form-group col-sm-9 col-12 mb-2">
-                <label asp-for="Nombre">Nombre del Curso *</label>
-                <input asp-for="Nombre" class="form-control" />
-            </div>
+                            <div class="form-group col mb-2">
+                                <label asp-for="config.Codigo">Código del Curso *</label>
+                                <input asp-for="config.Codigo" class="form-control" />
+                            </div>
+                        </div>
 
-            <div class="form-group col mb-2">
-                <label asp-for="Codigo">Código del Curso *</label>
-                <input asp-for="Codigo" class="form-control" />
-            </div>
-        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="config.DescripcionCorta">Descripción corta *</label>
+                            <input asp-for="config.DescripcionCorta" class="form-control" />
+                        </div>
 
-        <div class="form-group mb-2">
-            <label asp-for="DescripcionCorta">Descripción corta *</label>
-            <input asp-for="DescripcionCorta" class="form-control" />
-        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="config.DescripcionLarga">Descripción larga (opcional)</label>
+                            <textarea asp-for="config.DescripcionLarga" class="form-control"></textarea>
+                        </div>
 
-        <div class="form-group mb-2">
-            <label asp-for="DescripcionLarga">Descripción larga (opcional)</label>
-            <textarea asp-for="DescripcionLarga" class="form-control"></textarea>
-        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="config.FotoFile">Foto del curso (Opcional)</label>
+                            <input asp-for="config.FotoFile" type="file" accept="image/*" class="form-control" />
+                        </div>
 
-        <div class="form-group mb-2">
-            <label asp-for="Foto">Foto del curso (Opcional)</label>
-            <input asp-for="Foto" type="file" accept="image/*" class="form-control" />
-        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="config.DuracionHoras">Duración (en horas) *</label>
+                            <input asp-for="config.DuracionHoras" type="number" class="form-control" min="1" max="300" />
+                        </div>
 
-        <div class="form-group mb-2">
-            <label asp-for="DuracionHoras">Duración (en horas) *</label>
-            <input asp-for="DuracionHoras" type="number" class="form-control" min="1" max="300" />
-        </div>
+                        <div class="form-group mb-2">
+                            <label asp-for="config.Dificultad">Dificultad *</label>
+                            <select asp-for="config.Dificultad" class="form-control">
+                                <option disabled selected>Seleccione dificultad</option>
+                                @foreach (var d in dificultades)
+                                {
+                                    <option value="@d">@d</option>
+                                }
+                            </select>
+                        </div>
 
-        <div class="form-group mb-2">
-            <label asp-for="Dificultad">Dificultad *</label>
-            <select asp-for="Dificultad" class="form-control">
-                <option disabled selected>Seleccione dificultad</option>
-                @foreach (var d in dificultades)
-                {
-                    <option value="@d">@d</option>
-                }
-            </select>
-        </div>
+                        <div class="row row-cols-3">
 
-        <div class="row row-cols-3">
+                            <div class="form-group col-md-5 col-8 mb-2">
+                                <label>Asignar por departamento:</label>
+                                @foreach (var dept in departamentos)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="config.Departamentos" value="@dept" id="@dept" />
+                                        <label class="form-check-label" for="@dept">@dept</label>
+                                    </div>
+                                }
+                            </div>
 
-            <div class="form-group col-md-5 col-8 mb-2">
-                <label>Asignar por departamento:</label>
-                @foreach (var dept in departamentos)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="Departamentos" value="@dept" id="@dept" />
-                        <label class="form-check-label" for="@dept">@dept</label>
+                            <div class="form-group col-4 mb-2">
+                                <label>Asignar por rol:</label>
+                                @foreach (var rol in roles)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="config.Roles" value="@rol" id="@rol" />
+                                        <label class="form-check-label" for="@rol">@rol</label>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group col-12 col-md-3 mb-2">
+                                <label>Asignar por zona:</label>
+                                @foreach (var zona in zonas)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="config.Zonas" value="@zona" id="@zona" />
+                                        <label class="form-check-label" for="@zona">@zona</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
-                }
+                </div>
+
+                @* Para crear y diseñar el material del curso *@
+                <div id="material" class="wizard-step container-xl">
+                    <header>
+                        <h1>Configuración del Material</h1>
+                    </header>
+
+                    <div class="myContener">
+                        <main id="contenedorSecciones">
+
+                            <section class="seccion">
+                                <h4>Sección <span class="indice-seccion">1</span></h4>
+                                <input name="material.Secciones[0].TituloSeccion" class="form-control mb-2" placeholder="Título de la Sección" />
+
+                                <main class="contenedor-componentes">
+
+                                </main>
+
+                                <div class="addComponent">
+                                    <h4>Agregar Componentes</h4>
+                                    <div class="addComponentList">
+                                        <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Titulo')">
+                                            <i class="fi fi-rr-heading"></i>
+                                            <p>Titulo</p>
+                                        </button>
+                                        <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Texto')">
+                                            <i class="fi fi-rr-text"></i>
+                                            <p>Texto</p>
+                                        </button>
+                                        <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Video')">
+                                            <i class="fi fi-rr-screen-play"></i>
+                                            <p>Video</p>
+                                        </button>
+                                       @*  <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Archivo')">
+                                            <i class="fi fi-rr-folder-upload"></i>
+                                            <p>Archivo</p>
+                                        </button> *@
+                                    </div>
+                                </div>
+                            </section>
+
+
+
+                        </main>
+
+                        <div class="addSeccion">
+                            <button type="button" class="addSeccionGroup" onclick="agregarSeccion()">
+                                <i class="fi fi-rr-square-plus"></i>
+                                <p>Agregar Sección</p>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                @* Para crear y diseñar el examen del curso *@
+                <div id="examen" class="wizard-step container-xl">
+                    <header>
+                        <h1>Configuración del Examen</h1>
+                    </header>
+                    <div class="myContener">
+                        <main id="contenedorPreguntas"></main>
+
+                        <div class="addComponent">
+                            <h4>Agregar Pregunta</h4>
+                            <div class="addComponentList">
+                                <button type="button" class="addComponentGroup" onclick="agregarPregunta('Unica')">
+                                    <i class="fi fi-rr-message-question"></i>
+                                    <p>Selección Única</p>
+                                </button>
+                                <button type="button" class="addComponentGroup" onclick="agregarPregunta('Multiple')">
+                                    <i class="fi fi-rr-messages-question"></i>
+                                    <p>Selección Múltiple</p>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group col-4 mb-2">
-                <label>Asignar por rol:</label>
-                @foreach (var rol in roles)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="Roles" value="@rol" id="@rol" />
-                        <label class="form-check-label" for="@rol">@rol</label>
-                    </div>
-                }
-            </div>
-
-            <div class="form-group col-12 col-md-3 mb-2">
-                <label>Asignar por zona:</label>
-                @foreach (var zona in zonas)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="Zonas" value="@zona" id="@zona" />
-                        <label class="form-check-label" for="@zona">@zona</label>
-                    </div>
-                }
-            </div>
         </div>
 
+        @* Botones y acciones *@
         <footer class="footer">
             <div class="botonDiv">
-                <button class="btnDesactivado" type="button">Anterior</button>
-                <button class="btnPage" type="submit">Siguiente</button>
-            </div>
-            <div class="LinkDiv">
-                <a class="Select" asp-action="Create" asp-controller="CursosAdmin">Curso</a> -
-                <a asp-action="CreateMaterial" asp-controller="CursosAdmin">Material</a> -
-                <a asp-action="CreateTest" asp-controller="CursosAdmin">Examen</a>
+                <button type="button" class="btnAnterior btnPage">Anterior</button>
+                <button type="button" class="btnSiguiente btnPage">Siguiente</button>
+                <button type="submit" class="btnFin btnPage hidden">Finalizar</button>
             </div>
         </footer>
     </form>
+
+
+    @* Plantillas de los comonentes del material*@ 
+                    <div class="plantilla-seccion d-none">
+        <section class="seccion">
+            <div class="topHeader">
+                <h4>Sección <span class="indice-seccion">X</span></h4>
+                <button onclick="eliminarSeccion(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
+            <input name="material.Secciones[X].TituloSeccion" class="form-control mb-2" placeholder="Título de la Sección" />
+
+            <main class="contenedor-componentes"></main>
+
+            <div class="addComponent">
+                <h4>Agregar Componentes</h4>
+                <div class="addComponentList">
+                    <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Titulo')">
+                        <i class="fi fi-rr-heading"></i>
+                        <p>Titulo</p>
+                    </button>
+                    <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Texto')">
+                        <i class="fi fi-rr-text"></i>
+                        <p>Texto</p>
+                    </button>
+                    <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Video')">
+                        <i class="fi fi-rr-screen-play"></i>
+                        <p>Video</p>
+                    </button>
+                    @* <button type="button" class="addComponentGroup" onclick="agregarComponente(this, 'Archivo')">
+                        <i class="fi fi-rr-folder-upload"></i>
+                        <p>Archivo</p>
+                    </button> *@
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <template id="componente-Texto">
+        <div class="form-group mb-2">
+            <div class="topHeader">
+                <label>Texto</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
+            <textarea name="material.Secciones[X].Componentes[Y].Contenido" class="form-control TextComponent"></textarea>
+            <input type="hidden" name="material.Secciones[X].Componentes[Y].Tipo" value="Texto" />
+        </div>
+    </template>
+
+    <template id="componente-Video">
+        <div class="form-group mb-2">
+            <div class="topHeader">
+                <label>Video (YouTube)</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
+            <input name="material.Secciones[X].Componentes[Y].Contenido" class="form-control LinkComponent" placeholder="https://youtube.com/..." />
+            <input type="hidden" name="material.Secciones[X].Componentes[Y].Tipo" value="Video" />
+        </div>
+    </template>
+
+    <template id="componente-Archivo">
+        <div class="form-group mb-2">
+            <div class="topHeader">
+                <label>Archivo (.pdf, .docx, .xlsx)</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
+            <input accept=".pdf,.docx,.xlsx" type="file" name="material.Secciones[X].Componentes[Y].Archivo" class="form-control ArcivhoComponent" />
+            <input type="hidden" name="material.Secciones[X].Componentes[Y].Tipo" value="Archivo" />
+        </div>
+    </template>
+
+    <template id="componente-Titulo">
+        <div class="form-group mb-2">
+            <div class="topHeader">
+                <label>Título</label>
+                <button onclick="eliminarComponente(this)"><i class="fi fi-rr-trash"></i></button>
+            </div>
+            <input name="material.Secciones[X].Componentes[Y].Contenido" class="form-control TituloComponent" placeholder="Título del contenido" />
+            <input type="hidden" name="material.Secciones[X].Componentes[Y].Tipo" value="Titulo" />
+        </div>
+    </template>
+
+
+    @* Plantillas del examen*@
+    <template id="plantillaPregunta">
+        <section class="pregunta border rounded p-3 mb-3">
+            <div class="topHeader d-flex justify-content-between align-items-center mb-2">
+                <h4>Pregunta <span class="indice-pregunta">X</span></h4>
+                <button type="button" class="btn btn-sm btn-danger" onclick="eliminarPregunta(this)" title="Eliminar pregunta">
+                    <i class="fi fi-rr-trash"></i>
+                </button>
+            </div>
+
+            <input type="text" class="form-control mb-2" placeholder="Texto de la pregunta" name="examen.Preguntas[X].TextoPregunta" required />
+
+            <input type="hidden" name="examen.Preguntas[X].TipoPregunta" value="TIPO" />
+
+            <div class="contenedor-opciones" data-index-pregunta="X"></div>
+
+            <button type="button" class="btn btn-outline-primary mt-2" onclick="agregarOpcion(this)">Agregar Opción</button>
+        </section>
+    </template>
+
+    <template id="plantillaOpcion">
+
+        <div class="form-group mb-2 opcion">
+            <div class="input-group">
+                <div class="input-group-text">
+                    <input type="checkbox" class="input-es-correcta" />
+                </div>
+                <input type="text" class="form-control input-opcion" placeholder="Texto de opción" />
+                <button type="button" class="btn btn-danger" onclick="eliminarOpcion(this)">
+                    <i class="fi fi-rr-trash"></i>
+                </button>
+            </div>
+        </div>
+
+    </template>
+
+
 </div>
+
+@* Scrip del material *@
+<script>
+    let indexSeccion = 1;
+
+    function agregarSeccion() {
+        const contenedor = document.getElementById('contenedorSecciones');
+        const plantilla = document.querySelector('.plantilla-seccion').cloneNode(true);
+        plantilla.classList.remove('d-none');
+        plantilla.classList.remove('plantilla-seccion');
+
+        const idx = indexSeccion++;
+        plantilla.innerHTML = plantilla.innerHTML.replaceAll('X', idx);
+        plantilla.querySelector('.indice-seccion').innerText = idx + 1;
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function agregarComponente(btn, tipo) {
+        const seccion = btn.closest('.seccion');
+        const contenedor = seccion.querySelector('.contenedor-componentes');
+
+        let indexComponente = contenedor.children.length;
+        const plantilla = document.getElementById('componente-' + tipo).content.cloneNode(true);
+
+        // reemplazar X (índice sección) y Y (índice componente)
+        plantilla.querySelectorAll('input, textarea').forEach(el => {
+            if (el.name)
+                    el.name = el.name.replaceAll('X', seccion.querySelector('input').name.match(/\d+/)[0])
+                        .replaceAll('Y', indexComponente);
+        });
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function eliminarSeccion(btn) {
+        btn.closest('.seccion').remove();
+        indexSeccion = indexSeccion - 1;
+    }
+
+    function eliminarComponente(btn) {
+        btn.closest('.form-group').remove();
+    }
+
+    document.addEventListener('input', function (e) {
+        if (e.target.classList.contains('LinkComponent')) {
+            const url = e.target.value;
+            const iframe = document.createElement('iframe');
+            const div = document.createElement('div');
+            const parent = e.target.parentElement;
+
+            parent.querySelector('iframe')?.remove(); // elimina anterior
+
+            if (url.includes("youtube.com") || url.includes("youtu.be")) {
+                iframe.src = convertirURLaEmbed(url);
+                iframe.frameBorder = "0";
+                iframe.allowFullscreen = true;
+                iframe.classList.add('VideoPreview');
+                div.classList.add('VideoPreviewDiv');
+                div.appendChild(iframe);
+                parent.appendChild(div);
+            }
+        }
+    });
+
+    function convertirURLaEmbed(url) {
+        // Convierte https://www.youtube.com/watch?v=xxxx a https://www.youtube.com/embed/xxxx
+        const match = url.match(/(?:youtube\.com\/watch\?v=|youtu.be\/)([^&]+)/);
+        return match ? `https://www.youtube.com/embed/${match[1]}` : url;
+    }
+</script>
+
+@* Scrip del Examen *@
+<script>
+    let indexPregunta = 0;
+
+    function agregarPregunta(tipo) {
+        const contenedor = document.getElementById('contenedorPreguntas');
+        const plantilla = document.getElementById('plantillaPregunta').content.cloneNode(true);
+
+        const idx = indexPregunta++;
+
+        // Actualizar índices y valores
+        plantilla.querySelector('.indice-pregunta').innerText = idx + 1;
+        plantilla.querySelector('input[name$=".TextoPregunta"]').name = `examen.Preguntas[${idx}].TextoPregunta`;
+        const inputTipo = plantilla.querySelector('input[type="hidden"]');
+        inputTipo.name = `examen.Preguntas[${idx}].TipoPregunta`;
+        inputTipo.value = tipo;
+
+        // Actualizar contenedor opciones
+        const contenedorOpciones = plantilla.querySelector('.contenedor-opciones');
+        contenedorOpciones.setAttribute('data-index-pregunta', idx);
+
+        // Agregar una opción por defecto
+        agregarOpcionManual(contenedorOpciones);
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function agregarOpcion(btn) {
+        const contenedorOpciones = btn.closest('.pregunta').querySelector('.contenedor-opciones');
+        agregarOpcionManual(contenedorOpciones);
+    }
+
+    function agregarOpcionManual(contenedor) {
+        const idxPregunta = contenedor.getAttribute('data-index-pregunta');
+        const idxOpcion = contenedor.children.length;
+
+        const plantilla = document.getElementById('plantillaOpcion').content.cloneNode(true);
+
+        // Asignar name al texto de opción
+        const inputTexto = plantilla.querySelector('.input-opcion');
+        inputTexto.name = `examen.Preguntas[${idxPregunta}].Opciones[${idxOpcion}].TextoOpcion`;
+
+        // Seleccionar input correcto (radio o checkbox) según tipoPregunta
+        const contenedorPregunta = contenedor.closest('.pregunta');
+        const tipoPregunta = contenedorPregunta.querySelector(`input[name="examen.Preguntas[${idxPregunta}].TipoPregunta"]`).value;
+
+        const inputCorrecta = plantilla.querySelector('.input-es-correcta');
+
+        if (tipoPregunta === "Unica") {
+            inputCorrecta.type = "radio";
+            inputCorrecta.name = `examen.Preguntas[${idxPregunta}].EsCorrecta`; // mismo name para radio group
+            inputCorrecta.value = idxOpcion;
+        } else {
+            inputCorrecta.type = "checkbox";
+            inputCorrecta.name = `examen.Preguntas[${idxPregunta}].Opciones[${idxOpcion}].EsCorrecta`;
+            inputCorrecta.value = "true";
+        }
+
+        contenedor.appendChild(plantilla);
+    }
+
+    function eliminarPregunta(btn) {
+        btn.closest('.pregunta').remove();
+        indexPregunta--;
+        actualizarIndicesPreguntas();
+    }
+
+    function eliminarOpcion(btn) {
+        btn.closest('.opcion').remove();
+        // Opcional: podrías actualizar indices de opciones si quieres
+    }
+
+    function actualizarIndicesPreguntas() {
+        const preguntas = document.querySelectorAll('#contenedorPreguntas .pregunta');
+        preguntas.forEach((pregunta, idx) => {
+            pregunta.querySelector('.indice-pregunta').innerText = idx + 1;
+            pregunta.querySelector('input[name$=".TextoPregunta"]').name = `examen.Preguntas[${idx}].TextoPregunta`;
+            pregunta.querySelector('input[type="hidden"]').name = `examen.Preguntas[${idx}].TipoPregunta`;
+            pregunta.querySelector('input[type="hidden"]').value = pregunta.querySelector('input[type="hidden"]').value; // mantiene tipoPregunta
+
+            const contenedorOpciones = pregunta.querySelector('.contenedor-opciones');
+            contenedorOpciones.setAttribute('data-index-pregunta', idx);
+
+            // Actualizar nombres de opciones
+            const opciones = contenedorOpciones.querySelectorAll('.opcion');
+            opciones.forEach((opcion, idxOpcion) => {
+                opcion.querySelector('.input-opcion').name = `examen.Preguntas[${idx}].Opciones[${idxOpcion}].TextoOpcion`;
+
+                const inputCorrecta = opcion.querySelector('.input-es-correcta');
+                const tipoPregunta = pregunta.querySelector('input[type="hidden"]').value;
+
+                if (tipoPregunta === "Unica") {
+                    inputCorrecta.name = `examen.Preguntas[${idx}].OpcionesCorrecta`;
+                    inputCorrecta.value = idxOpcion;
+                } else {
+                    inputCorrecta.name = `examen.Preguntas[${idx}].Opciones[${idxOpcion}].EsCorrecta`;
+                    inputCorrecta.value = "true";
+                }
+            });
+        });
+    }
+</script>
+
+@* Scrip para animacion de slide *@
+<script>
+    let pasoActual = 0;
+    const slides = document.getElementById('wizardSlides');
+    const totalPasos = 3;
+
+    function mostrarPaso(index, paso) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        ajustarAltura(paso);
+        const ancho = window.innerWidth;
+        slides.style.transform = `translateX(-${paso * ancho}px)`;
+        pasoActual = paso;
+    }
+
+    function ajustarAltura(index) {
+        const slides = document.querySelectorAll('.wizard-step');
+        const contenedor = document.getElementById('CrearCurso');
+
+        // Quitar y agregar .active
+        slides.forEach(slide => slide.classList.remove('active'));
+        const pasoActualSlide = slides[index];
+
+        pasoActualSlide.classList.add('active');
+
+    }
+
+     // ayuda
+    function validarPasoActual() {
+        // Aquí validas los campos requeridos de cada paso antes de avanzar
+        if (pasoActual === 0) {
+            // Validación de configuración del curso
+            const nombre = document.querySelector('[name="config.Nombre"]');
+            const codigo = document.querySelector('[name="config.Codigo"]');
+            const duracion = document.querySelector('[name="config.DuracionHoras"]');
+            const dificultad = document.querySelector('[name="config.Dificultad"]');
+
+            if (!nombre.value.trim() || !codigo.value.trim() || !duracion.value || dificultad.selectedIndex === 0) {
+                alert("Por favor completa todos los campos obligatorios.");
+                return false;
+            }
+        }
+        // Puedes agregar más validaciones para material o examen si deseas
+        return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnAnterior = document.querySelector('.btnAnterior');
+        const btnSiguiente = document.querySelector('.btnSiguiente');
+
+        btnAnterior.addEventListener('click', () => {
+            if (pasoActual > 0) {
+                mostrarPaso(window.innerWidth, pasoActual - 1);
+                    btnSiguiente.classList.remove('hidden');
+                    document.querySelector('.btnFin').classList.add('hidden');
+            }
+        });
+
+        btnSiguiente.addEventListener('click', () => {
+            if (pasoActual < totalPasos - 1) {
+                if (!validarPasoActual()) return;
+                mostrarPaso(-window.innerWidth, pasoActual + 1);
+                if (pasoActual === totalPasos - 1) {
+                    btnSiguiente.classList.add('hidden');
+                    document.querySelector('.btnFin').classList.remove('hidden');
+                }
+            }
+        });
+    });
+</script>

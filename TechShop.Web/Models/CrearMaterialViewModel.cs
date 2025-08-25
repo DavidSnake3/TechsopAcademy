@@ -4,7 +4,7 @@
     {
         public string Tipo { get; set; } // "Texto", "Video", "Archivo", "Titulo"
         public string Contenido { get; set; } // texto o URL
-        public IFormFile Archivo { get; set; } // si es tipo Archivo
+        public IFormFile? Archivo { get; set; } // si es tipo Archivo
     }
 
     public class SeccionMaterial

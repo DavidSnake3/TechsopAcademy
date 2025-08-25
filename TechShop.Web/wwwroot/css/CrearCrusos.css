@@ -1,38 +1,82 @@
-﻿#CrearCurso {
+﻿html{
+    overflow-x: hidden;
+}
+#formCurso {
+    display: flex;
+    flex-direction: column;
+}
+
+#CrearCurso {
+    position: relative;
+    width: 100%;
+    padding: 0 15px;
+    margin-bottom: 10px;
+    height: calc(100vh - 192px);
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.myContener {
     width: 100%;
     border-radius: 10px;
     border: solid 4px RGBA(40, 134, 222, 1);
-    padding: 0;
-    box-shadow: 0 4px 20px 5px rgba(0, 0, 0, 0.3);
-    margin-bottom: 40px;
-    background-color: RGBA(180, 214, 250, 0.5)
+    padding: 10px 15px;
+    box-shadow: 0 4px 20px 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 0;
+    background-color: RGBA(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
 }
 
     /*      Header      */
 
-    #CrearCurso header {
-        background-color: RGBA(40, 134, 222, 1);
-        color: white;
-        text-align: center;
-        padding-top: 5px;
-        padding-bottom: 8px;
-        margin-bottom: 10px;
-    }
+#CrearCurso header {
+    border: solid 4px RGBA(40, 134, 222, 1);
+    border-radius: 10px;
+    background-color: RGBA(40, 134, 222, 1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px 5px rgba(0, 0, 0, 0.3);
+    color: white;
+    text-align: center;
+    padding: 5px;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10
+}
 
         #CrearCurso header h1 {
             text-align: center;
             font-size: 2rem;
-            margin-bottom: 0;
+            margin-bottom: 5px;
             padding: 0;
         }
 
     /*      Form        */
     #CrearCurso form {
-        padding: 0 20px;
     }
 
-/*------    Material    ------*/
-.addSeccion {
+/*      Animacion slide y control de seccio visible     */
+#wizardSlides {
+    display: flex;
+    gap: 30px;
+    width: calc(300vw - 30px);
+    transition: transform 0.6s ease-in-out;
+
+}
+
+.wizard-step {
+    padding: 10px 20px 30px;
+    height: calc(100vh - 192px);
+    overflow: hidden;
+}
+
+    .wizard-step.active {
+        max-height: unset;
+        height: 100%
+    }
+
+    /*------    Material    ------*/
+    .addSeccion {
     background-color: rgb(242, 242, 242);
     border: 3px solid rgb(177, 177, 177);
     box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
@@ -58,7 +102,7 @@
 
     .addSeccionGroup i {
         font-size: 2rem;
-        margin: 0 0 -10px 0;
+        margin: 0 0 0 0;
         padding: 0;
     }
 
@@ -174,11 +218,17 @@ section {
         color: darkred;
     }
 /*      Footer      */
-#CrearCurso footer {
+#formCurso .footer {
     padding: 10px 20px;
+    min-height: 80px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100% );
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-#CrearCurso .botonDiv {
+#formCurso .botonDiv {
     margin: 0 auto;
     width: 100%;
     max-width: 500px;
@@ -186,7 +236,7 @@ section {
     justify-content: space-between;
 }
 
-#CrearCurso .btnPage, #CrearCurso .btnDesactivado {
+#formCurso .btnPage, #formCurso .btnDesactivado {
     background-color: RGBA(40, 134, 222, 1);
     height: 30px;
     width: 100px;
@@ -198,32 +248,32 @@ section {
     border: none;
 }
 
-    #CrearCurso .btnPage:hover {
+    #formCurso .btnPage:hover {
         background-color: RGBA(15, 84, 140, 1);
     }
 
-#CrearCurso .btnDesactivado {
+#formCurso .btnDesactivado {
     background-color: darkgray;
     cursor: default;
     opacity: 60%;
 }
 
-#CrearCurso .LinkDiv {
+#formCurso .LinkDiv {
     margin: 0 auto;
     width: 200px;
 }
 
-    #CrearCurso .LinkDiv a {
+    #formCurso .LinkDiv a {
         text-decoration: none;
         color: RGBA(40, 134, 222, 1);
     }
 
-        #CrearCurso .LinkDiv a:hover {
+        #formCurso .LinkDiv a:hover {
             color: RGBA(15, 84, 140, 1);
             text-decoration: underline;
         }
 
-        #CrearCurso .LinkDiv a.Select {
+        #formCurso .LinkDiv a.Select {
             font-weight: bold;
             text-decoration: underline;
         }

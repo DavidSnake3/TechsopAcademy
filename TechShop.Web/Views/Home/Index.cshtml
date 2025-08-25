@@ -66,7 +66,7 @@
                             </div>
                             <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
                             <div class="small text-muted">
-                                @c.Dificultad | @(c.DuracionHoras?.ToString("h\\:mm") ?? "N/A") h
+                                @c.Dificultad | @(c.DuracionHoras.ToString() ?? "N/A") h
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Material" asp-route-id="@c.Id"
@@ -109,7 +109,7 @@
                             </div>
                             <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
                             <div class="small text-muted">
-                                @c.Dificultad | @(c.DuracionHoras?.ToString("h\\:mm") ?? "N/A") h
+                                @c.Dificultad | @(c.DuracionHoras.ToString() ?? "N/A") h
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Finalizados" asp-route-id="@c.Id"
@@ -152,7 +152,7 @@
                             <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
                             <div class="small text-muted">
                                  @c.Dificultad &nbsp;|&nbsp;
-                                 @(c.DuracionHoras?.ToString("h:mm") ?? "N/A") h
+                                 @(c.DuracionHoras.ToString() ?? "N/A") h
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Detalles" asp-route-id="@c.Id"
