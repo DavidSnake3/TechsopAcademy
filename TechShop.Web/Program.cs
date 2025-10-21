@@ -6,7 +6,6 @@ using TechShop.Application.Interfaces;
 using TechShop.Infraestructure.Data;
 using TechShop.Infraestructure.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 // configuración previa del fking dataverse
 var endpoint = builder.Configuration["Dataverse:Endpoint"];
@@ -19,7 +18,6 @@ builder.Services.AddHttpClient<IDataverseService, DataverseService>();
 // configuracion previa del fking sql server
 builder.Services.AddDbContext<TechAcademyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerDataBase")));
-
 // vaina para autenticar y proteger url
 builder.Services
   .AddAuthentication("MyCookieAuth")

@@ -103,8 +103,7 @@ namespace TechShop.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AgregarAviso(AvisoDto avisoDto)
+        public async Task<IActionResult> AgregarAviso(string texto, int duracionDias) 
         {
             try
             {
@@ -112,7 +111,7 @@ namespace TechShop.Web.Controllers
                 if (codigo != "2693" && codigo != "2692")
                     return Forbid();
 
-                if (!ModelState.IsValid)
+                if (string.IsNullOrWhiteSpace(texto))
                 {
                     TempData["Mensaje"] = "Swal.fire('Error','Por favor complete todos los campos correctamente','error');";
                     return RedirectToAction("Index");
@@ -120,6 +119,12 @@ namespace TechShop.Web.Controllers
 
                 var empleadoId = int.Parse(codigo!);
                 var empleadoNombre = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+
+                var avisoDto = new AvisoDto
+                {
+                    Texto = texto,
+                    DuracionDias = duracionDias
+                };
 
                 await _avisoService.CrearAvisoAsync(avisoDto, empleadoId, empleadoNombre);
 
@@ -129,6 +134,41 @@ namespace TechShop.Web.Controllers
             {
                 _logger.LogError(ex, "Error al agregar aviso");
                 TempData["Mensaje"] = "Swal.fire('Error','No se pudo agregar el aviso','error');";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditarAviso(int id, string texto, int duracionDias)
+        {
+            try
+            {
+                var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value;
+                if (codigo != "2693" && codigo != "2692")
+                    return Forbid();
+
+                var avisoDto = new AvisoDto
+                {
+                    Id = id,
+                    Texto = texto,
+                    DuracionDias = duracionDias
+                };
+
+                var resultado = await _avisoService.ActualizarAvisoAsync(avisoDto);
+
+                if (resultado)
+                {
+                    TempData["Mensaje"] = "Swal.fire('Éxito', 'Aviso actualizado correctamente', 'success');";
+                }
+                else
+                {
+                    TempData["Mensaje"] = "Swal.fire('Error', 'No se pudo actualizar el aviso', 'error');";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensaje"] = $"Swal.fire('Error', 'Error: {ex.Message}', 'error');";
             }
 
             return RedirectToAction("Index");

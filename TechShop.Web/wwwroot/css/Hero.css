@@ -113,12 +113,12 @@ main {
     gap: 0.5rem;
 }
 
-    .div4 > h6.text-primary .bi,
-    .div5 > h6.text-secondary .bi,
-    .div7 > h6.text-info .bi,
-    .div8 > h6 .bi {
-        color: #ffffff !important;
-    }
+.div4 > h6.text-primary .bi,
+.div5 > h6.text-secondary .bi,
+.div7 > h6.text-info .bi,
+.div8 > h6 .bi {
+    color: #ffffff !important;
+}
 
 .div1 {
     grid-area: personal;
@@ -136,9 +136,10 @@ main {
 .div8 {
     display: flex;
     flex-direction: column;
-    max-height: 350px;
+    max-height: 222px;
     overflow: hidden;
     position: relative;
+    height: 222px;
 }
 
     .div8.sin-boton-agregar {
@@ -359,10 +360,19 @@ main {
     scrollbar-color: rgba(255,255,255,0.4) rgba(255,255,255,0.1);
 }
 
+.aviso-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 180px;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
 .aviso-contenedor {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-height: 0;
 }
 
 .aviso-actual {
@@ -396,12 +406,23 @@ main {
 
 .texto-aviso {
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.4;
     max-height: 4.2em;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.aviso-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.aviso-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(40, 134, 222, 0.5);
+    border-radius: 3px;
 }
 
 .aviso-texto p {
@@ -535,31 +556,214 @@ main {
         color: rgba(12, 59, 94, 1);
     }
 
-@media (max-width: 768px) {
-    .aviso-actual {
-        padding: 0.875rem;
+@media (max-width: 992px) {
+    .parent {
+        display: grid;
+        padding: 1rem;
+        gap: 20px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto auto;
+        grid-template-areas:
+            "personal avisos"
+            "proceso  proceso"
+            "final    final"
+            "disponibles disponibles";
     }
 
-    .aviso-acciones {
+    .div1 {
+        grid-area: personal;
+    }
+
+    .div2 {
+        grid-area: avisos;
+    }
+
+    .div3 {
+        grid-area: proceso;
+    }
+
+    .div4 {
+        grid-area: final;
+    }
+
+    .div5 {
+        grid-area: disponibles;
+    }
+
+    .parent > div {
+        overflow-y: auto;
+        height: auto;
+        max-height: none;
+    }
+
+    .div1 {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+    }
+
+        .div1 > .d-flex.justify-content-between.align-items-start.mb-1 {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 0.5rem;
+        }
+
+            .div1 > .d-flex.justify-content-between.align-items-start.mb-1 .btn {
+                margin-top: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+        .div1 .row.g-2 {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100%;
+            gap: 0.75rem;
+        }
+
+            .div1 .row.g-2 .col {
+                width: 100% !important;
+            }
+
+    .div8 .scrollable-content {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+
+    .avisos-list {
+        display: flex;
         flex-direction: column;
-        gap: 0.75rem;
-        align-items: flex-start;
+        gap: 1.5em;
+        margin: 0;
+        padding: 0;
     }
 
-    .aviso-navegacion {
-        align-self: center;
+        .avisos-list li.alert {
+            margin-bottom: 0;
+            padding: 1rem;
+        }
+}
+
+@media (max-width: 576px) {
+    .parent {
+        display: grid;
+        padding: 0.5rem;
+        gap: 16px;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        grid-template-areas:
+            "personal"
+            "avisos"
+            "enproceso"
+            "disponibles"
+            "finalizados";
     }
 
-    .btn-agregar-aviso {
-        position: relative;
-        top: auto;
-        right: auto;
-        align-self: flex-end;
-        margin-top: 0.5rem !important;
-        margin-bottom: 0.5rem;
+    .div1 {
+        grid-area: personal;
     }
 
-    .div8 h6 {
-        margin-right: 0 !important;
+    .div8 {
+        grid-area: avisos;
+    }
+
+    .div4 {
+        grid-area: enproceso;
+    }
+
+    .div7 {
+        grid-area: disponibles;
+    }
+
+    .div5 {
+        grid-area: finalizados;
+    }
+
+    .div7 .scrollable-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        max-height: 200px;
+    }
+
+    .div1 .d-flex.justify-content-between.align-items-start.mb-4 {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .div1 .d-flex.align-items-center {
+        flex-direction: column !important;
+        text-align: center;
+    }
+
+        .div1 .d-flex.align-items-center .me-3 {
+            margin-right: 0 !important;
+            margin-bottom: 1rem;
+        }
+
+    .div1 .d-flex.justify-content-between.align-items-start.mb-4 h6.text-white {
+        order: 2;
+        margin-top: 0.5rem;
+    }
+
+    .div1 .row.gx-3 {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        margin: 0;
+    }
+
+        .div1 .row.gx-3 .col-6 {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
+
+    .div1 .stat-card {
+        height: 100%;
+        min-height: 80px;
+    }
+}
+
+@media (max-width: 375px) {
+    .div1 .d-flex.justify-content-between.align-items-start.mb-4 {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .div1 .d-flex.align-items-center {
+        flex-direction: column !important;
+        text-align: center;
+    }
+
+        .div1 .d-flex.align-items-center .me-3 {
+            margin-right: 0 !important;
+            margin-bottom: 1rem;
+        }
+
+    .div1 .d-flex.justify-content-between.align-items-start.mb-4 h6.text-white {
+        order: 2;
+        margin-top: 0.5rem;
+    }
+
+    .div1 .row.gx-3 {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        margin: 0;
+    }
+
+        .div1 .row.gx-3 .col-6 {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
+
+    .div1 .stat-card {
+        height: 100%;
+        min-height: 80px;
     }
 }

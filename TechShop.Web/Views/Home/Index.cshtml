@@ -176,55 +176,56 @@
             <i class="bi bi-megaphone-fill me-1"></i>Avisos
         </h6>
 
-        @if (Model.Avisos.Any())
-        {
-            var avisoActual = Model.Avisos.First();
-            var textoCorto = avisoActual.Texto.Length > 100 ? avisoActual.Texto.Substring(0, 100) + "..." : avisoActual.Texto;
-            var fechaCreacion = avisoActual.FechaCreacion.ToLocalTime().ToString("dd/MM/yyyy");
+        <div class="aviso-scroll-container">
+            @if (Model.Avisos.Any())
+            {
+                var avisoActual = Model.Avisos.First();
+                var textoCorto = avisoActual.Texto.Length > 100 ? avisoActual.Texto.Substring(0, 100) + "..." : avisoActual.Texto;
+                var fechaCreacion = avisoActual.FechaCreacion.ToLocalTime().ToString("dd/MM/yyyy");
 
-            <div class="aviso-contenedor">
-                <div class="aviso-actual">
-                    <div class="aviso-header">
-                        <small class="fecha-creacion">@fechaCreacion</small>
-                    </div>
-                    <div class="aviso-texto">
-                        <p class="texto-aviso">@avisoActual.Texto</p>
-                    </div>
-                    <div class="aviso-acciones">
-                        <div class="aviso-navegacion">
-                            @if (Model.Avisos.Count > 1)
-                            {
-                                <button type="button" class="btn aviso-anterior">
-                                    <i class="bi bi-chevron-left"></i>
-                                </button>
-                                <button type="button" class="btn aviso-siguiente">
-                                    <i class="bi bi-chevron-right"></i>
-                                </button>
-                                <small>1/@Model.Avisos.Count</small>
-                            }
+                <div class="aviso-contenedor">
+                    <div class="aviso-actual">
+                        <div class="aviso-header">
+                            <small class="fecha-creacion">@fechaCreacion</small>
                         </div>
-                        <div class="aviso-botones">
-                            @if (avisoActual.Texto.Length > 100)
-                            {
-                                <button type="button" class="btn btn-aviso-action ver-completo-btn"
-                                        data-bs-toggle="modal" data-bs-target="#modalVerAvisoCompleto"
-                                        data-aviso-id="@avisoActual.Id">
-                                    Ver completo
-                                </button>
-                            }
+                        <div class="aviso-texto">
+                            <p class="texto-aviso">@avisoActual.Texto</p>
+                        </div>
+                        <div class="aviso-acciones">
+                            <div class="aviso-navegacion">
+                                @if (Model.Avisos.Count > 1)
+                                {
+                                    <button type="button" class="btn aviso-anterior">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </button>
+                                    <button type="button" class="btn aviso-siguiente">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </button>
+                                    <small>1/@Model.Avisos.Count</small>
+                                }
+                            </div>
+                            <div class="aviso-botones">
+                                @if (avisoActual.Texto.Length > 100)
+                                {
+                                    <button type="button" class="btn btn-aviso-action ver-completo-btn"
+                                            data-bs-toggle="modal" data-bs-target="#modalVerAvisoCompleto"
+                                            data-aviso-id="@avisoActual.Id">
+                                        Ver completo
+                                    </button>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-        else
-        {
-            <div class="flex-grow-1 d-flex align-items-center justify-content-center">
-                <i class="bi bi-bell-slash fs-4 text-muted"></i>
-                <small class="text-muted ms-2">No hay avisos por el momento</small>
-            </div>
-        }
-
+            }
+            else
+            {
+                <div class="flex-grow-1 d-flex align-items-center justify-content-center h-100">
+                    <i class="bi bi-bell-slash fs-4 text-muted"></i>
+                    <small class="text-muted ms-2">No hay avisos por el momento</small>
+                </div>
+            }
+        </div>
         @{
             var userCodigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D";
         }
@@ -237,7 +238,6 @@
             </button>
         }
     </div>
-
 </div>
 
 @section Scripts {
@@ -311,8 +311,8 @@
                         });
 
                         if (aviso) {
-                            document.querySelector('#modalEditarAviso [name="Id"]').value = aviso.Id;
-                            document.querySelector('#modalEditarAviso [name="Texto"]').value = aviso.Texto || '';
+                            document.querySelector('#modalEditarAviso [name="id"]').value = aviso.Id;
+                            document.querySelector('#modalEditarAviso [name="texto"]').value = aviso.Texto || '';
 
                             var fechaExpiracion = aviso.FechaExpiracion;
                             if (fechaExpiracion) {
@@ -320,12 +320,12 @@
                                 var hoy = new Date();
                                 var diasRestantes = Math.ceil((fecha - hoy) / (1000 * 60 * 60 * 24));
                                 if (diasRestantes > 0) {
-                                    document.querySelector('#modalEditarAviso [name="DuracionDias"]').value = diasRestantes;
+                                    document.querySelector('#modalEditarAviso [name="duracionDias"]').value = diasRestantes;
                                 } else {
-                                    document.querySelector('#modalEditarAviso [name="DuracionDias"]').value = 7;
+                                    document.querySelector('#modalEditarAviso [name="duracionDias"]').value = 7;
                                 }
                             } else {
-                                document.querySelector('#modalEditarAviso [name="DuracionDias"]').value = 7;
+                                document.querySelector('#modalEditarAviso [name="duracionDias"]').value = 7;
                             }
                         }
                     });
