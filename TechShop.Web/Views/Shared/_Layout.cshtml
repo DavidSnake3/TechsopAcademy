@@ -12,11 +12,9 @@
     <link rel="stylesheet" href="@(ViewData["Style"])" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Spinner.css" asp-append-version="true" />
 
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-
 </head>
 <body class="d-flex flex-column ">
     @await Html.PartialAsync("_Spinner")
@@ -25,23 +23,129 @@
     </header>
     <main class="flex-grow-1">
         @RenderBody()
-
     </main>
     @await Html.PartialAsync("_Footer")
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.4/dist/sweetalert2.all.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <div class="modal fade" id="modalAgregarAviso" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form asp-action="AgregarAviso" asp-controller="Home" method="post" class="modal-content" id="formAgregarAviso">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo Aviso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Texto" class="form-label">Texto del aviso *</label>
+                        <textarea name="Texto" class="form-control" rows="4"
+                                  placeholder="Ingrese el texto del aviso..."
+                                  maxlength="1000" required></textarea>
+                        <div class="form-text">Máximo 1000 caracteres</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="DuracionDias" class="form-label">Duración (días) *</label>
+                        <input type="number" name="DuracionDias" class="form-control"
+                               min="1" max="365" value="7" required>
+                        <div class="form-text">El aviso se mostrará durante esta cantidad de días</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar aviso</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalVerAvisoCompleto" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Aviso Completo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="avisoCompletoContenido"></div>
+                    <div class="mt-3 text-muted small">
+                        <strong>Creado por:</strong> <span id="avisoCreadoPor"></span><br>
+                        <strong>Este aviso se eliminara hasta:</strong> <span id="avisoExpiracion"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEditarAviso" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form asp-action="EditarAviso" asp-controller="Home" method="post" class="modal-content">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Aviso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Texto" class="form-label">Texto del aviso *</label>
+                        <textarea name="Texto" class="form-control" rows="4"
+                                  placeholder="Ingrese el texto del aviso..."
+                                  maxlength="1000" required></textarea>
+                        <div class="form-text">Máximo 1000 caracteres</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="DuracionDias" class="form-label">Extender duración (días) *</label>
+                        <input type="number" name="DuracionDias" class="form-control"
+                               min="1" max="365" value="7" required>
+                        <div class="form-text">El aviso se extenderá por esta cantidad de días adicionales</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEliminarAviso" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form asp-action="EliminarAviso" asp-controller="Home" method="post" class="modal-content">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="avisoIdEliminar" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Eliminar Aviso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="bi bi-exclamation-triangle text-warning fs-1 mb-3"></i>
+                        <h6 class="text-dark">¿Está seguro de que desea eliminar este aviso?</h6>
+                        <p class="text-muted">Esta acción no se puede deshacer.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     @if (ViewBag.NotificationMessage != null)
     {
         <script>
             @Html.Raw(@ViewBag.NotificationMessage);
         </script>
     }
-    @* @await Html.PartialAsync("_Footer") *@
 </body>
 </html>

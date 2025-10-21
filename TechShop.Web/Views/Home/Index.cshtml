@@ -10,35 +10,39 @@
     var puesto = User.Claims.FirstOrDefault(c => c.Type == "Puesto")?.Value ?? "N/D";
     var correo = User.Claims.FirstOrDefault(c => c.Type == "Correo")?.Value ?? "N/D";
 }
+
 <div class="parent">
-    <div class="div1 p-3">
+    <div class="div1 p-3 d-flex flex-column">
+        <h6 class="mb-4 text-primary text-center">
+            <i class="bi bi-person-vcard-fill"></i>Datos Personales
+        </h6>
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div class="d-flex align-items-center">
-                <i class="bi bi-person-circle fs-1 text-white me-3"></i>
+                <i class="bi bi-person-bounding-box fs-1 text-white me-3"></i>
                 <div>
                     <h5 class="mb-0 text-white">@nombre</h5>
-                    <small class="text-white">Código: @codigo | @puesto | @rol</small><br />
+                    <small class="text-white">Código: @codigo | @puesto | @rol</small><br />
                 </div>
             </div>
-            <h6 class="text-white">@correo</h6> 
+            <h6 class="text-white">@correo</h6>
         </div>
 
         <div class="row gx-3">
             <div class="col-6">
                 <div class="stat-card success">
                     <i class="bi bi-check-circle-fill"></i>
-                    <small>Completado – @Model.Completados.Count()</small>
+                    <small>Completado – @Model.Completados.Count()</small>
                 </div>
             </div>
             <div class="col-6">
                 <div class="stat-card info">
                     <i class="bi bi-play-circle-fill"></i>
-                    <small>En Proceso – @Model.EnProceso.Count()</small>
+                    <small>En Proceso – @Model.EnProceso.Count()</small>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="div4 p-3 d-flex flex-column">
         <h6 class="mb-4 text-primary text-center">
             <i class="bi bi-play-circle-fill me-1"></i>En Proceso
@@ -62,11 +66,11 @@
                              style="width:100px; height:60px; object-fit:cover; border-radius:4px;" />
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between">
-                                <h6 class="mb-1">@c.Codigo - @c.Nombre</h6>
+                                <h6 class="mb-1">@c.Codigo - @c.Nombre</h6>
                             </div>
                             <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
                             <div class="small text-muted">
-                                @c.Dificultad | @(c.DuracionHoras.ToString() ?? "N/A") h
+                                @c.Dificultad | @(c.DuracionHoras.ToString() ?? "N/A") h
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Material" asp-route-id="@c.Id"
@@ -78,7 +82,7 @@
             }
         </div>
         <div class="text-center mt-3">
-            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="enproceso" class="btn btn-primary btn-sm">Mostrar todos</a>
+            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="enproceso" class="btn btn-primary btn-sm"><i class="bi bi-folder-fill"> Mostrar todos</i></a>
         </div>
     </div>
 
@@ -105,11 +109,11 @@
                              style="width:100px; height:60px; object-fit:cover; border-radius:4px;" />
                         <div class="flex-grow-1">
                             <div class="d-flex justify-content-between">
-                                <h6 class="mb-1">@c.Codigo - @c.Nombre</h6>
+                                <h6 class="mb-1">@c.Codigo - @c.Nombre</h6>
                             </div>
                             <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
                             <div class="small text-muted">
-                                @c.Dificultad | @(c.DuracionHoras.ToString() ?? "N/A") h
+                                @c.Dificultad | @(c.DuracionHoras.ToString() ?? "N/A") h
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Finalizados" asp-route-id="@c.Id"
@@ -121,11 +125,10 @@
             }
         </div>
         <div class="text-center mt-3">
-            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="finalizados" class="btn btn-primary btn-sm">Mostrar todos</a>
+            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="finalizados" class="btn btn-primary btn-sm"><i class="bi bi-folder-fill"> Mostrar todos</i></a>
         </div>
     </div>
 
-    
     <div class="div7 p-3 d-flex flex-column">
         <h6 class="mb-4 text-info text-center">
             <i class="bi bi-journal-bookmark-fill me-1"></i>Cursos Disponibles
@@ -151,8 +154,8 @@
                             </div>
                             <p class="mb-1 text-truncate-2">@c.DescripcionCorta</p>
                             <div class="small text-muted">
-                                 @c.Dificultad &nbsp;|&nbsp;
-                                 @(c.DuracionHoras.ToString() ?? "N/A") h
+                                @c.Dificultad &nbsp;|&nbsp;
+                                @(c.DuracionHoras.ToString() ?? "N/A") h
                             </div>
                         </div>
                         <a asp-controller="Curso" asp-action="Detalles" asp-route-id="@c.Id"
@@ -164,109 +167,306 @@
             }
         </div>
         <div class="text-center mt-3">
-            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="disponibles" class="btn btn-primary btn-sm">Mostrar todos</a>
+            <a asp-controller="Home" asp-action="Cursos" asp-route-estado="disponibles" class="btn btn-primary btn-sm"><i class="bi bi-folder-fill"> Mostrar todos</i></a>
         </div>
     </div>
 
-    <div class="div8 d-flex flex-column p-3">
-        <h6 class="mb-3">
-            <i class="bi bi-bell-fill me-1"></i>Avisos
+    <div class="div8 d-flex flex-column p-3 position-relative">
+        <h6 class="mb-2">
+            <i class="bi bi-megaphone-fill me-1"></i>Avisos
         </h6>
 
         @if (Model.Avisos.Any())
         {
-            <div class="scrollable-content flex-grow-1 mb-2">
-            <ul class="list-unstyled avisos-list flex-grow-1 mb-2">
-                @foreach (var a in Model.Avisos)
-                {
-                    <li class="d-flex justify-content-between align-items-center alert alert-warning py-2 px-3 mb-1">
-                        <div>
-                            <strong>¡Aviso!</strong> @a.Texto<br />
-                            <small class="text-muted">@a.FechaCreacion.ToLocalTime().ToShortDateString()</small>
-                        </div>
-                            <div class="d-flex align-items-end justify-content-end mt-2">
-                                <button type="button" class="btn btn-outline-secondary btn-square"
-                                        data-bs-toggle="modal" data-bs-target="#modalEditarAviso"
-                                        data-aviso-id="@a.FechaCreacion.Ticks"
-                                        data-aviso-text="@a.Texto">
-                                    <i class="bi bi-pencil"></i>
+            var avisoActual = Model.Avisos.First();
+            var textoCorto = avisoActual.Texto.Length > 100 ? avisoActual.Texto.Substring(0, 100) + "..." : avisoActual.Texto;
+            var fechaCreacion = avisoActual.FechaCreacion.ToLocalTime().ToString("dd/MM/yyyy");
+
+            <div class="aviso-contenedor">
+                <div class="aviso-actual">
+                    <div class="aviso-header">
+                        <small class="fecha-creacion">@fechaCreacion</small>
+                    </div>
+                    <div class="aviso-texto">
+                        <p class="texto-aviso">@avisoActual.Texto</p>
+                    </div>
+                    <div class="aviso-acciones">
+                        <div class="aviso-navegacion">
+                            @if (Model.Avisos.Count > 1)
+                            {
+                                <button type="button" class="btn aviso-anterior">
+                                    <i class="bi bi-chevron-left"></i>
                                 </button>
-                                <form asp-action="EliminarAviso" asp-controller="Home" method="post" class="d-inline">
-                                    <input type="hidden" name="fechaTicks" value="@a.FechaCreacion.Ticks" />
-                                    <button type="submit" class="btn btn-outline-danger btn-square">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                    </li>
-                }
-            </ul>
+                                <button type="button" class="btn aviso-siguiente">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                                <small>1/@Model.Avisos.Count</small>
+                            }
+                        </div>
+                        <div class="aviso-botones">
+                            @if (avisoActual.Texto.Length > 100)
+                            {
+                                <button type="button" class="btn btn-aviso-action ver-completo-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalVerAvisoCompleto"
+                                        data-aviso-id="@avisoActual.Id">
+                                    Ver completo
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         }
         else
         {
-            <div class="flex-grow-1 d-flex align-items-center justify-content-center mb-2">
-                <i class="bi bi-dash-circle fs-2 text-muted"></i>
+            <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+                <i class="bi bi-bell-slash fs-4 text-muted"></i>
                 <small class="text-muted ms-2">No hay avisos por el momento</small>
             </div>
         }
 
-        @if (codigo == "2693" || codigo == "2692")
+        @{
+            var userCodigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D";
+        }
+        @if (userCodigo == "2693" || userCodigo == "2692")
         {
-            <button class="btn btn-warning btn-sm position-absolute top-0 end-0 m-2 shadow"
+            <button class="btn btn-aviso-action btn-agregar-aviso"
                     data-bs-toggle="modal" data-bs-target="#modalAgregarAviso"
                     title="Agregar aviso">
-                <i class="bi bi-plus fs-5"></i>
+                <i class="bi bi-plus-lg me-1"></i>Agregar Aviso
             </button>
         }
     </div>
+
 </div>
 
-<div class="modal fade" id="modalAgregarAviso" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <form asp-action="AgregarAviso" asp-controller="Home" method="post" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Nuevo Aviso</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <textarea name="texto" class="form-control" rows="3" required></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar aviso</button>
-            </div>
-        </form>
-    </div>
-</div>
+@section Scripts {
+    <script>
+        var avisosFromServer = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Avisos));
 
-<div class="modal fade" id="modalEditarAviso" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <form asp-action="EditarAviso" asp-controller="Home" method="post" class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Editar Aviso</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="fechaTicks" id="editFechaTicks" />
-                <textarea name="texto" id="editTexto" class="form-control" rows="3" required></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Actualizar aviso</button>
-            </div>
-        </form>
-    </div>
-</div>
+        document.addEventListener('DOMContentLoaded', function () {
+            var avisos = avisosFromServer || [];
+            var avisoIndex = 0;
 
-<script>
-    var editarModal = document.getElementById('modalEditarAviso');
-    editarModal.addEventListener('show.bs.modal', function (event) {
-      var btn = event.relatedTarget;
-      var texto = btn.getAttribute('data-aviso-text');
-      var fecha = btn.getAttribute('data-aviso-id');
-      document.getElementById('editTexto').value = texto;
-      document.getElementById('editFechaTicks').value = fecha;
-    });
-</script>
+            if (avisos.length > 0) {
+                inicializarSistemaAvisos();
+            }
 
+            function inicializarSistemaAvisos() {
+                configurarNavegacion();
+                configurarModales();
+                mostrarAvisoActual();
+                ajustarBarraAvisos();
+            }
+
+            function configurarNavegacion() {
+                var btnAnterior = document.querySelector('.aviso-anterior');
+                var btnSiguiente = document.querySelector('.aviso-siguiente');
+
+                if (btnAnterior) {
+                    btnAnterior.addEventListener('click', function() {
+                        if (avisoIndex > 0) {
+                            avisoIndex--;
+                            mostrarAvisoActual();
+                        }
+                    });
+                }
+
+                if (btnSiguiente) {
+                    btnSiguiente.addEventListener('click', function() {
+                        if (avisoIndex < avisos.length - 1) {
+                            avisoIndex++;
+                            mostrarAvisoActual();
+                        }
+                    });
+                }
+            }
+
+            function configurarModales() {
+                var modalVer = document.getElementById('modalVerAvisoCompleto');
+                if (modalVer) {
+                    modalVer.addEventListener('show.bs.modal', function (event) {
+                        var button = event.relatedTarget;
+                        var avisoId = button.getAttribute('data-aviso-id');
+
+                        if (!avisoId && avisos.length > 0) {
+                            avisoId = avisos[avisoIndex].Id;
+                        }
+
+                        if (avisoId) {
+                            cargarAvisoEnModal(avisoId);
+                        }
+                    });
+                }
+
+                var modalEditar = document.getElementById('modalEditarAviso');
+                if (modalEditar) {
+                    modalEditar.addEventListener('show.bs.modal', function (event) {
+                        var button = event.relatedTarget;
+                        if (!button) return;
+
+                        var avisoId = button.getAttribute('data-aviso-id');
+                        var aviso = avisos.find(function(a) {
+                            return a.Id.toString() === avisoId.toString();
+                        });
+
+                        if (aviso) {
+                            document.querySelector('#modalEditarAviso [name="Id"]').value = aviso.Id;
+                            document.querySelector('#modalEditarAviso [name="Texto"]').value = aviso.Texto || '';
+
+                            var fechaExpiracion = aviso.FechaExpiracion;
+                            if (fechaExpiracion) {
+                                var fecha = new Date(fechaExpiracion);
+                                var hoy = new Date();
+                                var diasRestantes = Math.ceil((fecha - hoy) / (1000 * 60 * 60 * 24));
+                                if (diasRestantes > 0) {
+                                    document.querySelector('#modalEditarAviso [name="DuracionDias"]').value = diasRestantes;
+                                } else {
+                                    document.querySelector('#modalEditarAviso [name="DuracionDias"]').value = 7;
+                                }
+                            } else {
+                                document.querySelector('#modalEditarAviso [name="DuracionDias"]').value = 7;
+                            }
+                        }
+                    });
+                }
+
+                var modalEliminar = document.getElementById('modalEliminarAviso');
+                if (modalEliminar) {
+                    modalEliminar.addEventListener('show.bs.modal', function (event) {
+                        var button = event.relatedTarget;
+                        var avisoId = button.getAttribute('data-aviso-id');
+                        document.getElementById('avisoIdEliminar').value = avisoId;
+                    });
+                }
+            }
+
+            function mostrarAvisoActual() {
+                var aviso = avisos[avisoIndex];
+                if (!aviso) return;
+
+                var textoCompleto = aviso.Texto || '';
+                var necesitaVerCompleto = textoCompleto.length > 100;
+
+                var fechaCreacion = aviso.FechaCreacion;
+                var fechaCreacionFormateada = formatearFecha(fechaCreacion);
+
+                var headerSmall = document.querySelector('.aviso-actual .aviso-header small');
+                var textoP = document.querySelector('.aviso-actual .aviso-texto p');
+                var navSmall = document.querySelector('.aviso-navegacion small');
+
+                if (headerSmall) headerSmall.textContent = fechaCreacionFormateada;
+                if (textoP) textoP.textContent = textoCompleto;
+                if (navSmall) navSmall.textContent = (avisoIndex + 1) + '/' + avisos.length;
+
+                actualizarBotonesAviso(aviso, necesitaVerCompleto);
+            }
+
+            function actualizarBotonesAviso(aviso, necesitaVerCompleto) {
+                var avisoId = aviso.Id;
+                var contenedorBotones = document.querySelector('.aviso-botones');
+
+                if (!contenedorBotones) return;
+
+                contenedorBotones.innerHTML = '';
+
+                if (necesitaVerCompleto) {
+                    var btnVerCompleto = document.createElement('button');
+                    btnVerCompleto.type = 'button';
+                    btnVerCompleto.className = 'btn btn-aviso-action';
+                    btnVerCompleto.innerHTML = 'Ver completo';
+                    btnVerCompleto.setAttribute('data-bs-toggle', 'modal');
+                    btnVerCompleto.setAttribute('data-bs-target', '#modalVerAvisoCompleto');
+                    btnVerCompleto.setAttribute('data-aviso-id', avisoId);
+                    contenedorBotones.appendChild(btnVerCompleto);
+                }
+
+                var userCodigo = '@(User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value ?? "N/D")';
+                if (userCodigo === "2693" || userCodigo === "2692") {
+                    var btnEditar = document.createElement('button');
+                    btnEditar.type = 'button';
+                    btnEditar.className = 'btn btn-aviso-action ms-1';
+                    btnEditar.innerHTML = '<i class="bi bi-pencil"></i>';
+                    btnEditar.setAttribute('data-bs-toggle', 'modal');
+                    btnEditar.setAttribute('data-bs-target', '#modalEditarAviso');
+                    btnEditar.setAttribute('data-aviso-id', avisoId);
+                    btnEditar.setAttribute('title', 'Editar aviso');
+                    contenedorBotones.appendChild(btnEditar);
+
+                    var btnEliminar = document.createElement('button');
+                    btnEliminar.type = 'button';
+                    btnEliminar.className = 'btn btn-aviso-action ms-1';
+                    btnEliminar.innerHTML = '<i class="bi bi-trash"></i>';
+                    btnEliminar.setAttribute('title', 'Eliminar aviso');
+                    btnEliminar.setAttribute('data-bs-toggle', 'modal');
+                    btnEliminar.setAttribute('data-bs-target', '#modalEliminarAviso');
+                    btnEliminar.setAttribute('data-aviso-id', avisoId);
+                    contenedorBotones.appendChild(btnEliminar);
+                }
+            }
+
+            function cargarAvisoEnModal(avisoId) {
+                var aviso = avisos.find(function(a) {
+                    return a.Id.toString() === avisoId.toString();
+                });
+
+                if (aviso) {
+                    mostrarDatosEnModal(aviso);
+                } else {
+                    buscarAvisoEnServidor(avisoId);
+                }
+            }
+
+            function mostrarDatosEnModal(aviso) {
+                var textoCompleto = aviso.Texto || '[Texto no disponible]';
+                document.getElementById('avisoCompletoContenido').textContent = textoCompleto;
+
+                var creador = aviso.CreadoPorNombre || 'Sistema';
+                document.getElementById('avisoCreadoPor').textContent = creador;
+
+                var fechaExpiracion = aviso.FechaExpiracion;
+                var fechaExpiracionTexto = formatearFecha(fechaExpiracion) || 'No especificada';
+                document.getElementById('avisoExpiracion').textContent = fechaExpiracionTexto;
+            }
+
+            function buscarAvisoEnServidor(avisoId) {
+                fetch('/Home/ObtenerAviso?id=' + encodeURIComponent(avisoId))
+                    .then(function (res) {
+                        if (!res.ok) throw new Error('Error ' + res.status);
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        mostrarDatosEnModal(data);
+                    })
+                    .catch(function (err) {
+                        document.getElementById('avisoCompletoContenido').textContent = 'Error al cargar el aviso desde el servidor';
+                        document.getElementById('avisoCreadoPor').textContent = 'N/A';
+                        document.getElementById('avisoExpiracion').textContent = 'N/A';
+                    });
+            }
+
+            function formatearFecha(fecha) {
+                if (!fecha) return null;
+                try {
+                    var fechaObj = new Date(fecha);
+                    if (isNaN(fechaObj.getTime())) return null;
+                    return fechaObj.toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function ajustarBarraAvisos() {
+                var div8 = document.querySelector('.div8');
+                var btnAgregar = document.querySelector('.btn-agregar-aviso');
+                if (!btnAgregar) {
+                    div8.classList.add('sin-boton-agregar');
+                }
+            }
+        });
+    </script>
+}

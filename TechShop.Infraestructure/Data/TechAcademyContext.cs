@@ -11,6 +11,7 @@ public partial class TechAcademyContext : DbContext
         : base(options)
     {
     }
+    public virtual DbSet<Aviso> Avisos { get; set; }
 
     public virtual DbSet<CapacitacionPuestoZona> CapacitacionPuestoZona { get; set; }
 
@@ -36,6 +37,7 @@ public partial class TechAcademyContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.Entity<CapacitacionPuestoZona>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Capacita__3214EC07638CC5BA");
@@ -218,6 +220,22 @@ public partial class TechAcademyContext : DbContext
                 .ToView("vw_ResultadoPorEmpleado");
 
             entity.Property(e => e.NotaPorcentaje).HasColumnType("decimal(5, 2)");
+        });
+
+        modelBuilder.Entity<Aviso>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Avisos__3214EC0797A8A9B6");
+            entity.Property(e => e.Texto)
+                .IsRequired()
+                .HasMaxLength(1000);
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(getutcdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.FechaExpiracion)
+                .IsRequired()
+                .HasColumnType("datetime");
+            entity.Property(e => e.CreadoPorNombre)
+                .HasMaxLength(200);
         });
 
         OnModelCreatingPartial(modelBuilder);

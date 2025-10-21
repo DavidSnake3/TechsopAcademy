@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 using TechShop.Application.DTOs;
+using TechShop.Application.Interfaces;
 using TechShop.Infraestructure.Data;
 using TechShop.Infraestructure.Models;
 using TechShop.Web.Models;
@@ -14,12 +16,13 @@ namespace TechShop.Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly TechAcademyContext _ctx;
-        private readonly AvisosService _avisosSvc;
-        public HomeController(ILogger<HomeController> logger, TechAcademyContext ctx, AvisosService avisosSvc)
+        private readonly IAvisoService _avisoService;
+
+        public HomeController(ILogger<HomeController> logger, TechAcademyContext ctx, IAvisoService avisoService)
         {
             _logger = logger;
             _ctx = ctx;
-            _avisosSvc = avisosSvc;
+            _avisoService = avisoService;
         }
 
         public async Task<IActionResult> Index()
@@ -81,11 +84,14 @@ namespace TechShop.Web.Controllers
                 }
             ).ToListAsync();
 
+            var avisos = await _avisoService.ObtenerAvisosActivosAsync();
+
             var vm = new DashboardViewModel
             {
                 Completados = completados,
                 EnProceso = enProceso,
-                Disponibles = disponibles
+                Disponibles = disponibles,
+                Avisos = avisos
             };
 
             if (TempData.ContainsKey("Mensaje"))
@@ -93,36 +99,75 @@ namespace TechShop.Web.Controllers
                 ViewBag.NotificationMessage = TempData["Mensaje"];
             }
 
-            vm.Avisos = _avisosSvc.ObtenerAvisos();
             return View(vm);
         }
 
         [HttpPost]
-        public IActionResult AgregarAviso(string texto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AgregarAviso(AvisoDto avisoDto)
         {
-            var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value;
-            if (codigo != "2693" && codigo != "2692")
-                return Forbid();
+            try
+            {
+                var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value;
+                if (codigo != "2693" && codigo != "2692")
+                    return Forbid();
 
-            if (!string.IsNullOrWhiteSpace(texto))
-                _avisosSvc.AgregarAviso(texto);
+                if (!ModelState.IsValid)
+                {
+                    TempData["Mensaje"] = "Swal.fire('Error','Por favor complete todos los campos correctamente','error');";
+                    return RedirectToAction("Index");
+                }
 
-            TempData["Mensaje"] = "Swal.fire('Aviso agregado','Tu aviso se mostrará durante 7 días','success');";
+                var empleadoId = int.Parse(codigo!);
+                var empleadoNombre = User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+
+                await _avisoService.CrearAvisoAsync(avisoDto, empleadoId, empleadoNombre);
+
+                TempData["Mensaje"] = "Swal.fire('Éxito','Aviso agregado correctamente','success');";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al agregar aviso");
+                TempData["Mensaje"] = "Swal.fire('Error','No se pudo agregar el aviso','error');";
+            }
+
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult EliminarAviso(long fechaTicks)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EliminarAviso(int id)
         {
-            _avisosSvc.EliminarAviso(new DateTime(fechaTicks));
+            try
+            {
+                var codigo = User.Claims.FirstOrDefault(c => c.Type == "Codigo")?.Value;
+                if (codigo != "2693" && codigo != "2692")
+                    return Forbid();
+
+                var resultado = await _avisoService.EliminarAvisoAsync(id);
+
+                if (resultado)
+                    TempData["Mensaje"] = "Swal.fire('Éxito','Aviso eliminado correctamente','success');";
+                else
+                    TempData["Mensaje"] = "Swal.fire('Error','No se pudo encontrar el aviso','error');";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar aviso");
+                TempData["Mensaje"] = "Swal.fire('Error','No se pudo eliminar el aviso','error');";
+            }
+
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public IActionResult EditarAviso(long fechaTicks, string texto)
+        [HttpGet]
+        public async Task<IActionResult> ObtenerAviso(int id)
         {
-            _avisosSvc.EditarAviso(new DateTime(fechaTicks), texto);
-            return RedirectToAction("Index");
+            var aviso = await _avisoService.ObtenerAvisoPorIdAsync(id);
+            if (aviso == null)
+                return NotFound();
+
+            return Json(aviso);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -196,4 +241,4 @@ namespace TechShop.Web.Controllers
             return View("~/Views/Curso/Cursos.cshtml", model);
         }
     }
-    }
+}

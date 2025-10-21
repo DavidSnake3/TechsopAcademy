@@ -1,53 +1,126 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TechShop.Application.DTOs;
+using TechShop.Application.Interfaces;
+using TechShop.Infraestructure.Data;
+using TechShop.Infraestructure.Models;
 
-public class AvisosService
+namespace TechShop.Infraestructure.Services
 {
-    private const string CacheKey = "AvisosActivos";
-    private readonly IMemoryCache _cache;
-
-    public AvisosService(IMemoryCache cache)
+    public class AvisoService : IAvisoService
     {
-        _cache = cache;
-    }
+        private readonly TechAcademyContext _context;
 
-    public List<Aviso> ObtenerAvisos()
-    {
-        if (!_cache.TryGetValue(CacheKey, out List<Aviso> avisos))
-            avisos = new List<Aviso>();
-
-        avisos = avisos.Where(a => a.FechaCreacion > DateTime.UtcNow.AddDays(-7)).ToList();
-        _cache.Set(CacheKey, avisos, TimeSpan.FromDays(7));
-        return avisos;
-    }
-
-    public void AgregarAviso(string texto)
-    {
-        var avisos = ObtenerAvisos();
-        avisos.Add(new Aviso { Texto = texto, FechaCreacion = DateTime.UtcNow });
-        _cache.Set(CacheKey, avisos, TimeSpan.FromDays(7));
-    }
-
-    public void EliminarAviso(DateTime fecha)
-    {
-        var avisos = ObtenerAvisos();
-        avisos.RemoveAll(a => a.FechaCreacion == fecha);
-        _cache.Set(CacheKey, avisos, TimeSpan.FromDays(7));
-    }
-
-    public void EditarAviso(DateTime fecha, string nuevoTexto)
-    {
-        var avisos = ObtenerAvisos();
-        var aviso = avisos.FirstOrDefault(a => a.FechaCreacion == fecha);
-        if (aviso != null)
+        public AvisoService(TechAcademyContext context)
         {
-            aviso.Texto = nuevoTexto;
-            _cache.Set(CacheKey, avisos, TimeSpan.FromDays(7));
+            _context = context;
+        }
+
+        public async Task<List<AvisoDto>> ObtenerAvisosActivosAsync()
+        {
+            var ahora = DateTime.UtcNow;
+
+            var avisos = await _context.Avisos
+                .Where(a => a.FechaExpiracion > ahora)
+                .OrderByDescending(a => a.FechaCreacion)
+                .Select(a => new AvisoDto
+                {
+                    Id = a.Id,
+                    Texto = a.Texto,
+                    FechaCreacion = a.FechaCreacion,
+                    FechaExpiracion = a.FechaExpiracion,
+                    CreadoPorNombre = a.CreadoPorNombre,
+                    EstaActivo = a.EstaActivo
+                })
+                .ToListAsync();
+
+            return avisos;
+        }
+
+        public async Task<AvisoDto?> ObtenerAvisoPorIdAsync(int id)
+        {
+            var aviso = await _context.Avisos
+                .Where(a => a.Id == id)
+                .Select(a => new AvisoDto
+                {
+                    Id = a.Id,
+                    Texto = a.Texto,
+                    FechaCreacion = a.FechaCreacion,
+                    FechaExpiracion = a.FechaExpiracion,
+                    CreadoPorNombre = a.CreadoPorNombre,
+                    EstaActivo = a.EstaActivo
+                })
+                .FirstOrDefaultAsync();
+
+            return aviso;
+        }
+
+        public async Task<AvisoDto> CrearAvisoAsync(AvisoDto avisoDto, int empleadoId, string empleadoNombre)
+        {
+            var aviso = new Aviso
+            {
+                Texto = avisoDto.Texto.Trim(),
+                FechaCreacion = DateTime.UtcNow,
+                FechaExpiracion = DateTime.UtcNow.AddDays(avisoDto.DuracionDias),
+                CreadoPorEmpleadoId = empleadoId,
+                CreadoPorNombre = empleadoNombre
+            };
+
+            _context.Avisos.Add(aviso);
+            await _context.SaveChangesAsync();
+
+            avisoDto.Id = aviso.Id;
+            avisoDto.FechaCreacion = aviso.FechaCreacion;
+            avisoDto.FechaExpiracion = aviso.FechaExpiracion;
+            avisoDto.CreadoPorNombre = aviso.CreadoPorNombre;
+            avisoDto.EstaActivo = aviso.EstaActivo;
+
+            return avisoDto;
+        }
+
+        public async Task<bool> EliminarAvisoAsync(int id)
+        {
+            var aviso = await _context.Avisos.FindAsync(id);
+            if (aviso == null)
+                return false;
+
+            _context.Avisos.Remove(aviso);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ActualizarAvisoAsync(AvisoDto avisoDto)
+        {
+            var aviso = await _context.Avisos.FindAsync(avisoDto.Id);
+            if (aviso == null)
+                return false;
+
+            aviso.Texto = avisoDto.Texto.Trim();
+            aviso.FechaExpiracion = aviso.FechaCreacion.AddDays(avisoDto.DuracionDias);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<AvisoDto>> ObtenerTodosAvisosAsync()
+        {
+            var avisos = await _context.Avisos
+                .OrderByDescending(a => a.FechaCreacion)
+                .Select(a => new AvisoDto
+                {
+                    Id = a.Id,
+                    Texto = a.Texto,
+                    FechaCreacion = a.FechaCreacion,
+                    FechaExpiracion = a.FechaExpiracion,
+                    CreadoPorNombre = a.CreadoPorNombre,
+                    EstaActivo = a.EstaActivo
+                })
+                .ToListAsync();
+
+            return avisos;
         }
     }
-}
-
-public class Aviso
-{
-    public string Texto { get; set; } = "";
-    public DateTime FechaCreacion { get; set; }
 }
