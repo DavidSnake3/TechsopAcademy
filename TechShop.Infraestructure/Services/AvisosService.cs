@@ -22,7 +22,7 @@ namespace TechShop.Infraestructure.Services
         public async Task<List<AvisoDto>> ObtenerAvisosActivosAsync()
         {
             var ahora = DateTime.UtcNow;
-
+            
             var avisos = await _context.Avisos
                 .Where(a => a.FechaExpiracion > ahora)
                 .OrderByDescending(a => a.FechaCreacion)
