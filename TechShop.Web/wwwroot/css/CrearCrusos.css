@@ -11,7 +11,7 @@
     width: 100%;
     padding: 0 15px;
     margin-bottom: 10px;
-    height: calc(100vh - 192px);
+    height: calc(100vh - 130px);
     overflow: hidden;
     overflow-y: auto;
 }
@@ -66,7 +66,7 @@
 
 .wizard-step {
     padding: 10px 20px 30px;
-    height: calc(100vh - 192px);
+    height: calc(100vh - 100px);
     overflow: hidden;
 }
 
@@ -220,7 +220,7 @@ section {
 /*      Footer      */
 #formCurso .footer {
     padding: 10px 20px;
-    min-height: 80px;
+    min-height: 60px;
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100% );
     display:flex;
     flex-direction: column;
