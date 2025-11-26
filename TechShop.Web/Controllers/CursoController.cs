@@ -15,12 +15,14 @@ namespace TechShop.Web.Controllers
         private readonly TechAcademyContext _ctx;
         private readonly ICursoService _cursoService;
         private readonly IDataverseService _dataverse;
+        private readonly ILogger<CursoController> _logger;
 
-        public CursoController(TechAcademyContext ctx, ICursoService cursoService, IDataverseService dataverse)
+        public CursoController(TechAcademyContext ctx, ICursoService cursoService, IDataverseService dataverse, ILogger<CursoController> logger)
         {
             _ctx = ctx;
             _cursoService = cursoService;
             _dataverse = dataverse;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Detalles(int id)
@@ -239,10 +241,6 @@ namespace TechShop.Web.Controllers
             var emp = await _dataverse.GetEmpleadoByCodigoAsync(codigo);
             if (emp == null || !int.TryParse(emp.Crfb9_codigo, out var empleadoId)) return Forbid();
 
-
-
-
-
             var ahora = DateTime.Now;
 
             var preguntasBD = await _ctx.Preguntas
@@ -263,37 +261,76 @@ namespace TechShop.Web.Controllers
                 string respuestaUsuario = "";
                 string respuestaCorrecta = "";
 
-                if (preguntaVM.TipoPregunta == "Unica")
+                var tipoRaw = (preguntaVM.TipoPregunta ?? "").Trim();
+                string tipo;
+                if (tipoRaw.IndexOf("unica", StringComparison.OrdinalIgnoreCase) >= 0
+                    || tipoRaw.Equals("Single", StringComparison.OrdinalIgnoreCase))
+                {
+                    tipo = "Unica";
+                }
+                else if (tipoRaw.IndexOf("multiple", StringComparison.OrdinalIgnoreCase) >= 0
+                         || tipoRaw.IndexOf("multiplechoice", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    tipo = "Multiple";
+                }
+                else if (tipoRaw.IndexOf("abierta", StringComparison.OrdinalIgnoreCase) >= 0
+                         || tipoRaw.IndexOf("open", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    tipo = "Abierta";
+                }
+                else
+                {
+                    tipo = "Multiple";
+                }
+
+                if (tipo == "Unica")
                 {
                     var opcionCorrecta = preguntaBD.OpcionesRespuesta.FirstOrDefault(o => o.EsCorrecta);
-                    respuestaCorrecta = opcionCorrecta?.TextoOpcion;
+                    respuestaCorrecta = opcionCorrecta?.TextoOpcion ?? "";
 
                     var opcionUsuario = preguntaBD.OpcionesRespuesta
-                        .FirstOrDefault(o => o.Id == preguntaVM.OpcionSeleccionada);
-                    respuestaUsuario = opcionUsuario?.TextoOpcion;
+                        .FirstOrDefault(o => o.Id == (preguntaVM.OpcionSeleccionada ?? -1));
+                    respuestaUsuario = opcionUsuario?.TextoOpcion ?? "";
 
-                    if (opcionCorrecta != null && opcionUsuario?.Id == opcionCorrecta.Id)
+                    if (opcionCorrecta != null && opcionUsuario != null && opcionUsuario.Id == opcionCorrecta.Id)
                         esCorrecta = true;
                 }
-                else if (preguntaVM.TipoPregunta == "Multiple")
+                else if (tipo == "Multiple")
                 {
-                    var opcionesCorrectas = preguntaBD.OpcionesRespuesta.Where(p => p.EsCorrecta).Select(p => p.Id).ToList();
-                    var opcionesUsuario = preguntaVM.OpcionesSeleccionadas ?? new List<int>();
+                    var opcionesCorrectas = preguntaBD.OpcionesRespuesta
+                        .Where(o => o.EsCorrecta)
+                        .Select(o => o.Id)
+                        .OrderBy(x => x)
+                        .ToList();
 
-                    // Se considera correcta solo si el conjunto es idéntico
-                    if (opcionesCorrectas.All(op => opcionesUsuario.Contains(op)) &&
-                        opcionesUsuario.All(op => opcionesCorrectas.Contains(op)))
+                    var opcionesUsuario = (preguntaVM.OpcionesSeleccionadas ?? new List<int>())
+                        .OrderBy(x => x)
+                        .ToList();
+
+                    if (opcionesCorrectas.SequenceEqual(opcionesUsuario))
+                        esCorrecta = true;
+
+                    respuestaCorrecta = string.Join(", ",
+                        preguntaBD.OpcionesRespuesta.Where(o => opcionesCorrectas.Contains(o.Id)).Select(o => o.TextoOpcion));
+
+                    respuestaUsuario = string.Join(", ",
+                        preguntaBD.OpcionesRespuesta.Where(o => opcionesUsuario.Contains(o.Id)).Select(o => o.TextoOpcion));
+                }
+                else if (tipo == "Abierta")
+                {
+                    var opcionCorrecta = preguntaBD.OpcionesRespuesta.FirstOrDefault(o => o.EsCorrecta);
+                    respuestaCorrecta = opcionCorrecta?.TextoOpcion ?? "";
+
+                    respuestaUsuario = preguntaVM.OpcionesSeleccionadas != null && preguntaVM.OpcionesSeleccionadas.Any()
+                        ? string.Join(", ", preguntaVM.OpcionesSeleccionadas)
+                        : "";
+
+                    if (!string.IsNullOrWhiteSpace(respuestaUsuario) &&
+                        !string.IsNullOrWhiteSpace(respuestaCorrecta) &&
+                        string.Equals(respuestaUsuario.Trim(), respuestaCorrecta.Trim(), StringComparison.OrdinalIgnoreCase))
                     {
                         esCorrecta = true;
                     }
-
-                    respuestaCorrecta = string.Join(", ",
-                        preguntaBD.OpcionesRespuesta.Where(o => opcionesCorrectas.Contains(o.Id))
-                        .Select(o => o.TextoOpcion));
-
-                    respuestaUsuario = string.Join(", ",
-                        preguntaBD.OpcionesRespuesta.Where(o => opcionesUsuario.Contains(o.Id))
-                        .Select(o => o.TextoOpcion));
                 }
 
                 if (esCorrecta) correctas++;
@@ -314,27 +351,33 @@ namespace TechShop.Web.Controllers
             {
                 foreach (var p in model.Preguntas)
                 {
-                    if (p.TipoPregunta == "Unica" && p.OpcionSeleccionada.HasValue)
+                    if (p.TipoPregunta != null && p.TipoPregunta.IndexOf("unica", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        _ctx.RespuestasEmpleado.Add(new RespuestasEmpleado
-                        {
-                            EmpleadoId = empleadoId,
-                            PreguntaId = p.PreguntaId,
-                            OpcionRespuestaId = p.OpcionSeleccionada,
-                            FechaRespuesta = ahora
-                        });
-                    }
-                    else if (p.TipoPregunta == "Multiple" && p.OpcionesSeleccionadas?.Any() == true)
-                    {
-                        foreach (var opcionId in p.OpcionesSeleccionadas)
+                        if (p.OpcionSeleccionada.HasValue)
                         {
                             _ctx.RespuestasEmpleado.Add(new RespuestasEmpleado
                             {
                                 EmpleadoId = empleadoId,
                                 PreguntaId = p.PreguntaId,
-                                OpcionRespuestaId = opcionId,
+                                OpcionRespuestaId = p.OpcionSeleccionada,
                                 FechaRespuesta = ahora
                             });
+                        }
+                    }
+                    else
+                    {
+                        if (p.OpcionesSeleccionadas?.Any() == true)
+                        {
+                            foreach (var opcionId in p.OpcionesSeleccionadas)
+                            {
+                                _ctx.RespuestasEmpleado.Add(new RespuestasEmpleado
+                                {
+                                    EmpleadoId = empleadoId,
+                                    PreguntaId = p.PreguntaId,
+                                    OpcionRespuestaId = opcionId,
+                                    FechaRespuesta = ahora
+                                });
+                            }
                         }
                     }
                 }
@@ -375,6 +418,9 @@ namespace TechShop.Web.Controllers
                 Detalles = detalles
             });
         }
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> Resultados(int id)
@@ -469,7 +515,6 @@ namespace TechShop.Web.Controllers
                 if (emp == null || !int.TryParse(emp.Crfb9_codigo, out var empleadoId))
                     return Forbid();
 
-                // Obtener resultados del examen
                 var resultado = await _ctx.ResultadosCapacitacion
                     .FirstOrDefaultAsync(r =>
                         r.EmpleadoId == empleadoId &&
@@ -478,7 +523,6 @@ namespace TechShop.Web.Controllers
                 if (resultado == null)
                     return RedirectToAction("Examen", new { id });
 
-                // Obtener todas las preguntas del examen
                 var preguntas = await _ctx.Preguntas
                     .Where(p => p.CapacitacionId == id)
                     .ToListAsync();
@@ -487,7 +531,6 @@ namespace TechShop.Web.Controllers
 
                 foreach (var pregunta in preguntas)
                 {
-                    // Obtener respuesta del empleado (más reciente)
                     var respuesta = await _ctx.RespuestasEmpleado
                         .Where(r =>
                             r.EmpleadoId == empleadoId &&
@@ -495,13 +538,11 @@ namespace TechShop.Web.Controllers
                         .OrderByDescending(r => r.FechaRespuesta)
                         .FirstOrDefaultAsync();
 
-                    // Obtener opción correcta
                     var opcionCorrecta = await _ctx.OpcionesRespuesta
                         .FirstOrDefaultAsync(o =>
                             o.PreguntaId == pregunta.Id &&
                             o.EsCorrecta);
 
-                    // Determinar si la respuesta fue correcta
                     bool esCorrecta = false;
                     string respuestaUsuario = "";
 

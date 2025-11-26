@@ -25,6 +25,7 @@
         </div>
 
         <form id="examenForm" asp-action="Examen" method="post">
+            @Html.AntiForgeryToken()
             <input asp-for="CapacitacionId" type="hidden" />
             <input asp-for="Nombre" type="hidden" />
             <input asp-for="Codigo" type="hidden" />

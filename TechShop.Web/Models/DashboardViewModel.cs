@@ -7,6 +7,6 @@ namespace TechShop.Web.Models
         public List<CursoDetallelDto> Completados { get; set; } = new();
         public List<CursoDetallelDto> EnProceso { get; set; } = new();
         public List<CursoDetallelDto> Disponibles { get; set; } = new();
-        public List<Aviso> Avisos { get; set; } = new();
+        public List<AvisoDto> Avisos { get; set; } = new();
     }
 }

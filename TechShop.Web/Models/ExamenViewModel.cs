@@ -54,7 +54,7 @@
         public string Nombre { get; set; }
         public string DescripcionCorta { get; set; }
         public string DescripcionLarga { get; set; }
-        public int? DuracionHoras { get; set; }    
+        public int DuracionHoras { get; set; }    
         public string Dificultad { get; set; }
         public byte[] Foto { get; set; }
 

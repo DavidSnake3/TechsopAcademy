@@ -6,9 +6,7 @@ using TechShop.Application.Interfaces;
 using TechShop.Infraestructure.Data;
 using TechShop.Infraestructure.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
-
 // configuración previa del fking dataverse
 var endpoint = builder.Configuration["Dataverse:Endpoint"];
 if (string.IsNullOrWhiteSpace(endpoint))
@@ -20,8 +18,6 @@ builder.Services.AddHttpClient<IDataverseService, DataverseService>();
 // configuracion previa del fking sql server
 builder.Services.AddDbContext<TechAcademyContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerDataBase")));
-
-
 // vaina para autenticar y proteger url
 builder.Services
   .AddAuthentication("MyCookieAuth")
@@ -58,13 +54,9 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 
-// al reiniciar se mantiene y gestiona cosas en memoria
-builder.Services.AddMemoryCache();
-builder.Services.AddSingleton<AvisosService>();
-
-//inyectamos
+//inyectamos los fking services
 builder.Services.AddScoped<ICursoService, CursoService>();
-
+builder.Services.AddScoped<IAvisoService, AvisoService>();
 
 
 var app = builder.Build();
